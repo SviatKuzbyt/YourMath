@@ -42,7 +42,7 @@ data class AppTypes(
             ),
             secondary = TextStyle(
                 fontFamily = fontFamily,
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight.Normal,
                 fontSize = AppSizes.sp16,
                 color = colors.textSecondary
             ),

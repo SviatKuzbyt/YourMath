@@ -43,8 +43,4 @@ object AppTheme {
     val types: AppTypes
         @Composable
         get() = LocalThemeTypes.current
-
-    val shapes = AppShapes
-
-    val sizes = AppSizes
 }

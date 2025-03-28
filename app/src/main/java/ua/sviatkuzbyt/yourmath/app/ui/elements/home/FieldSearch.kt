@@ -65,7 +65,7 @@ fun FieldSearch(
             .fillMaxWidth()
             .padding(horizontal = AppSizes.dp16)
             .padding(bottom = AppSizes.dp16)
-            .height(AppSizes.dp50),
+            .height(AppSizes.dp52),
         keyboardOptions = KeyboardOptions.Default.copy(
             imeAction = ImeAction.Search
         )

@@ -3,4 +3,6 @@
     <string name="history">History</string>
     <string name="editor">Editor</string>
     <string name="search">Search</string>
+    <string name="to_pin">Pin formula</string>
+    <string name="to_unpin">Unpin formula</string>
 </resources>

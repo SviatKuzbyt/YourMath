@@ -59,7 +59,7 @@ fun ButtonTopBar(
 }
 
 @Composable
-fun ContainerTopBar(
+fun ButtonContainer(
     @DrawableRes imageRes: Int,
     @StringRes contentDescriptionRes: Int,
     modifier: Modifier = Modifier,

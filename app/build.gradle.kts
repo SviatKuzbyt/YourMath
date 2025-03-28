@@ -69,8 +69,8 @@ dependencies {
     implementation(libs.androidx.material3)
 
     //test
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
+    //    testImplementation(libs.junit)
+    //    androidTestImplementation(libs.androidx.junit)
 
     //navigation
     implementation(libs.kotlinx.serialization.core)

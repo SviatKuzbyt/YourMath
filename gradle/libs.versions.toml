@@ -20,6 +20,10 @@ navigationCompose = "2.8.9"
 hilt = "2.51.1"
 hiltAndroid = "2.51.1"
 hiltAndroidCompiler = "2.51.1"
+jetbrainsKotlinJvm = "2.1.10"
+espressoCore = "3.6.1"
+appcompat = "1.7.0"
+material = "1.12.0"
 
 [libraries]
 #core, compose and tests
@@ -42,6 +46,9 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 #navigation
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "ktxSerialization"}
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [plugins]
 #core and compose
@@ -54,3 +61,5 @@ google-devtools-ksp = {id="com.google.devtools.ksp", version.ref = "ksp"}
 kotlin-serialization = { id="org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
 kotlin-kapt = {id = "kotlin-kapt"}
 dagger-hilt = {id = "com.google.dagger.hilt.android", version.ref = "hilt"}
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
+android-library = { id = "com.android.library", version.ref = "agp" }

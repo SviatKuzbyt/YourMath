@@ -3,8 +3,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    //room
-    alias(libs.plugins.google.devtools.ksp)
     //navigation
     alias(libs.plugins.kotlin.serialization)
     //hilt
@@ -58,11 +56,11 @@ kapt {
 }
 
 dependencies {
-    //Core
+    //core
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
 
-    //Compose
+    //compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.ui)
@@ -70,13 +68,9 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
 
-    //Test
+    //test
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
-
-    //room
-    implementation(libs.androidx.room.runtime)
-    ksp(libs.androidx.room.compiler)
 
     //navigation
     implementation(libs.kotlinx.serialization.core)
@@ -86,4 +80,8 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
     kapt(libs.hilt.android.compiler)
+
+    //modules
+    implementation(project(":domain"))
+    implementation(project(":data"))
 }

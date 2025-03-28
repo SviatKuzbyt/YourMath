@@ -21,3 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "YourMath"
 include(":app")
+include(":domain")
+include(":data")

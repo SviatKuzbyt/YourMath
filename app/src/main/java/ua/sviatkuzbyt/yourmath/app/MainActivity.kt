@@ -12,6 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import ua.sviatkuzbyt.yourmath.app.ui.theme.YourMathTheme
+import ua.sviatkuzbyt.yourmath.data.MyClassData
+import ua.sviatkuzbyt.yourmath.domain.MyClassDomain
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,8 +22,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             YourMathTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    val domain = MyClassDomain().data
+                    val data = MyClassData().data
                     Greeting(
-                        name = "Android",
+                        name = "$domain, $data, app",
                         modifier = Modifier.padding(innerPadding)
                     )
                 }

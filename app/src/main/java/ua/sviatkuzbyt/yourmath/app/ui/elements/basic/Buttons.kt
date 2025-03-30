@@ -52,7 +52,7 @@ fun ButtonTopBar(
     ButtonIcon(
         imageRes = imageRes,
         contentDescription = stringResource(contentDescriptionRes),
-        color = AppTheme.colors.buttonTopBar,
+        color = AppTheme.colors.textPrimary,
         modifier = modifier,
         onClick = onClick
     )
@@ -68,7 +68,7 @@ fun ButtonContainer(
     ButtonIcon(
         imageRes = imageRes,
         contentDescription = stringResource(contentDescriptionRes),
-        color = AppTheme.colors.buttonInContainer,
+        color = AppTheme.colors.primary,
         modifier = modifier,
         onClick = onClick
     )

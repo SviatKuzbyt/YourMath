@@ -11,6 +11,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import ua.sviatkuzbyt.yourmath.app.ui.elements.home.FieldSearch
+import ua.sviatkuzbyt.yourmath.app.ui.elements.home.FormulaNoPinItemList
+import ua.sviatkuzbyt.yourmath.app.ui.elements.home.FormulaPinnedItemList
 import ua.sviatkuzbyt.yourmath.app.ui.elements.home.HomeTopBar
 
 @Composable

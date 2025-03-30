@@ -1,4 +1,4 @@
-package ua.sviatkuzbyt.yourmath.app.ui.screens.home
+package ua.sviatkuzbyt.yourmath.app.ui.elements.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row

@@ -53,10 +53,10 @@ fun FieldSearch(
             }
         ),
         colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = AppTheme.colors.container,
-            unfocusedContainerColor = AppTheme.colors.container,
-            unfocusedBorderColor = AppTheme.colors.container,
-            focusedBorderColor = AppTheme.colors.container,
+            focusedContainerColor = AppTheme.colors.containerSearchField,
+            unfocusedContainerColor = AppTheme.colors.containerSearchField,
+            unfocusedBorderColor = AppTheme.colors.containerSearchField,
+            focusedBorderColor = AppTheme.colors.containerSearchField,
             focusedTextColor = AppTheme.colors.textPrimary,
             unfocusedTextColor = AppTheme.colors.textPrimary,
             cursorColor = AppTheme.colors.primary,

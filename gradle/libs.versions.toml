@@ -1,7 +1,6 @@
 [versions]
 #core, compose and tests
 agp = "8.8.2"
-hiltNavigationCompose = "1.2.0"
 kotlin = "2.1.10"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -9,6 +8,7 @@ junitVersion = "1.2.1"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.1"
 composeBom = "2025.03.01"
+jetbrainsKotlinJvm = "2.1.10"
 #room
 ksp = "2.1.20-1.0.32"
 roomRuntime = "2.6.1"
@@ -20,17 +20,11 @@ navigationCompose = "2.8.9"
 hilt = "2.51.1"
 hiltAndroid = "2.51.1"
 hiltAndroidCompiler = "2.51.1"
-jetbrainsKotlinJvm = "2.1.10"
-espressoCore = "3.6.1"
-appcompat = "1.7.0"
-material = "1.12.0"
+hiltNavigationCompose = "1.2.0"
 
 [libraries]
 #core, compose and tests
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
-hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
@@ -46,20 +40,23 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 #navigation
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "ktxSerialization"}
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+#hilt
+hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
+androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+
 
 [plugins]
 #core and compose
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 #room
 google-devtools-ksp = {id="com.google.devtools.ksp", version.ref = "ksp"}
 #navigation
 kotlin-serialization = { id="org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
+#hilt
 kotlin-kapt = {id = "kotlin-kapt"}
 dagger-hilt = {id = "com.google.dagger.hilt.android", version.ref = "hilt"}
-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
-android-library = { id = "com.android.library", version.ref = "agp" }

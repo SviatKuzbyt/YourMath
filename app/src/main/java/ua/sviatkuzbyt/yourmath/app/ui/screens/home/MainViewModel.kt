@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ua.sviatkuzbyt.yourmath.app.ui.intents.MainIntent
+import ua.sviatkuzbyt.yourmath.app.ui.other.ErrorData
 import ua.sviatkuzbyt.yourmath.app.ui.states.ContentOnScreen
 import ua.sviatkuzbyt.yourmath.app.ui.states.MainState
 import ua.sviatkuzbyt.yourmath.domain.structures.FormulaItem
@@ -34,41 +35,58 @@ class MainViewModel @Inject constructor(
         when(intent){
             is MainIntent.PinFormula -> pinFormula(intent.formula)
             is MainIntent.UnPinFormula -> unpinFormula(intent.formula)
+            MainIntent.CloseDialog -> clearError()
         }
     }
 
-    private fun loadFormulas() = viewModelScope.launch(Dispatchers.IO){
-        val formulasLists = getFormulasUseCase.execute()
+    private fun clearError(){
+        _screenState.value = _screenState.value.copy(errorMessage = null)
+    }
 
-        _screenState.value =
-            if (formulasLists.pins.isNotEmpty() && formulasLists.unpins.isNotEmpty()){
-                MainState(formulas = formulasLists)
-            } else{
-                MainState(contentOnScreen = ContentOnScreen.NoFormulas)
-            }
+    private fun loadFormulas() = viewModelScope.launch(Dispatchers.IO){
+        try {
+            val formulasLists = getFormulasUseCase.execute()
+
+            _screenState.value =
+                if (formulasLists.pins.isNotEmpty() && formulasLists.unpins.isNotEmpty()){
+                    MainState(formulas = formulasLists)
+                } else{
+                    MainState(contentOnScreen = ContentOnScreen.NoFormulas)
+                }
+        } catch (e: Exception){
+            _screenState.value = _screenState.value.copy(errorMessage = ErrorData())
+        }
     }
 
     private fun pinFormula(formula: FormulaItem){
-        pinFormulaUseCase.execute(formula.id)
+        try {
+            pinFormulaUseCase.execute(formula.id)
 
-        val oldLists = _screenState.value.formulas
-        _screenState.value = _screenState.value.copy(
-            formulas = oldLists.copy(
-                (oldLists.pins + formula).sortedBy { it.position },
-                oldLists.unpins - formula
+            val oldLists = _screenState.value.formulas
+            _screenState.value = _screenState.value.copy(
+                formulas = oldLists.copy(
+                    (oldLists.pins + formula).sortedBy { it.position },
+                    oldLists.unpins - formula
+                )
             )
-        )
+        } catch (e: Exception){
+            _screenState.value = _screenState.value.copy(errorMessage = ErrorData())
+        }
     }
 
     private fun unpinFormula(formula: FormulaItem){
-        unpinFormulaUseCase.execute(formula.id)
+        try {
+            unpinFormulaUseCase.execute(formula.id)
 
-        val oldLists = _screenState.value.formulas
-        _screenState.value = _screenState.value.copy(
-            formulas = oldLists.copy(
-                oldLists.pins - formula,
-                (oldLists.unpins + formula).sortedBy { it.position }
+            val oldLists = _screenState.value.formulas
+            _screenState.value = _screenState.value.copy(
+                formulas = oldLists.copy(
+                    oldLists.pins - formula,
+                    (oldLists.unpins + formula).sortedBy { it.position }
+                )
             )
-        )
+        } catch (e: Exception){
+            _screenState.value = _screenState.value.copy(errorMessage = ErrorData())
+        }
     }
 }

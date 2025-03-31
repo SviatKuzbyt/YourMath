@@ -13,7 +13,9 @@ data class AppTypes(
     val basic: TextStyle,
     val bold: TextStyle,
     val secondary: TextStyle,
-    val white: TextStyle
+    val white: TextStyle,
+    val dialogTittle: TextStyle,
+    val blueButton: TextStyle
 ){
     companion object{
         private val fontFamily = FontFamily(
@@ -51,6 +53,18 @@ data class AppTypes(
                 fontWeight = FontWeight.Bold,
                 fontSize = AppSizes.sp16,
                 color = Color(0xFFF3F9FE)
+            ),
+            dialogTittle = TextStyle(
+                fontFamily = fontFamily,
+                fontWeight = FontWeight.Bold,
+                fontSize = AppSizes.sp20,
+                color = colors.textPrimary
+            ),
+            blueButton = TextStyle(
+                fontFamily = fontFamily,
+                fontWeight = FontWeight.Bold,
+                fontSize = AppSizes.sp16,
+                color = colors.primary
             )
         )
     }

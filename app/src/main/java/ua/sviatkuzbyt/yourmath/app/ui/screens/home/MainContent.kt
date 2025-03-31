@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.ui.elements.basic.AnimateListItem
+import ua.sviatkuzbyt.yourmath.app.ui.elements.basic.dialog.DialogError
 import ua.sviatkuzbyt.yourmath.app.ui.elements.basic.EmptyScreenInList
 import ua.sviatkuzbyt.yourmath.app.ui.elements.basic.SubTittleText
 import ua.sviatkuzbyt.yourmath.app.ui.elements.home.FieldSearch
@@ -92,6 +93,12 @@ fun MainContent(
                     iconRes = R.drawable.ic_no_formulas
                 )
             }
+        }
+    }
+
+    if (screenState.errorMessage != null){
+        DialogError(screenState.errorMessage) {
+            onIntent(MainIntent.CloseDialog)
         }
     }
 }

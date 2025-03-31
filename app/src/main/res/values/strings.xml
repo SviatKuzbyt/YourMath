@@ -10,4 +10,7 @@
     <string name="no_data">No data on this page</string>
     <string name="no_formulas">There are no formulas yet. Go to the Editor to add formulas</string>
     <string name="no_search_result">Formula with this name was not found</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="unknown_error_detail">An unexpected error has occurred. We\'re sorry for the inconvenience. We are already working on it.</string>
+    <string name="ok">OK</string>
 </resources>

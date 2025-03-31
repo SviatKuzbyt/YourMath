@@ -4,7 +4,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 object AppSizes {
-    val dp1 = 1.dp
     val dp4 = 4.dp
     val dp16 = 16.dp
     val dp8 = 8.dp
@@ -16,4 +15,5 @@ object AppSizes {
 
     val sp16 = 16.sp
     val sp24 = 24.sp
+    val sp20 = 20.sp
 }

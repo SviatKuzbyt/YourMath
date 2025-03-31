@@ -1,7 +1,9 @@
 package ua.sviatkuzbyt.yourmath.domain.structures
 
-data class FormulaListItem(
+import javax.swing.text.Position
+
+data class FormulaItem(
     val id: Long,
     val name: String,
-    val isPinned: Boolean
+    val position: Int
 )

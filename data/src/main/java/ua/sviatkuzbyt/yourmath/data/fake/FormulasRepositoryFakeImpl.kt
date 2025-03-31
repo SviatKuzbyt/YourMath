@@ -1,31 +1,29 @@
 package ua.sviatkuzbyt.yourmath.data.fake
 
-import ua.sviatkuzbyt.yourmath.data.structures.FormulaListItemData
+import ua.sviatkuzbyt.yourmath.data.structures.FormulaItemData
 import ua.sviatkuzbyt.yourmath.domain.repositories.FormulasRepository
-import ua.sviatkuzbyt.yourmath.domain.structures.FormulaListItem
+import ua.sviatkuzbyt.yourmath.domain.structures.FormulaItemWithPinned
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class FormulasRepositoryFakeImpl @Inject constructor(): FormulasRepository {
     private val formulas = mutableListOf(
-        FormulaListItemData(1, "One formula", true),
-        FormulaListItemData(2, "Two formula", false),
-        FormulaListItemData(3, "Three formula", true),
-        FormulaListItemData(4, "Four formula", false),
-        FormulaListItemData(5, "Five formula", false),
-        FormulaListItemData(6, "Six formula", false),
+        FormulaItemData(1, "One formula", true, 1),
+        FormulaItemData(2, "Two formula", false, 2),
+        FormulaItemData(3, "Three formula", true, 3),
+        FormulaItemData(4, "Four formula", false, 4),
+        FormulaItemData(5, "Five formula", false, 5),
+        FormulaItemData(6, "Six formula", false, 6)
     )
 
-    override fun getFormulas(): List<FormulaListItem> {
+    override fun getFormulas(): List<FormulaItemWithPinned> {
         return formulas.map { item ->
-            mapFormulaListToDomain(item)
+            mapFormulaToDomain(item)
         }
     }
 
-    private fun mapFormulaListToDomain(item: FormulaListItemData): FormulaListItem {
-        return FormulaListItem(item.id, item.name, item.isPinned)
+    private fun mapFormulaToDomain(item: FormulaItemData): FormulaItemWithPinned {
+        return FormulaItemWithPinned(item.id, item.name, item.isPinned, item.position)
     }
-
-
 }

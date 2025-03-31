@@ -8,5 +8,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 @Composable
 fun MainScreen(viewModel: MainViewModel = hiltViewModel()){
     val screenState by viewModel.screenState.collectAsState()
-    MainContent(screenState)
+    MainContent(
+        screenState = screenState,
+        onIntent = { intent ->
+            viewModel.onIntent(intent)
+        }
+    )
 }

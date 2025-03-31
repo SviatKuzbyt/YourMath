@@ -1,4 +1,4 @@
-package ua.sviatkuzbyt.yourmath.app.main
+package ua.sviatkuzbyt.yourmath.app.core.main
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

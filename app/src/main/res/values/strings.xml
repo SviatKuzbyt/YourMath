@@ -5,4 +5,6 @@
     <string name="search">Search</string>
     <string name="to_pin">Pin formula</string>
     <string name="to_unpin">Unpin formula</string>
+    <string name="pinned">Pinned</string>
+    <string name="other">Other</string>
 </resources>

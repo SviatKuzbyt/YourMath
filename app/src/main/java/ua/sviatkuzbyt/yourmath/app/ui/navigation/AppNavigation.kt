@@ -1,4 +1,4 @@
-package ua.sviatkuzbyt.yourmath.app.navigation
+package ua.sviatkuzbyt.yourmath.app.ui.navigation
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,7 +13,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import ua.sviatkuzbyt.yourmath.app.ui.screens.home.HomeScreen
+import ua.sviatkuzbyt.yourmath.app.ui.screens.home.MainScreen
 
 val LocalNavController: ProvidableCompositionLocal<NavController> = staticCompositionLocalOf {
     error("LocalNavController: No installed")
@@ -31,10 +31,10 @@ fun AppNavigation(){
         NavHost(
             modifier = modifier,
             navController = navController,
-            startDestination = HomeRoute,
+            startDestination = MainRoute,
         ){
-            composable<HomeRoute> {
-                HomeScreen()
+            composable<MainRoute> {
+                MainScreen()
             }
         }
     }

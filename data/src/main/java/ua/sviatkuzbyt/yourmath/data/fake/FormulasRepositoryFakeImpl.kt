@@ -8,7 +8,7 @@ import javax.inject.Singleton
 
 @Singleton
 class FormulasRepositoryFakeImpl @Inject constructor(): FormulasRepository {
-    private val formulas = mutableListOf(
+    private val formulas = mutableListOf<FormulaItemData>(
         FormulaItemData(1, "One formula", true, 1),
         FormulaItemData(2, "Two formula", false, 2),
         FormulaItemData(3, "Three formula", true, 3),

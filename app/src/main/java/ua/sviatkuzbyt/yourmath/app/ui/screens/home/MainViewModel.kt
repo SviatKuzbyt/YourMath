@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ua.sviatkuzbyt.yourmath.app.ui.intents.MainIntent
+import ua.sviatkuzbyt.yourmath.app.ui.states.ContentOnScreen
 import ua.sviatkuzbyt.yourmath.app.ui.states.MainState
 import ua.sviatkuzbyt.yourmath.domain.structures.FormulaItem
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.GetFormulasUseCase
@@ -37,9 +38,14 @@ class MainViewModel @Inject constructor(
     }
 
     private fun loadFormulas() = viewModelScope.launch(Dispatchers.IO){
-        _screenState.value = MainState(
-            formulas = getFormulasUseCase.execute()
-        )
+        val formulasLists = getFormulasUseCase.execute()
+
+        _screenState.value =
+            if (formulasLists.pins.isNotEmpty() && formulasLists.unpins.isNotEmpty()){
+                MainState(formulas = formulasLists)
+            } else{
+                MainState(contentOnScreen = ContentOnScreen.NoFormulas)
+            }
     }
 
     private fun pinFormula(formula: FormulaItem){

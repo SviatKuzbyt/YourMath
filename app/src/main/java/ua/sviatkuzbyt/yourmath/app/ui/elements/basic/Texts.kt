@@ -25,11 +25,11 @@ fun SubTittleText(
 
 @Composable
 fun SubTittleText(
-    @StringRes text: Int,
+    @StringRes textRes: Int,
     modifier: Modifier = Modifier
 ) {
     SubTittleText(
-        text = stringResource(text),
+        text = stringResource(textRes),
         modifier = modifier
     )
 }

@@ -2,7 +2,12 @@ package ua.sviatkuzbyt.yourmath.app.ui.states
 
 import ua.sviatkuzbyt.yourmath.domain.structures.PinUnpinFormulaItems
 
+enum class ContentOnScreen {
+    Content, NoFormulas, NoSearchResult
+}
+
 data class MainState(
     val searchText: String = "",
-    val formulas: PinUnpinFormulaItems = PinUnpinFormulaItems(listOf(), listOf())
+    val formulas: PinUnpinFormulaItems = PinUnpinFormulaItems(listOf(), listOf()),
+    val contentOnScreen: ContentOnScreen = ContentOnScreen.Content
 )

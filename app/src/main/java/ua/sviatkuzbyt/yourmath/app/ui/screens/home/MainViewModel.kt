@@ -11,11 +11,15 @@ import ua.sviatkuzbyt.yourmath.app.ui.intents.MainIntent
 import ua.sviatkuzbyt.yourmath.app.ui.states.MainState
 import ua.sviatkuzbyt.yourmath.domain.structures.FormulaItem
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.GetFormulasUseCase
+import ua.sviatkuzbyt.yourmath.domain.usecases.main.PinFormulaUseCase
+import ua.sviatkuzbyt.yourmath.domain.usecases.main.UnpinFormulaUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val getFormulasUseCase: GetFormulasUseCase
+    private val getFormulasUseCase: GetFormulasUseCase,
+    private val pinFormulaUseCase: PinFormulaUseCase,
+    private val unpinFormulaUseCase: UnpinFormulaUseCase,
 ): ViewModel() {
 
     private val _screenState = MutableStateFlow(MainState())
@@ -39,21 +43,25 @@ class MainViewModel @Inject constructor(
     }
 
     private fun pinFormula(formula: FormulaItem){
-        val formulas = _screenState.value.formulas
+        pinFormulaUseCase.execute(formula.id)
+
+        val oldLists = _screenState.value.formulas
         _screenState.value = _screenState.value.copy(
-            formulas = formulas.copy(
-                (formulas.pins + formula).sortedBy { it.position },
-                    formulas.unpins - formula
+            formulas = oldLists.copy(
+                (oldLists.pins + formula).sortedBy { it.position },
+                oldLists.unpins - formula
             )
         )
     }
 
     private fun unpinFormula(formula: FormulaItem){
-        val formulas = _screenState.value.formulas
+        unpinFormulaUseCase.execute(formula.id)
+
+        val oldLists = _screenState.value.formulas
         _screenState.value = _screenState.value.copy(
-            formulas = formulas.copy(
-                formulas.pins - formula,
-                (formulas.unpins + formula).sortedBy { it.position }
+            formulas = oldLists.copy(
+                oldLists.pins - formula,
+                (oldLists.unpins + formula).sortedBy { it.position }
             )
         )
     }

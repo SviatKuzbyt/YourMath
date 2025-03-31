@@ -23,6 +23,14 @@ class FormulasRepositoryFakeImpl @Inject constructor(): FormulasRepository {
         }
     }
 
+    override fun pinFormula(id: Long) {
+        println("SKLT formula $id is pinned")
+    }
+
+    override fun unpinFormula(id: Long) {
+        println("SKLT formula $id is unpinned")
+    }
+
     private fun mapFormulaToDomain(item: FormulaItemData): FormulaItemWithPinned {
         return FormulaItemWithPinned(item.id, item.name, item.isPinned, item.position)
     }

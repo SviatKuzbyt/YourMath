@@ -1,17 +1,17 @@
 package ua.sviatkuzbyt.yourmath.app.ui.screens.home
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import ua.sviatkuzbyt.yourmath.app.R
+import ua.sviatkuzbyt.yourmath.app.ui.elements.basic.AnimateListItem
 import ua.sviatkuzbyt.yourmath.app.ui.elements.basic.SubTittleText
 import ua.sviatkuzbyt.yourmath.app.ui.elements.home.FieldSearch
 import ua.sviatkuzbyt.yourmath.app.ui.elements.home.FormulaNoPinItemList
@@ -45,11 +45,15 @@ fun MainContent(
                     items = screenState.formulas.pins,
                     key = { formula -> formula.id }
                 ){ formula ->
-                    FormulaPinnedItemList(
-                        text = formula.name,
-                        onClick = {  },
-                        unpinOnClick = { onIntent(MainIntent.UnPinFormula(formula)) }
-                    )
+                    AnimateListItem {
+                        FormulaPinnedItemList(
+                            text = formula.name,
+                            onClick = {  },
+                            unpinOnClick = {
+                                onIntent(MainIntent.UnPinFormula(formula))
+                            }
+                        )
+                    }
                 }
             }
 
@@ -62,11 +66,15 @@ fun MainContent(
                     items = screenState.formulas.unpins,
                     key = { formula -> formula.id }
                 ){ formula ->
-                    FormulaNoPinItemList(
-                        text = formula.name,
-                        onClick = {  },
-                        pinOnClick = { onIntent(MainIntent.PinFormula(formula)) }
-                    )
+                    AnimateListItem {
+                        FormulaNoPinItemList(
+                            text = formula.name,
+                            onClick = {  },
+                            pinOnClick = {
+                                onIntent(MainIntent.PinFormula(formula))
+                            }
+                        )
+                    }
                 }
             }
         }

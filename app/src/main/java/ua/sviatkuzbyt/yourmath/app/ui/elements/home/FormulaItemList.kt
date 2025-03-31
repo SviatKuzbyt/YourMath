@@ -3,6 +3,8 @@ package ua.sviatkuzbyt.yourmath.app.ui.elements.home
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyItemScope
+import androidx.compose.foundation.lazy.grid.LazyGridScopeMarker
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,10 +17,11 @@ import ua.sviatkuzbyt.yourmath.app.ui.theme.AppSizes
 import ua.sviatkuzbyt.yourmath.app.ui.theme.AppTheme
 
 @Composable
+@LazyGridScopeMarker
 private fun FormulaItemList(
     text: String,
     pinButton: @Composable () -> Unit,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ){
     Container {
         Row(
@@ -30,6 +33,7 @@ private fun FormulaItemList(
                     onClick = onClick,
                     role = Role.Button
                 )
+
         ) {
             Text(
                 text = text,
@@ -64,7 +68,7 @@ fun FormulaNoPinItemList(
 fun FormulaPinnedItemList(
     text: String,
     onClick: () -> Unit,
-    unpinOnClick: () -> Unit
+    unpinOnClick: () -> Unit,
 ){
     FormulaItemList(
         text = text,

@@ -48,17 +48,18 @@ class MainViewModel @Inject constructor(
             val formulasLists = getFormulasUseCase.execute()
 
             _screenState.value =
-                if (formulasLists.pins.isNotEmpty() && formulasLists.unpins.isNotEmpty()){
-                    MainState(formulas = formulasLists)
-                } else{
+                if (formulasLists.pins.isEmpty() && formulasLists.unpins.isEmpty()){
                     MainState(contentOnScreen = ContentOnScreen.NoFormulas)
+                } else{
+                    MainState(formulas = formulasLists)
                 }
         } catch (e: Exception){
+
             _screenState.value = _screenState.value.copy(errorMessage = ErrorData())
         }
     }
 
-    private fun pinFormula(formula: FormulaItem){
+    private fun pinFormula(formula: FormulaItem) = viewModelScope.launch(Dispatchers.IO){
         try {
             pinFormulaUseCase.execute(formula.id)
 
@@ -74,7 +75,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun unpinFormula(formula: FormulaItem){
+    private fun unpinFormula(formula: FormulaItem) = viewModelScope.launch(Dispatchers.IO){
         try {
             unpinFormulaUseCase.execute(formula.id)
 

@@ -1,8 +1,8 @@
 package ua.sviatkuzbyt.yourmath.data.structures
 
 data class FormulaItemData(
-    val id: Long,
+    val formulaID: Long,
     val name: String,
-    val isPinned: Boolean,
+    val isPin: Boolean,
     val position: Int
 )

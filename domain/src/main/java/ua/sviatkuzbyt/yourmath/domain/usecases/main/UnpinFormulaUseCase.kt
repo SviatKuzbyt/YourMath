@@ -4,6 +4,6 @@ import ua.sviatkuzbyt.yourmath.domain.repositories.FormulasRepository
 
 class UnpinFormulaUseCase(private val repository: FormulasRepository) {
     fun execute(id: Long) {
-        repository.unpinFormula(id)
+        repository.changePinFormula(id, false)
     }
 }

@@ -31,7 +31,9 @@ private fun FormulaItemList(
                 .padding(start = AppSizes.dp20, end = AppSizes.dp4)
                 .clickable(
                     onClick = onClick,
-                    role = Role.Button
+                    role = Role.Button,
+                    interactionSource = null,
+                    indication = null
                 )
 
         ) {

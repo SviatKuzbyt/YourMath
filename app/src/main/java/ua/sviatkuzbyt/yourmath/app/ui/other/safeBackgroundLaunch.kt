@@ -7,7 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 fun ViewModel.safeBackgroundLaunch(
-    code: () -> Unit,
+    code: suspend () -> Unit,
     errorHandling: (Exception) -> Unit
 ){
     viewModelScope.launch(Dispatchers.IO){

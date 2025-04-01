@@ -2,16 +2,14 @@ package ua.sviatkuzbyt.yourmath.app.ui.screens.home
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import ua.sviatkuzbyt.yourmath.app.ui.intents.MainIntent
 import ua.sviatkuzbyt.yourmath.app.ui.other.ErrorData
 import ua.sviatkuzbyt.yourmath.app.ui.other.safeBackgroundLaunch
+import ua.sviatkuzbyt.yourmath.app.ui.states.MainContent
 import ua.sviatkuzbyt.yourmath.app.ui.states.MainState
 import ua.sviatkuzbyt.yourmath.domain.structures.FormulaItem
-import ua.sviatkuzbyt.yourmath.domain.structures.PinUnpinFormulaItems
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.GetFormulasUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.PinFormulaUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.SearchFormulasUseCase
@@ -46,8 +44,14 @@ class MainViewModel @Inject constructor(
         _screenState.value = _screenState.value.copy(searchText = newText)
         safeBackgroundLaunch(
             code = {
+                val formulas = searchFormulasUseCase.execute(newText)
+                val content = if(formulas.pins.isEmpty() && formulas.unpins.isEmpty()){
+                    MainContent.NoSearchResult
+                } else{
+                    MainContent.Formulas(formulas)
+                }
                 _screenState.value = _screenState.value.copy(
-                    formulas = searchFormulasUseCase.execute(newText)
+                    content = content
                 )
             },
             errorHandling = {
@@ -70,8 +74,7 @@ class MainViewModel @Inject constructor(
                 val formulasLists = getFormulasUseCase.execute()
 
                 _screenState.value = MainState(
-                    formulas = formulasLists,
-                    isLoading = false
+                    content = MainContent.Formulas(formulasLists)
                 )
             },
             errorHandling = {
@@ -83,8 +86,11 @@ class MainViewModel @Inject constructor(
     private fun pinFormula(formula: FormulaItem){
         safeBackgroundLaunch(
             code = {
-                _screenState.value = _screenState.value.copy(
-                    formulas = pinFormulaUseCase.execute(formula, _screenState.value.formulas)
+                val formulas = _screenState.value.content as MainContent.Formulas
+                    _screenState.value = _screenState.value.copy(
+                    content = MainContent.Formulas(
+                        pinFormulaUseCase.execute(formula, formulas.lists)
+                    )
                 )
             },
             errorHandling = {
@@ -96,8 +102,12 @@ class MainViewModel @Inject constructor(
     private fun unpinFormula(formula: FormulaItem){
         safeBackgroundLaunch(
             code = {
+                val formulas = _screenState.value.content as MainContent.Formulas
+
                 _screenState.value = _screenState.value.copy(
-                    formulas = unpinFormulaUseCase.execute(formula, _screenState.value.formulas)
+                    content = MainContent.Formulas(
+                        unpinFormulaUseCase.execute(formula, formulas.lists)
+                    )
                 )
             },
             errorHandling = {

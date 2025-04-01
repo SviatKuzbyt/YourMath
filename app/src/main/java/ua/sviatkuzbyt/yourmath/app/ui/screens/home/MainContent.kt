@@ -1,8 +1,5 @@
 package ua.sviatkuzbyt.yourmath.app.ui.screens.home
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -20,6 +17,7 @@ import ua.sviatkuzbyt.yourmath.app.ui.elements.home.FormulaNoPinItemList
 import ua.sviatkuzbyt.yourmath.app.ui.elements.home.FormulaPinnedItemList
 import ua.sviatkuzbyt.yourmath.app.ui.elements.home.HomeTopBar
 import ua.sviatkuzbyt.yourmath.app.ui.intents.MainIntent
+import ua.sviatkuzbyt.yourmath.app.ui.states.MainContent
 import ua.sviatkuzbyt.yourmath.app.ui.states.MainState
 
 @Composable
@@ -37,79 +35,67 @@ fun MainContent(
             onIntent(MainIntent.ChangeSearchText(newText))
         }
 
-        val showEmptyScreen =
-            !screenState.isLoading &&
-             screenState.formulas.pins.isEmpty() &&
-             screenState.formulas.unpins.isEmpty()
+        when(screenState.content){
+            MainContent.Empty -> {}
+            is MainContent.Formulas -> {
+                LazyColumn(Modifier.fillMaxSize()) {
+                    if (screenState.content.lists.pins.isNotEmpty()) {
+                        item {
+                            SubTittleText(R.string.pinned)
+                        }
 
-        AnimatedVisibility(
-            visible = showEmptyScreen,
-            enter = fadeIn(),
-            exit = fadeOut()
-        ) {
-            if (screenState.searchText.isNotEmpty()) {
-                EmptyScreenInList(
-                    textRes = R.string.no_search_result,
-                    iconRes = R.drawable.ic_no_results
-                )
-            } else {
+                        items(
+                            items = screenState.content.lists.pins,
+                            key = { formula -> formula.id }
+                        ) { formula ->
+                            AnimateListItem {
+                                FormulaPinnedItemList(
+                                    text = formula.name,
+                                    onClick = { },
+                                    unpinOnClick = {
+                                        onIntent(MainIntent.UnPinFormula(formula))
+                                    }
+                                )
+                            }
+                        }
+                    }
+
+                    if (screenState.content.lists.unpins.isNotEmpty()) {
+                        if (screenState.content.lists.pins.isNotEmpty()) {
+                            item {
+                                AnimateListItem {
+                                    SubTittleText(R.string.other)
+                                }
+                            }
+                        }
+                        items(
+                            items = screenState.content.lists.unpins,
+                            key = { formula -> formula.id }
+                        ) { formula ->
+                            AnimateListItem {
+                                FormulaNoPinItemList(
+                                    text = formula.name,
+                                    onClick = { },
+                                    pinOnClick = {
+                                        onIntent(MainIntent.PinFormula(formula))
+                                    }
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+            MainContent.NoFormulas -> {
                 EmptyScreenInList(
                     textRes = R.string.no_formulas,
                     iconRes = R.drawable.ic_no_formulas
                 )
             }
-        }
-
-        AnimatedVisibility(
-            visible = !showEmptyScreen,
-            enter = fadeIn(),
-            exit = fadeOut()
-        ){
-            LazyColumn(Modifier.fillMaxSize()) {
-                if (screenState.formulas.pins.isNotEmpty()) {
-                    item {
-                        SubTittleText(R.string.pinned)
-                    }
-
-                    items(
-                        items = screenState.formulas.pins,
-                        key = { formula -> formula.id }
-                    ) { formula ->
-                        AnimateListItem {
-                            FormulaPinnedItemList(
-                                text = formula.name,
-                                onClick = { },
-                                unpinOnClick = {
-                                    onIntent(MainIntent.UnPinFormula(formula))
-                                }
-                            )
-                        }
-                    }
-                }
-
-                if (screenState.formulas.unpins.isNotEmpty()) {
-                    if (screenState.formulas.pins.isNotEmpty()) {
-                        item {
-                            AnimateListItem {
-                                SubTittleText(R.string.other)
-                            }
-                        }
-                    }
-                    items(
-                        items = screenState.formulas.unpins,
-                        key = { formula -> formula.id }
-                    ) { formula ->
-                        AnimateListItem {
-                            FormulaNoPinItemList(
-                                text = formula.name,
-                                onClick = { },
-                                pinOnClick = {
-                                    onIntent(MainIntent.PinFormula(formula))
-                                }
-                            )
-                        }
-                    }
-                }
+            MainContent.NoSearchResult -> {
+                EmptyScreenInList(
+                    textRes = R.string.no_search_result,
+                    iconRes = R.drawable.ic_no_results
+                )
             }
         }
 

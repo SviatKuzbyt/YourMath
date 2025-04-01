@@ -5,7 +5,13 @@ import ua.sviatkuzbyt.yourmath.domain.structures.PinUnpinFormulaItems
 
 data class MainState(
     val searchText: String = "",
-    val formulas: PinUnpinFormulaItems = PinUnpinFormulaItems(listOf(), listOf()),
-    val isLoading: Boolean = true,
+    val content: MainContent = MainContent.Empty,
     val errorMessage: ErrorData? = null
 )
+
+sealed class MainContent{
+    data class Formulas(val lists: PinUnpinFormulaItems): MainContent()
+    data object NoFormulas: MainContent()
+    data object NoSearchResult: MainContent()
+    data object Empty: MainContent()
+}

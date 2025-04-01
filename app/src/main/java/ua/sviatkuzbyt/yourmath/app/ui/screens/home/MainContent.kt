@@ -60,9 +60,14 @@ fun MainContent(
                     }
 
                     if (screenState.formulas.unpins.isNotEmpty()){
-                        item {
-                            SubTittleText(R.string.other)
+                        if(screenState.formulas.pins.isNotEmpty()){
+                            item {
+                                AnimateListItem {
+                                    SubTittleText(R.string.other)
+                                }
+                            }
                         }
+
 
                         items(
                             items = screenState.formulas.unpins,

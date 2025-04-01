@@ -1,13 +1,9 @@
 package ua.sviatkuzbyt.yourmath.app.ui.screens.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 import ua.sviatkuzbyt.yourmath.app.ui.intents.MainIntent
 import ua.sviatkuzbyt.yourmath.app.ui.other.ErrorData
 import ua.sviatkuzbyt.yourmath.app.ui.other.safeBackgroundLaunch
@@ -38,7 +34,12 @@ class MainViewModel @Inject constructor(
             is MainIntent.PinFormula -> pinFormula(intent.formula)
             is MainIntent.UnPinFormula -> unpinFormula(intent.formula)
             MainIntent.CloseDialog -> clearError()
+            is MainIntent.ChangeSearchText -> changeSearch(intent.newText)
         }
+    }
+
+    private fun changeSearch(newText: String){
+        _screenState.value = _screenState.value.copy(searchText = newText)
     }
 
     private fun clearError(){
@@ -70,14 +71,8 @@ class MainViewModel @Inject constructor(
     private fun pinFormula(formula: FormulaItem){
         safeBackgroundLaunch(
             code = {
-                pinFormulaUseCase.execute(formula.id)
-
-                val oldLists = _screenState.value.formulas
                 _screenState.value = _screenState.value.copy(
-                    formulas = oldLists.copy(
-                        (oldLists.pins + formula).sortedBy { it.position },
-                        oldLists.unpins - formula
-                    )
+                    formulas = pinFormulaUseCase.execute(formula, _screenState.value.formulas)
                 )
             },
             errorHandling = {
@@ -89,14 +84,8 @@ class MainViewModel @Inject constructor(
     private fun unpinFormula(formula: FormulaItem){
         safeBackgroundLaunch(
             code = {
-                unpinFormulaUseCase.execute(formula.id)
-
-                val oldLists = _screenState.value.formulas
                 _screenState.value = _screenState.value.copy(
-                    formulas = oldLists.copy(
-                        oldLists.pins - formula,
-                        (oldLists.unpins + formula).sortedBy { it.position }
-                    )
+                    formulas = unpinFormulaUseCase.execute(formula, _screenState.value.formulas)
                 )
             },
             errorHandling = {

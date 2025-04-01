@@ -31,8 +31,8 @@ fun MainContent(
             editOnClick = {}
         )
 
-        FieldSearch(screenState.searchText){
-            //TODO
+        FieldSearch(screenState.searchText){ newText ->
+            onIntent(MainIntent.ChangeSearchText(newText))
         }
 
         when(screenState.contentOnScreen){

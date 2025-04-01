@@ -21,6 +21,13 @@ class FormulasRepositoryImpl @Inject constructor(
         formulaDao.changePinFormula(id, isPin)
     }
 
+    override fun searchFormulas(searchText: String): List<FormulaItemWithPinned> {
+        return formulaDao.searchFormulas(searchText).map { formula ->
+            mapFormulaToDomain(formula)
+        }
+    }
+
+
     private fun mapFormulaToDomain(item: FormulaItemData): FormulaItemWithPinned {
         return FormulaItemWithPinned(item.formulaID, item.name, item.isPin, item.position)
     }

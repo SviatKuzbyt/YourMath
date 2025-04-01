@@ -4,11 +4,11 @@ import ua.sviatkuzbyt.yourmath.domain.usecases.ConvertToPinUnpinFormulaItemsUseC
 import ua.sviatkuzbyt.yourmath.domain.repositories.FormulasRepository
 import ua.sviatkuzbyt.yourmath.domain.structures.PinUnpinFormulaItems
 
-class GetFormulasUseCase(
+class SearchFormulasUseCase(
     private val repository: FormulasRepository,
     private val convert: ConvertToPinUnpinFormulaItemsUseCase
 ) {
-    fun execute(): PinUnpinFormulaItems {
-        return convert.execute(repository.getFormulas())
+    fun execute(searchText: String): PinUnpinFormulaItems {
+        return convert.execute(repository.searchFormulas("%$searchText%"))
     }
 }

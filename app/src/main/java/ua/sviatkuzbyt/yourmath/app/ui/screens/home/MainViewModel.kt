@@ -2,6 +2,8 @@ package ua.sviatkuzbyt.yourmath.app.ui.screens.home
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import ua.sviatkuzbyt.yourmath.app.ui.intents.MainIntent
@@ -10,8 +12,10 @@ import ua.sviatkuzbyt.yourmath.app.ui.other.safeBackgroundLaunch
 import ua.sviatkuzbyt.yourmath.app.ui.states.ContentOnScreen
 import ua.sviatkuzbyt.yourmath.app.ui.states.MainState
 import ua.sviatkuzbyt.yourmath.domain.structures.FormulaItem
+import ua.sviatkuzbyt.yourmath.domain.structures.PinUnpinFormulaItems
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.GetFormulasUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.PinFormulaUseCase
+import ua.sviatkuzbyt.yourmath.domain.usecases.main.SearchFormulasUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.UnpinFormulaUseCase
 import javax.inject.Inject
 
@@ -20,6 +24,7 @@ class MainViewModel @Inject constructor(
     private val getFormulasUseCase: GetFormulasUseCase,
     private val pinFormulaUseCase: PinFormulaUseCase,
     private val unpinFormulaUseCase: UnpinFormulaUseCase,
+    private val searchFormulasUseCase: SearchFormulasUseCase
 ): ViewModel() {
 
     private val _screenState = MutableStateFlow(MainState())
@@ -40,6 +45,30 @@ class MainViewModel @Inject constructor(
 
     private fun changeSearch(newText: String){
         _screenState.value = _screenState.value.copy(searchText = newText)
+        safeBackgroundLaunch(
+            code = {
+                val searchResult = searchFormulasUseCase.execute(newText)
+
+                if (searchResult.pins.isEmpty() && searchResult.unpins.isEmpty()){
+                    _screenState.value = _screenState.value.copy(
+                        contentOnScreen = ContentOnScreen.NoSearchResult,
+                        formulas = PinUnpinFormulaItems(listOf(), listOf())
+                    )
+                } else{
+                    if (_screenState.value.contentOnScreen == ContentOnScreen.NoSearchResult){
+                        _screenState.value = _screenState.value.copy(
+                            contentOnScreen = ContentOnScreen.Content
+                        )
+                    }
+                }
+                _screenState.value = _screenState.value.copy(
+                    formulas = searchResult
+                )
+            },
+            errorHandling = {
+                setError()
+            }
+        )
     }
 
     private fun clearError(){

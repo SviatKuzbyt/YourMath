@@ -5,4 +5,5 @@ import ua.sviatkuzbyt.yourmath.domain.structures.FormulaItemWithPinned
 interface FormulasRepository {
     fun getFormulas(): List<FormulaItemWithPinned>
     fun changePinFormula(id: Long, isPin: Boolean)
+    fun searchFormulas(searchText: String): List<FormulaItemWithPinned>
 }

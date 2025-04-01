@@ -1,5 +1,8 @@
 package ua.sviatkuzbyt.yourmath.app.ui.screens.home
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -17,7 +20,6 @@ import ua.sviatkuzbyt.yourmath.app.ui.elements.home.FormulaNoPinItemList
 import ua.sviatkuzbyt.yourmath.app.ui.elements.home.FormulaPinnedItemList
 import ua.sviatkuzbyt.yourmath.app.ui.elements.home.HomeTopBar
 import ua.sviatkuzbyt.yourmath.app.ui.intents.MainIntent
-import ua.sviatkuzbyt.yourmath.app.ui.states.ContentOnScreen
 import ua.sviatkuzbyt.yourmath.app.ui.states.MainState
 
 @Composable
@@ -25,85 +27,96 @@ fun MainContent(
     screenState: MainState,
     onIntent: (MainIntent) -> Unit
 ){
-    Column(modifier = Modifier.fillMaxSize().padding()){
+    Column(modifier = Modifier.fillMaxSize().padding()) {
         HomeTopBar(
             historyOnClick = {},
             editOnClick = {}
         )
 
-        FieldSearch(screenState.searchText){ newText ->
+        FieldSearch(screenState.searchText) { newText ->
             onIntent(MainIntent.ChangeSearchText(newText))
         }
 
-        when(screenState.contentOnScreen){
-            ContentOnScreen.Content -> {
-                LazyColumn(Modifier.fillMaxSize()) {
-                    if (screenState.formulas.pins.isNotEmpty()){
-                        item {
-                            SubTittleText(R.string.pinned)
-                        }
+        val showEmptyScreen =
+            !screenState.isLoading &&
+             screenState.formulas.pins.isEmpty() &&
+             screenState.formulas.unpins.isEmpty()
 
-                        items(
-                            items = screenState.formulas.pins,
-                            key = { formula -> formula.id }
-                        ){ formula ->
-                            AnimateListItem {
-                                FormulaPinnedItemList(
-                                    text = formula.name,
-                                    onClick = {  },
-                                    unpinOnClick = {
-                                        onIntent(MainIntent.UnPinFormula(formula))
-                                    }
-                                )
-                            }
-                        }
-                    }
-
-                    if (screenState.formulas.unpins.isNotEmpty()){
-                        if(screenState.formulas.pins.isNotEmpty()){
-                            item {
-                                AnimateListItem {
-                                    SubTittleText(R.string.other)
-                                }
-                            }
-                        }
-
-
-                        items(
-                            items = screenState.formulas.unpins,
-                            key = { formula -> formula.id }
-                        ){ formula ->
-                            AnimateListItem {
-                                FormulaNoPinItemList(
-                                    text = formula.name,
-                                    onClick = {  },
-                                    pinOnClick = {
-                                        onIntent(MainIntent.PinFormula(formula))
-                                    }
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-            ContentOnScreen.NoSearchResult -> {
+        AnimatedVisibility(
+            visible = showEmptyScreen,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            if (screenState.searchText.isNotEmpty()) {
                 EmptyScreenInList(
                     textRes = R.string.no_search_result,
                     iconRes = R.drawable.ic_no_results
                 )
-            }
-            ContentOnScreen.NoFormulas -> {
+            } else {
                 EmptyScreenInList(
                     textRes = R.string.no_formulas,
                     iconRes = R.drawable.ic_no_formulas
                 )
             }
         }
-    }
 
-    if (screenState.errorMessage != null){
-        DialogError(screenState.errorMessage) {
-            onIntent(MainIntent.CloseDialog)
+        AnimatedVisibility(
+            visible = !showEmptyScreen,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ){
+            LazyColumn(Modifier.fillMaxSize()) {
+                if (screenState.formulas.pins.isNotEmpty()) {
+                    item {
+                        SubTittleText(R.string.pinned)
+                    }
+
+                    items(
+                        items = screenState.formulas.pins,
+                        key = { formula -> formula.id }
+                    ) { formula ->
+                        AnimateListItem {
+                            FormulaPinnedItemList(
+                                text = formula.name,
+                                onClick = { },
+                                unpinOnClick = {
+                                    onIntent(MainIntent.UnPinFormula(formula))
+                                }
+                            )
+                        }
+                    }
+                }
+
+                if (screenState.formulas.unpins.isNotEmpty()) {
+                    if (screenState.formulas.pins.isNotEmpty()) {
+                        item {
+                            AnimateListItem {
+                                SubTittleText(R.string.other)
+                            }
+                        }
+                    }
+                    items(
+                        items = screenState.formulas.unpins,
+                        key = { formula -> formula.id }
+                    ) { formula ->
+                        AnimateListItem {
+                            FormulaNoPinItemList(
+                                text = formula.name,
+                                onClick = { },
+                                pinOnClick = {
+                                    onIntent(MainIntent.PinFormula(formula))
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        if (screenState.errorMessage != null) {
+            DialogError(screenState.errorMessage) {
+                onIntent(MainIntent.CloseDialog)
+            }
         }
     }
 }

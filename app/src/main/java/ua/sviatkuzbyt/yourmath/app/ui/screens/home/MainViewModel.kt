@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.StateFlow
 import ua.sviatkuzbyt.yourmath.app.ui.intents.MainIntent
 import ua.sviatkuzbyt.yourmath.app.ui.other.ErrorData
 import ua.sviatkuzbyt.yourmath.app.ui.other.safeBackgroundLaunch
-import ua.sviatkuzbyt.yourmath.app.ui.states.ContentOnScreen
 import ua.sviatkuzbyt.yourmath.app.ui.states.MainState
 import ua.sviatkuzbyt.yourmath.domain.structures.FormulaItem
 import ua.sviatkuzbyt.yourmath.domain.structures.PinUnpinFormulaItems
@@ -47,22 +46,8 @@ class MainViewModel @Inject constructor(
         _screenState.value = _screenState.value.copy(searchText = newText)
         safeBackgroundLaunch(
             code = {
-                val searchResult = searchFormulasUseCase.execute(newText)
-
-                if (searchResult.pins.isEmpty() && searchResult.unpins.isEmpty()){
-                    _screenState.value = _screenState.value.copy(
-                        contentOnScreen = ContentOnScreen.NoSearchResult,
-                        formulas = PinUnpinFormulaItems(listOf(), listOf())
-                    )
-                } else{
-                    if (_screenState.value.contentOnScreen == ContentOnScreen.NoSearchResult){
-                        _screenState.value = _screenState.value.copy(
-                            contentOnScreen = ContentOnScreen.Content
-                        )
-                    }
-                }
                 _screenState.value = _screenState.value.copy(
-                    formulas = searchResult
+                    formulas = searchFormulasUseCase.execute(newText)
                 )
             },
             errorHandling = {
@@ -84,12 +69,10 @@ class MainViewModel @Inject constructor(
             code = {
                 val formulasLists = getFormulasUseCase.execute()
 
-                _screenState.value =
-                    if (formulasLists.pins.isEmpty() && formulasLists.unpins.isEmpty()){
-                        MainState(contentOnScreen = ContentOnScreen.NoFormulas)
-                    } else{
-                        MainState(formulas = formulasLists)
-                    }
+                _screenState.value = MainState(
+                    formulas = formulasLists,
+                    isLoading = false
+                )
             },
             errorHandling = {
                 setError()

@@ -27,7 +27,6 @@ class FormulasRepositoryImpl @Inject constructor(
         }
     }
 
-
     private fun mapFormulaToDomain(item: FormulaItemData): FormulaItemWithPinned {
         return FormulaItemWithPinned(item.formulaID, item.name, item.isPin, item.position)
     }

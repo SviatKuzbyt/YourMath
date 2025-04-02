@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.MainContent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.MainIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.MainState
+import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.ShowOnScreen
 import ua.sviatkuzbyt.yourmath.app.presenter.other.ErrorData
 import ua.sviatkuzbyt.yourmath.app.presenter.other.safeBackgroundLaunch
 import ua.sviatkuzbyt.yourmath.domain.structures.FormulaItem
@@ -36,18 +36,19 @@ class MainViewModel @Inject constructor(
         safeBackgroundLaunch(
             code = {
                 //get all data from DB and set in UI
-                val pinUnpinFormulas = getFormulasUseCase.execute()
+                val formulasFromDB = getFormulasUseCase.execute()
 
-                //set empty screen if no data
-                val content = if (pinUnpinFormulas.isEmpty()){
-                    MainContent.NoFormulas
+                val showOnScreen = if (formulasFromDB.isEmpty()){
+                    ShowOnScreen.NoFormulas
                 } else {
-                    MainContent.Formulas(pinUnpinFormulas)
+                    ShowOnScreen.Formulas
                 }
 
-                //update UI
                 updateMainState { state ->
-                    state.copy(content = content)
+                    state.copy(
+                        showOnScreen = showOnScreen,
+                        formulas = formulasFromDB
+                    )
                 }
             },
             errorHandling = {
@@ -80,17 +81,17 @@ class MainViewModel @Inject constructor(
                 pinFormulaUseCase.execute(formula)
 
                 //move formula up in UI
-                val pinUnpinFormulas = (_screenState.value.content as MainContent.Formulas).lists
-
                 updateMainState{ state ->
+                    val oldFormulas = state.formulas
+
                     state.copy(
-                        content = MainContent.Formulas(
+                        formulas =
                             PinUnpinFormulaItems(
-                                pins = (pinUnpinFormulas.pins + formula).sortedBy { it.position },
-                                unpins = pinUnpinFormulas.unpins - formula
+                                pins = (oldFormulas.pins + formula).sortedBy { it.position },
+                                unpins = oldFormulas.unpins - formula
                             )
                         )
-                    )
+
                 }
             },
             errorHandling = {
@@ -106,16 +107,16 @@ class MainViewModel @Inject constructor(
                 unpinFormulaUseCase.execute(formula)
 
                 //move formula down in UI
-                val pinUnpinFormulas = (_screenState.value.content as MainContent.Formulas).lists
-
                 updateMainState{ state ->
+                    val oldFormulas = state.formulas
+
                     state.copy(
-                        content = MainContent.Formulas(
+                        formulas =
                             PinUnpinFormulaItems(
-                                pins = pinUnpinFormulas.pins - formula,
-                                unpins = (pinUnpinFormulas.unpins + formula).sortedBy { it.position }
+                                pins = oldFormulas.pins - formula,
+                                unpins = (oldFormulas.unpins + formula).sortedBy { it.position }
                             )
-                        )
+
                     )
                 }
             },
@@ -136,18 +137,19 @@ class MainViewModel @Inject constructor(
                 //get formulas by search text from DB
                 val pinUnpinFormulas = searchFormulasUseCase.execute(newText)
 
-                //set empty screen if no search result
-                val content = if(pinUnpinFormulas.isEmpty()){
-                    MainContent.NoSearchResult
+                val showOnScreen = if(pinUnpinFormulas.isEmpty()){
+                    ShowOnScreen.NoSearchResult
                 } else{
-                    MainContent.Formulas(pinUnpinFormulas)
+                    ShowOnScreen.Formulas
                 }
 
-                //update UI if it necessary
-                if (content != _screenState.value.content){
-                    updateMainState { state ->
-                        state.copy(content = content)
-                    }
+                val newState = _screenState.value.copy(
+                    showOnScreen = showOnScreen,
+                    formulas = pinUnpinFormulas
+                )
+
+                if (_screenState.value != newState){
+                    _screenState.value = newState
                 }
             },
             errorHandling = {

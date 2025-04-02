@@ -10,6 +10,7 @@ import ua.sviatkuzbyt.yourmath.app.ui.other.safeBackgroundLaunch
 import ua.sviatkuzbyt.yourmath.app.ui.states.MainContent
 import ua.sviatkuzbyt.yourmath.app.ui.states.MainState
 import ua.sviatkuzbyt.yourmath.domain.structures.FormulaItem
+import ua.sviatkuzbyt.yourmath.domain.structures.PinUnpinFormulaItems
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.GetFormulasUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.PinFormulaUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.SearchFormulasUseCase
@@ -31,28 +32,23 @@ class MainViewModel @Inject constructor(
         loadFormulas()
     }
 
-    fun onIntent(intent: MainIntent){
-        when(intent){
-            is MainIntent.PinFormula -> pinFormula(intent.formula)
-            is MainIntent.UnPinFormula -> unpinFormula(intent.formula)
-            MainIntent.CloseDialog -> clearError()
-            is MainIntent.ChangeSearchText -> changeSearch(intent.newText)
-        }
-    }
-
-    private fun changeSearch(newText: String){
-        _screenState.value = _screenState.value.copy(searchText = newText)
+    private fun loadFormulas(){
         safeBackgroundLaunch(
             code = {
-                val formulas = searchFormulasUseCase.execute(newText)
-                val content = if(formulas.pins.isEmpty() && formulas.unpins.isEmpty()){
-                    MainContent.NoSearchResult
-                } else{
-                    MainContent.Formulas(formulas)
+                //get all data from DB and set in UI
+                val pinUnpinFormulas = getFormulasUseCase.execute()
+
+                //set empty screen if no data
+                val content = if (pinUnpinFormulas.isEmpty()){
+                    MainContent.NoFormulas
+                } else {
+                    MainContent.Formulas(pinUnpinFormulas)
                 }
-                _screenState.value = _screenState.value.copy(
-                    content = content
-                )
+
+                //update UI
+                updateMainState { state ->
+                    state.copy(content = content)
+                }
             },
             errorHandling = {
                 setError()
@@ -60,38 +56,42 @@ class MainViewModel @Inject constructor(
         )
     }
 
-    private fun clearError(){
-        _screenState.value = _screenState.value.copy(errorMessage = null)
+    private inline fun updateMainState(update: (MainState) -> MainState) {
+        _screenState.value = update(_screenState.value)
     }
 
     private fun setError(){
         _screenState.value = _screenState.value.copy(errorMessage = ErrorData())
     }
 
-    private fun loadFormulas(){
-        safeBackgroundLaunch(
-            code = {
-                val formulasLists = getFormulasUseCase.execute()
-
-                _screenState.value = MainState(
-                    content = MainContent.Formulas(formulasLists)
-                )
-            },
-            errorHandling = {
-                setError()
-            }
-        )
+    fun onIntent(intent: MainIntent){
+        when(intent){
+            is MainIntent.PinFormula -> pinFormula(intent.formula)
+            is MainIntent.UnPinFormula -> unpinFormula(intent.formula)
+            is MainIntent.ChangeSearchText -> updateSearchText(intent.newText)
+            MainIntent.CloseDialog -> clearError()
+        }
     }
 
     private fun pinFormula(formula: FormulaItem){
         safeBackgroundLaunch(
             code = {
-                val formulas = _screenState.value.content as MainContent.Formulas
-                    _screenState.value = _screenState.value.copy(
-                    content = MainContent.Formulas(
-                        pinFormulaUseCase.execute(formula, formulas.lists)
+                //update record in DB
+                pinFormulaUseCase.execute(formula)
+
+                //move formula up in UI
+                val pinUnpinFormulas = (_screenState.value.content as MainContent.Formulas).lists
+
+                updateMainState{ state ->
+                    state.copy(
+                        content = MainContent.Formulas(
+                            PinUnpinFormulaItems(
+                                pins = (pinUnpinFormulas.pins + formula).sortedBy { it.position },
+                                unpins = pinUnpinFormulas.unpins - formula
+                            )
+                        )
                     )
-                )
+                }
             },
             errorHandling = {
                 setError()
@@ -102,17 +102,61 @@ class MainViewModel @Inject constructor(
     private fun unpinFormula(formula: FormulaItem){
         safeBackgroundLaunch(
             code = {
-                val formulas = _screenState.value.content as MainContent.Formulas
+                //update record in DB
+                unpinFormulaUseCase.execute(formula)
 
-                _screenState.value = _screenState.value.copy(
-                    content = MainContent.Formulas(
-                        unpinFormulaUseCase.execute(formula, formulas.lists)
+                //move formula down in UI
+                val pinUnpinFormulas = (_screenState.value.content as MainContent.Formulas).lists
+
+                updateMainState{ state ->
+                    state.copy(
+                        content = MainContent.Formulas(
+                            PinUnpinFormulaItems(
+                                pins = pinUnpinFormulas.pins - formula,
+                                unpins = (pinUnpinFormulas.unpins + formula).sortedBy { it.position }
+                            )
+                        )
                     )
-                )
+                }
             },
             errorHandling = {
                 setError()
             }
         )
+    }
+
+    private fun updateSearchText(newText: String){
+        _screenState.value = _screenState.value.copy(searchText = newText)
+        searchFormulas(newText)
+    }
+
+    private fun searchFormulas(newText: String){
+        safeBackgroundLaunch(
+            code = {
+                //get formulas by search text from DB
+                val pinUnpinFormulas = searchFormulasUseCase.execute(newText)
+
+                //set empty screen if no search result
+                val content = if(pinUnpinFormulas.isEmpty()){
+                    MainContent.NoSearchResult
+                } else{
+                    MainContent.Formulas(pinUnpinFormulas)
+                }
+
+                //update UI if it necessary
+                if (content != _screenState.value.content){
+                    updateMainState { state ->
+                        state.copy(content = content)
+                    }
+                }
+            },
+            errorHandling = {
+                setError()
+            }
+        )
+    }
+
+    private fun clearError(){
+        _screenState.value = _screenState.value.copy(errorMessage = null)
     }
 }

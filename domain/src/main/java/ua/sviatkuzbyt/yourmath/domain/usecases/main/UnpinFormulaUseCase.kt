@@ -5,16 +5,7 @@ import ua.sviatkuzbyt.yourmath.domain.structures.FormulaItem
 import ua.sviatkuzbyt.yourmath.domain.structures.PinUnpinFormulaItems
 
 class UnpinFormulaUseCase(private val repository: FormulasRepository) {
-    fun execute(
-        formula: FormulaItem,
-        pinUnpinFormulaItems: PinUnpinFormulaItems
-    ): PinUnpinFormulaItems {
-
+    fun execute(formula: FormulaItem) {
         repository.changePinFormula(formula.id, false)
-
-        return pinUnpinFormulaItems.copy(
-            pins = pinUnpinFormulaItems.pins - formula,
-            unpins = (pinUnpinFormulaItems.unpins + formula).sortedBy { it.position }
-        )
     }
 }

@@ -4,3 +4,14 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data object MainRoute
+
+@Serializable
+data class FormulaRoute(
+    val formulaID: Long
+)
+
+@Serializable
+data object HistoryRoute
+
+@Serializable
+data object EditorRoute

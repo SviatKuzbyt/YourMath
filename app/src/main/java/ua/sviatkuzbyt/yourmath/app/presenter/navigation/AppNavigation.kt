@@ -13,11 +13,14 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import ua.sviatkuzbyt.yourmath.app.presenter.screens.EmptyScreen
 import ua.sviatkuzbyt.yourmath.app.presenter.screens.main.MainScreen
 
 val LocalNavController: ProvidableCompositionLocal<NavController> = staticCompositionLocalOf {
     error("LocalNavController: No installed")
 }
+
+//TODO: make enter and exit transitions
 
 @Composable
 fun AppNavigation(){
@@ -31,10 +34,22 @@ fun AppNavigation(){
         NavHost(
             modifier = modifier,
             navController = navController,
-            startDestination = MainRoute,
+            startDestination = MainRoute
         ){
             composable<MainRoute> {
                 MainScreen()
+            }
+
+            composable<FormulaRoute> {
+                EmptyScreen()
+            }
+
+            composable<HistoryRoute> {
+                EmptyScreen()
+            }
+
+            composable<EditorRoute> {
+                EmptyScreen()
             }
         }
     }

@@ -44,6 +44,7 @@ class MainViewModel @Inject constructor(
                     ShowOnScreen.Formulas
                 }
 
+                //update UI
                 updateMainState { state ->
                     state.copy(
                         showOnScreen = showOnScreen,
@@ -69,7 +70,10 @@ class MainViewModel @Inject constructor(
         when(intent){
             is MainIntent.PinFormula -> pinFormula(intent.formula)
             is MainIntent.UnPinFormula -> unpinFormula(intent.formula)
-            is MainIntent.ChangeSearchText -> updateSearchText(intent.newText)
+            is MainIntent.ChangeSearchText ->{
+                updateSearchText(intent.newText)
+                searchFormulas(intent.newText)
+            }
             MainIntent.CloseDialog -> clearError()
         }
     }
@@ -127,29 +131,35 @@ class MainViewModel @Inject constructor(
     }
 
     private fun updateSearchText(newText: String){
-        _screenState.value = _screenState.value.copy(searchText = newText)
-        searchFormulas(newText)
+        updateMainState{ state ->
+            state.copy(searchText = newText)
+        }
     }
 
     private fun searchFormulas(newText: String){
         safeBackgroundLaunch(
             code = {
-                //get formulas by search text from DB
-                val pinUnpinFormulas = searchFormulasUseCase.execute(newText)
+                //search formulas in DB
+                val searchFormulas = searchFormulasUseCase.execute(newText)
 
-                val showOnScreen = if(pinUnpinFormulas.isEmpty()){
+                //update UI if it necessary
+                val showOnScreen = if (searchFormulas.isEmpty()) {
                     ShowOnScreen.NoSearchResult
-                } else{
+                } else {
                     ShowOnScreen.Formulas
                 }
 
-                val newState = _screenState.value.copy(
-                    showOnScreen = showOnScreen,
-                    formulas = pinUnpinFormulas
-                )
-
-                if (_screenState.value != newState){
-                    _screenState.value = newState
+                if (
+                    _screenState.value.showOnScreen != showOnScreen ||
+                    _screenState.value.formulas != searchFormulas
+                    )
+                {
+                    updateMainState{ state ->
+                        state.copy(
+                            showOnScreen = showOnScreen,
+                            formulas = searchFormulas
+                        )
+                    }
                 }
             },
             errorHandling = {

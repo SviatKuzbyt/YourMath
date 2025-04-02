@@ -17,7 +17,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppTheme
 
 @Composable
-private fun ButtonIcon(
+private fun ButtonIconBasic(
     @DrawableRes imageRes: Int,
     contentDescription: String,
     color: Color,
@@ -25,11 +25,15 @@ private fun ButtonIcon(
     onClick: () -> Unit
 ){
     Icon(
+        //Button appearance
         imageVector = ImageVector.vectorResource(imageRes),
         contentDescription = contentDescription,
         tint = color,
+
         modifier = modifier
             .size(AppSizes.dp48)
+
+            //Button click
             .clickable(
                 onClick = onClick,
                 role = Role.Button,
@@ -43,13 +47,13 @@ private fun ButtonIcon(
 }
 
 @Composable
-fun ButtonTopBar(
+fun ButtonIconTopBar(
     @DrawableRes imageRes: Int,
     @StringRes contentDescriptionRes: Int,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ){
-    ButtonIcon(
+    ButtonIconBasic(
         imageRes = imageRes,
         contentDescription = stringResource(contentDescriptionRes),
         color = AppTheme.colors.textPrimary,
@@ -59,13 +63,13 @@ fun ButtonTopBar(
 }
 
 @Composable
-fun ButtonContainer(
+fun ButtonIconContainer(
     @DrawableRes imageRes: Int,
     @StringRes contentDescriptionRes: Int,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ){
-    ButtonIcon(
+    ButtonIconBasic(
         imageRes = imageRes,
         contentDescription = stringResource(contentDescriptionRes),
         color = AppTheme.colors.primary,

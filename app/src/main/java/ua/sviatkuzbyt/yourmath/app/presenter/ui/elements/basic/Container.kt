@@ -24,7 +24,6 @@ fun Container(
                 color = AppTheme.colors.container,
                 shape = AppShapes.main
             )
-
     ){
         content()
     }

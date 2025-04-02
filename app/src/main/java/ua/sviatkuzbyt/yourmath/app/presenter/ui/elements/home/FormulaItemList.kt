@@ -9,7 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import ua.sviatkuzbyt.yourmath.app.R
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ButtonContainer
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ButtonIconContainer
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.Container
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppTheme
@@ -53,7 +53,7 @@ fun FormulaNoPinItemList(
         text = text,
         onClick = onClick,
         pinButton = {
-            ButtonContainer(
+            ButtonIconContainer(
                 imageRes = R.drawable.btn_no_pin,
                 contentDescriptionRes = R.string.to_pin,
                 onClick = pinOnClick
@@ -72,7 +72,7 @@ fun FormulaPinnedItemList(
         text = text,
         onClick = onClick,
         pinButton = {
-            ButtonContainer(
+            ButtonIconContainer(
                 imageRes = R.drawable.btn_pinned,
                 contentDescriptionRes = R.string.to_unpin,
                 onClick = unpinOnClick

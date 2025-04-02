@@ -5,7 +5,6 @@ import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
-
 @Composable
 fun LazyItemScope.AnimateListItem(
     modifier: Modifier = Modifier,

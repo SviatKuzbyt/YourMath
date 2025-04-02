@@ -5,8 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import dagger.hilt.android.AndroidEntryPoint
-import ua.sviatkuzbyt.yourmath.app.ui.navigation.AppNavigation
-import ua.sviatkuzbyt.yourmath.app.ui.theme.YourMathTheme
+import ua.sviatkuzbyt.yourmath.app.presenter.navigation.AppNavigation
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.YourMathTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {

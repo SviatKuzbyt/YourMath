@@ -1,4 +1,4 @@
-package ua.sviatkuzbyt.yourmath.data.structures
+package ua.sviatkuzbyt.yourmath.data.structures.main
 
 data class FormulaItemData(
     val formulaID: Long,

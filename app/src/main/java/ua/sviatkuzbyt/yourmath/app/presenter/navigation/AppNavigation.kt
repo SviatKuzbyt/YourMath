@@ -14,12 +14,14 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import ua.sviatkuzbyt.yourmath.app.presenter.screens.EmptyScreen
 import ua.sviatkuzbyt.yourmath.app.presenter.screens.formula.FormulaScreen
+import ua.sviatkuzbyt.yourmath.app.presenter.screens.formula.FormulaViewModel
 import ua.sviatkuzbyt.yourmath.app.presenter.screens.main.MainScreen
 
 val LocalNavController: ProvidableCompositionLocal<NavController> = staticCompositionLocalOf {
@@ -77,7 +79,8 @@ fun AppNavigation(){
             }
 
             composable<FormulaRoute> {
-                FormulaScreen()
+                val viewModel: FormulaViewModel = hiltViewModel()
+                FormulaScreen(viewModel)
             }
 
             composable<HistoryRoute> {

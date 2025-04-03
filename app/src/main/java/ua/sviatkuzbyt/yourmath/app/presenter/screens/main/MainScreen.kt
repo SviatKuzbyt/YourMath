@@ -25,7 +25,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.home.FieldSearch
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.home.FormulaNoPinItemList
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.home.FormulaPinnedItemList
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.home.HomeTopBar
-import ua.sviatkuzbyt.yourmath.domain.structures.PinUnpinFormulaItems
+import ua.sviatkuzbyt.yourmath.domain.structures.main.PinUnpinFormulaItems
 
 @Composable
 fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {

@@ -9,8 +9,8 @@ import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.MainState
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.ShowOnScreen
 import ua.sviatkuzbyt.yourmath.app.presenter.other.ErrorData
 import ua.sviatkuzbyt.yourmath.app.presenter.other.safeBackgroundLaunch
-import ua.sviatkuzbyt.yourmath.domain.structures.FormulaItem
-import ua.sviatkuzbyt.yourmath.domain.structures.PinUnpinFormulaItems
+import ua.sviatkuzbyt.yourmath.domain.structures.main.FormulaItem
+import ua.sviatkuzbyt.yourmath.domain.structures.main.PinUnpinFormulaItems
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.GetFormulasUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.PinFormulaUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.SearchFormulasUseCase

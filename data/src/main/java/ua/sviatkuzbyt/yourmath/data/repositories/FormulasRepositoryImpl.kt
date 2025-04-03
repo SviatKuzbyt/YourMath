@@ -1,9 +1,13 @@
 package ua.sviatkuzbyt.yourmath.data.repositories
 
 import ua.sviatkuzbyt.yourmath.data.database.FormulaDao
-import ua.sviatkuzbyt.yourmath.data.structures.FormulaItemData
+import ua.sviatkuzbyt.yourmath.data.structures.formula.FormulaInfoData
+import ua.sviatkuzbyt.yourmath.data.structures.formula.InputDataFormulaData
+import ua.sviatkuzbyt.yourmath.data.structures.main.FormulaItemData
 import ua.sviatkuzbyt.yourmath.domain.repositories.FormulasRepository
-import ua.sviatkuzbyt.yourmath.domain.structures.FormulaItemWithPinned
+import ua.sviatkuzbyt.yourmath.domain.structures.formula.FormulaInfo
+import ua.sviatkuzbyt.yourmath.domain.structures.formula.InputDataFormula
+import ua.sviatkuzbyt.yourmath.domain.structures.main.FormulaItemWithPinned
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -13,7 +17,7 @@ class FormulasRepositoryImpl @Inject constructor(
 ): FormulasRepository {
     override fun getFormulas(): List<FormulaItemWithPinned> {
         return formulaDao.getFormulas().map { formulaFromDB ->
-            mapFormulaToDomain(formulaFromDB)
+            mapFormulaItemToDomain(formulaFromDB)
         }
     }
 
@@ -23,11 +27,29 @@ class FormulasRepositoryImpl @Inject constructor(
 
     override fun searchFormulas(searchText: String): List<FormulaItemWithPinned> {
         return formulaDao.searchFormulas(searchText).map { formula ->
-            mapFormulaToDomain(formula)
+            mapFormulaItemToDomain(formula)
         }
     }
 
-    private fun mapFormulaToDomain(item: FormulaItemData): FormulaItemWithPinned {
+    override fun getFormulaInfo(formulaID: Long): FormulaInfo {
+        return mapFormulaInfoToDomain(formulaDao.getFormulaInfo(formulaID))
+    }
+
+    override fun getInputDataFormula(formulaID: Long): List<InputDataFormula> {
+        return formulaDao.getFormulaInputData(formulaID).map{ inputData ->
+            mapInputDataFormulaToDomain(inputData)
+        }
+    }
+
+    private fun mapFormulaItemToDomain(item: FormulaItemData): FormulaItemWithPinned {
         return FormulaItemWithPinned(item.formulaID, item.name, item.isPin, item.position)
+    }
+
+    private fun mapFormulaInfoToDomain(info: FormulaInfoData): FormulaInfo {
+        return FormulaInfo(info.name, info.description)
+    }
+
+    private fun mapInputDataFormulaToDomain(data: InputDataFormulaData): InputDataFormula {
+        return InputDataFormula(data.inputDataID, data.label, data.defaultData, "")
     }
 }

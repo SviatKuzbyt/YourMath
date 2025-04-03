@@ -1,8 +1,8 @@
 package ua.sviatkuzbyt.yourmath.domain.usecases
 
-import ua.sviatkuzbyt.yourmath.domain.structures.FormulaItem
-import ua.sviatkuzbyt.yourmath.domain.structures.FormulaItemWithPinned
-import ua.sviatkuzbyt.yourmath.domain.structures.PinUnpinFormulaItems
+import ua.sviatkuzbyt.yourmath.domain.structures.main.FormulaItem
+import ua.sviatkuzbyt.yourmath.domain.structures.main.FormulaItemWithPinned
+import ua.sviatkuzbyt.yourmath.domain.structures.main.PinUnpinFormulaItems
 
 class ConvertToPinUnpinFormulaItemsUseCase {
     fun execute(formulas: List<FormulaItemWithPinned>): PinUnpinFormulaItems {

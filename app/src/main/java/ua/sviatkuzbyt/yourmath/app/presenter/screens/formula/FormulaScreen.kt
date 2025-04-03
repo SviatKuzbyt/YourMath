@@ -16,6 +16,9 @@ import androidx.compose.ui.platform.LocalFocusManager
 import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.formula.FormulaIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.formula.FormulaState
+import ua.sviatkuzbyt.yourmath.app.presenter.navigation.LocalNavController
+import ua.sviatkuzbyt.yourmath.app.presenter.navigation.NavigateIntent
+import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.formula.InputDataContainer
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ScreenTopBar
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.SubTittleText
@@ -25,13 +28,19 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppTheme
 @Composable
 fun FormulaScreen(viewModel: FormulaViewModel) {
     val screenState by viewModel.screenState.collectAsState()
-    FormulaContent(screenState, viewModel::onIntent)
+    val navController = LocalNavController.current
+
+    FormulaContent(
+        screenState = screenState,
+        screenIntent = viewModel::onIntent,
+        onNavigate = { onNavigateIntent(navController, it) })
 }
 
 @Composable
 fun FormulaContent(
     screenState: FormulaState,
-    screenIntent: (FormulaIntent) -> Unit
+    screenIntent: (FormulaIntent) -> Unit,
+    onNavigate: (NavigateIntent) -> Unit
 ){
     val listState = rememberLazyListState()
     val focusManager = LocalFocusManager.current
@@ -40,7 +49,7 @@ fun FormulaContent(
         ScreenTopBar(
             tittle = screenState.content.info.label,
             listState = listState,
-            onBack = {}
+            onBack = { onNavigate(NavigateIntent.NavigateUp) }
         )
 
         LazyColumn(

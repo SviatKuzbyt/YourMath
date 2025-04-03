@@ -121,7 +121,9 @@ private fun FormulasList(
                 AnimateListItem {
                     FormulaNoPinItemList(
                         text = formula.name,
-                        onClick = {},
+                        onClick = {
+                            onNavigate(NavigateIntent.OpenFormulaScreen(formulaID = formula.id))
+                        },
                         pinOnClick = {
                             onIntent(MainIntent.PinFormula(formula))
                         }

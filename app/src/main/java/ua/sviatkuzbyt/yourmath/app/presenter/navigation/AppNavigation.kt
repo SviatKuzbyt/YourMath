@@ -1,5 +1,10 @@
 package ua.sviatkuzbyt.yourmath.app.presenter.navigation
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBars
@@ -20,7 +25,33 @@ val LocalNavController: ProvidableCompositionLocal<NavController> = staticCompos
     error("LocalNavController: No installed")
 }
 
-//TODO: make enter and exit transitions
+private val enterTransition = scaleIn(
+    initialScale = 0.7f,
+    animationSpec = tween(300)
+) + fadeIn(
+    animationSpec = tween(250, 50)
+)
+
+private val popEnterTransition = scaleIn(
+    initialScale = 1.3f,
+    animationSpec = tween(300)
+) + fadeIn(
+    animationSpec = tween(250, 50)
+)
+
+private val exitTransition = scaleOut(
+    targetScale = 1.3f,
+    animationSpec = tween(300)
+) + fadeOut(
+    animationSpec = tween(250, 50)
+)
+
+private val popExitTransition = scaleOut(
+    targetScale = 0.7f,
+    animationSpec = tween(300)
+) + fadeOut(
+    animationSpec = tween(250, 50)
+)
 
 @Composable
 fun AppNavigation(){
@@ -34,7 +65,11 @@ fun AppNavigation(){
         NavHost(
             modifier = modifier,
             navController = navController,
-            startDestination = MainRoute
+            startDestination = MainRoute,
+            enterTransition = { enterTransition },
+            popEnterTransition = { popEnterTransition },
+            exitTransition = { exitTransition },
+            popExitTransition = { popExitTransition }
         ){
             composable<MainRoute> {
                 MainScreen()

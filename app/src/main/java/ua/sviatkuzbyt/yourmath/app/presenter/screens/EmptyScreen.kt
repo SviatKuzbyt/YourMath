@@ -18,6 +18,7 @@ import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppTheme
 
+//Remove in PROD
 @Composable
 fun EmptyScreen(){
     Column(

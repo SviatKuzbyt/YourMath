@@ -14,4 +14,6 @@
     <string name="unknown_error_detail">An unexpected error has occurred. We\'re sorry for the inconvenience. We are already working on it.</string>
     <string name="ok">OK</string>
     <string name="back">Go to previous page</string>
+    <string name="input_data">Input data</string>
+    <string name="enter_data">Enter the data</string>
 </resources>

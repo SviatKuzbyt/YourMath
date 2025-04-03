@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
@@ -13,10 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.formula.FormulaIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.formula.FormulaState
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.InputDataContainer
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.formula.InputDataContainer
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ScreenTopBar
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.SubTittleText
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
@@ -34,6 +34,7 @@ fun FormulaContent(
     screenIntent: (FormulaIntent) -> Unit
 ){
     val listState = rememberLazyListState()
+    val focusManager = LocalFocusManager.current
 
     Column(modifier = Modifier.fillMaxSize()) {
         ScreenTopBar(
@@ -87,7 +88,9 @@ fun FormulaContent(
                     label = inputData.label,
                     data = inputData.data,
                     hint = inputData.defaultData,
-                    onDataChange = { screenIntent(FormulaIntent.ChangeInputData(position, it)) }
+                    onDataChange = { screenIntent(FormulaIntent.ChangeInputData(position, it)) },
+                    isDoneButton = screenState.content.inputData.lastIndex == position,
+                    focusManager = focusManager
                 )
             }
         }

@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppShapes
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
@@ -73,8 +74,9 @@ fun FieldSearch(
             .padding(bottom = AppSizes.dp16)
             .height(AppSizes.dp52),
 
-        keyboardOptions = KeyboardOptions.Default.copy(
-            imeAction = ImeAction.Search
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Search,
+            capitalization = KeyboardCapitalization.Sentences,
         )
     )
 }

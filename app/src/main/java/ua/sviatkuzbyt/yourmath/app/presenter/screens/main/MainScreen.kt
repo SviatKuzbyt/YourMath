@@ -3,6 +3,7 @@ package ua.sviatkuzbyt.yourmath.app.presenter.screens.main
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
@@ -25,6 +26,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.home.FieldSearch
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.home.FormulaNoPinItemList
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.home.FormulaPinnedItemList
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.home.HomeTopBar
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
 import ua.sviatkuzbyt.yourmath.domain.structures.main.PinUnpinFormulaItems
 
 @Composable
@@ -96,7 +98,8 @@ private fun FormulasList(
     LazyColumn(Modifier.fillMaxSize()) {
         //Pinned formulas
         if (lists.pins.isNotEmpty()) {
-            item { SubTittleText(R.string.pinned) }
+            item {
+                SubTittleText(R.string.pinned) }
             items(lists.pins, key = { it.id }) { formula ->
                 AnimateListItem {
                     FormulaPinnedItemList(

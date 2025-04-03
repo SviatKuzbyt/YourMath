@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import ua.sviatkuzbyt.yourmath.app.presenter.controllers.formula.FormulaIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.formula.FormulaState
 import ua.sviatkuzbyt.yourmath.app.presenter.other.ErrorData
 import ua.sviatkuzbyt.yourmath.app.presenter.other.safeBackgroundLaunch
@@ -24,15 +25,37 @@ class FormulaViewModel @Inject constructor (
         loadFormulaData()
     }
 
+    fun onIntent(intent: FormulaIntent){
+        when(intent){
+            is FormulaIntent.ChangeInputData -> changeInputData(intent.position, intent.newData)
+        }
+    }
+
     private fun loadFormulaData(){
         safeBackgroundLaunch(
             code = {
-                _screenState.value = FormulaState(
-                    content = getFormulaUseCase.execute(formulaID)
-                )
+                updateFormulaState{
+                    FormulaState(content = getFormulaUseCase.execute(formulaID))
+                }
             },
-            errorHandling = {setError()}
+            errorHandling = { setError() }
         )
+    }
+
+    private fun changeInputData(position: Int, newText: String) {
+        try {
+            updateFormulaState { state ->
+                state.copy(
+                    content = state.content.copy(
+                        inputData = state.content.inputData.mapIndexed { index, item ->
+                            if (index == position) item.copy(data = newText) else item
+                        }
+                    )
+                )
+            }
+        } catch (e: Exception){
+            setError()
+        }
     }
 
     private fun setError(){
@@ -42,4 +65,9 @@ class FormulaViewModel @Inject constructor (
     private fun clearError(){
         _screenState.value = _screenState.value.copy(errorMessage = null)
     }
+
+    private inline fun updateFormulaState(update: (FormulaState) -> FormulaState) {
+        _screenState.value = update(_screenState.value)
+    }
+
 }

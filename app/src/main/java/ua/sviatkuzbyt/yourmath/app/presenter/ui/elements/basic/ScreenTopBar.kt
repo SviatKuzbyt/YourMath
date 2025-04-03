@@ -38,7 +38,7 @@ fun ScreenTopBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(start = AppSizes.dp4, end = AppSizes.dp16, bottom = AppSizes.dp8),
+            .padding(start = AppSizes.dp4, end = AppSizes.dp16),
         verticalAlignment = Alignment.CenterVertically
     ) {
         ButtonIconTopBar(

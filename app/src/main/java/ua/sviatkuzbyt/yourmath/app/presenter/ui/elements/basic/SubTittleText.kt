@@ -18,8 +18,8 @@ fun SubTittleText(
         text = text,
         style = AppTheme.types.bold,
         modifier = modifier
-            .padding(horizontal = AppSizes.dp16)
             .padding(bottom = AppSizes.dp8)
+            .padding(horizontal = AppSizes.dp16)
     )
 }
 

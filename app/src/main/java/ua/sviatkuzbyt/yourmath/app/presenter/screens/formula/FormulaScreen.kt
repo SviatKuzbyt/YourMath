@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -20,6 +19,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.controllers.formula.FormulaState
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.LocalNavController
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.NavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ButtonTextPrimary
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.formula.InputDataContainer
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ScreenTopBar
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.SubTittleText
@@ -55,8 +55,7 @@ fun FormulaContent(
 
         LazyColumn(
             state = listState,
-            modifier = Modifier
-                .fillMaxSize()
+            modifier = Modifier.weight(1f)
         ) {
             item {
                 Text(
@@ -104,5 +103,10 @@ fun FormulaContent(
                 )
             }
         }
+
+        ButtonTextPrimary(
+            textRes = R.string.math,
+            onClick = { screenIntent(FormulaIntent.MathFormula) }
+        )
     }
 }

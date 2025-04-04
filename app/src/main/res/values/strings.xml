@@ -16,4 +16,5 @@
     <string name="back">Go to previous page</string>
     <string name="input_data">Input data</string>
     <string name="enter_data">Enter the data</string>
+    <string name="math">Math</string>
 </resources>

@@ -17,4 +17,6 @@
     <string name="input_data">Input data</string>
     <string name="enter_data">Enter the data</string>
     <string name="math">Math</string>
+    <string name="result">Result</string>
+    <string name="no_found">No found</string>
 </resources>

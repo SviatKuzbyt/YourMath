@@ -1,10 +1,12 @@
 package ua.sviatkuzbyt.yourmath.app.presenter.screens.formula
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
@@ -13,6 +15,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.formula.FormulaIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.formula.FormulaState
@@ -23,6 +26,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ButtonTextPrimary
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.formula.InputDataContainer
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ScreenTopBar
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.SubTittleText
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.formula.ResultDataContainer
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppTheme
 
@@ -101,6 +105,16 @@ fun FormulaContent(
                     isDoneButton = screenState.content.inputData.lastIndex == position,
                     focusManager = focusManager
                 )
+            }
+
+            if (screenState.content.resultData.isNotEmpty()){
+                item {
+                    SubTittleText(R.string.result)
+                }
+
+                items(screenState.content.resultData) { result ->
+                    ResultDataContainer(result.label, result.data ?: stringResource(R.string.no_found))
+                }
             }
         }
 

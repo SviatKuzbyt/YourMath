@@ -5,6 +5,7 @@ import com.chaquo.python.Python
 import com.chaquo.python.android.AndroidPlatform
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.json.JSONObject
+import ua.sviatkuzbyt.yourmath.data.NoAllDataEnterException
 import ua.sviatkuzbyt.yourmath.domain.repositories.PythonRepository
 import ua.sviatkuzbyt.yourmath.domain.structures.formula.InputDataFormula
 import ua.sviatkuzbyt.yourmath.domain.structures.formula.ResultDataFormula
@@ -20,7 +21,7 @@ class PythonRepositoryImpl @Inject constructor(
             val value = when {
                 item.data.isNotEmpty() -> item.data
                 item.defaultData != null -> item.defaultData
-                else -> throw Exception("No all data") //TODO change it
+                else -> throw NoAllDataEnterException()
             }
 
             jsonObject.put(item.codeLabel, value)

@@ -64,11 +64,18 @@ class FormulaViewModel @Inject constructor (
     private fun mathFormula(){
         safeBackgroundLaunch(
             code = {
-                val result = mathFormulaUseCase.execute(formulaID, _screenState.value.content.inputData)
-                println("SKLT $result")
+                val mathResult = mathFormulaUseCase.execute(
+                    formulaID = formulaID,
+                    inputData = _screenState.value.content.inputData
+                )
+                updateFormulaState { state ->
+                    state.copy(content = state.content.copy(
+                        resultData = mathResult
+                    ))
+                }
             },
             errorHandling = {
-                println("SKLT ERROR $it")
+                setError()
             }
         )
     }

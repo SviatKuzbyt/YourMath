@@ -10,5 +10,6 @@ data class FormulaState(
         inputData = listOf(),
         resultData = listOf()
     ),
+    val isLoading: Boolean = false,
     val errorMessage: ErrorData? = null,
 )

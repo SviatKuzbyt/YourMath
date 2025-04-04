@@ -19,7 +19,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppTheme
 
 @Composable
-fun ButtonTextPrimary(
+fun ButtonLarge(
     @StringRes textRes: Int,
     onClick: () -> Unit
 ){

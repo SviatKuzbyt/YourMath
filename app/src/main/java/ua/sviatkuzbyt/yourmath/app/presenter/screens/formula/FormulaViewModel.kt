@@ -80,6 +80,7 @@ class FormulaViewModel @Inject constructor (
     private fun mathFormula(){
         safeBackgroundLaunch(
             code = {
+                updateLoading(true)
                 val mathResult = mathFormulaUseCase.execute(
                     formulaID = formulaID,
                     inputData = _screenState.value.content.inputData
@@ -89,6 +90,7 @@ class FormulaViewModel @Inject constructor (
                         resultData = mathResult
                     ))
                 }
+                updateLoading(false)
             },
             errorHandling = {
                 setError(it)
@@ -102,6 +104,7 @@ class FormulaViewModel @Inject constructor (
             is MathException -> ErrorData(R.string.math_error, R.string.math_error_description, exception.message)
             else -> ErrorData()
         }
+        updateLoading(false)
         _screenState.value = _screenState.value.copy(errorMessage = errorData)
     }
 
@@ -111,6 +114,14 @@ class FormulaViewModel @Inject constructor (
 
     private inline fun updateFormulaState(update: (FormulaState) -> FormulaState) {
         _screenState.value = update(_screenState.value)
+    }
+
+    private fun updateLoading(isLoading: Boolean){
+        if (isLoading != _screenState.value.isLoading){
+            updateFormulaState { state ->
+                state.copy(isLoading = isLoading)
+            }
+        }
     }
 
 }

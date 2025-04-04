@@ -26,4 +26,5 @@
     <string name="copied_formula">Copied formula</string>
     <string name="copied">Copied to clipboard</string>
     <string name="formula">Formula</string>
+    <string name="load">Loading</string>
 </resources>

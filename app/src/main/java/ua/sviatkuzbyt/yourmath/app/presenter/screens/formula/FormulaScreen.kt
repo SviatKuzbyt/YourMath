@@ -1,8 +1,6 @@
 package ua.sviatkuzbyt.yourmath.app.presenter.screens.formula
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,13 +19,13 @@ import androidx.compose.ui.res.stringResource
 import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.formula.FormulaIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.formula.FormulaState
-import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.MainIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.LocalNavController
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.NavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.AnimateListItem
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ButtonIconTopBar
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ButtonTextPrimary
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ButtonLarge
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ButtonLargeLoad
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.formula.InputDataContainer
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ScreenTopBar
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.SubTittleText
@@ -142,10 +140,16 @@ fun FormulaContent(
 
         }
 
-        ButtonTextPrimary(
-            textRes = R.string.math,
-            onClick = { onIntent(FormulaIntent.MathFormula) }
-        )
+        Crossfade(screenState.isLoading){
+            if (it){
+                ButtonLargeLoad()
+            } else {
+                ButtonLarge(
+                    textRes = R.string.math,
+                    onClick = { onIntent(FormulaIntent.MathFormula) }
+                )
+            }
+        }
     }
 
     screenState.errorMessage?.let { error ->

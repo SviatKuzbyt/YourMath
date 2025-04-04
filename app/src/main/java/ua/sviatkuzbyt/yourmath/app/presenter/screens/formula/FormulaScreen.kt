@@ -26,6 +26,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.navigation.LocalNavController
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.NavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.AnimateListItem
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ButtonIconTopBar
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ButtonTextPrimary
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.formula.InputDataContainer
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ScreenTopBar
@@ -59,7 +60,16 @@ fun FormulaContent(
         ScreenTopBar(
             tittle = screenState.content.info.label,
             listState = listState,
-            onBack = { onNavigate(NavigateIntent.NavigateUp) }
+            onBack = { onNavigate(NavigateIntent.NavigateUp) },
+            toolButtons = {
+                ButtonIconTopBar(
+                    imageRes = R.drawable.btn_copy,
+                    contentDescriptionRes = R.string.copy,
+                    onClick = {
+                        onIntent(FormulaIntent.CopyToClipboard)
+                    }
+                )
+            }
         )
 
         LazyColumn(
@@ -112,7 +122,7 @@ fun FormulaContent(
                 )
             }
 
-            
+            //TODO add loader
 
             if(screenState.content.resultData.isNotEmpty()){
                 item {

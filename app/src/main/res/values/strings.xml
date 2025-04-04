@@ -22,4 +22,8 @@
     <string name="no_all_data">Not all required data was entered</string>
     <string name="math_error">Calculation error</string>
     <string name="math_error_description">An unexpected error occurred while executing the calculation code</string>
+    <string name="copy">Copy to clipboard</string>
+    <string name="copied_formula">Copied formula</string>
+    <string name="copied">Copied to clipboard</string>
+    <string name="formula">Formula</string>
 </resources>

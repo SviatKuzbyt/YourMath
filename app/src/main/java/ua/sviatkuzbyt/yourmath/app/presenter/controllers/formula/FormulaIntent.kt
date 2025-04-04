@@ -4,4 +4,5 @@ sealed class FormulaIntent {
     data class ChangeInputData(val position: Int, val newData: String): FormulaIntent()
     data object MathFormula: FormulaIntent()
     data object CloseDialog: FormulaIntent()
+    data object CopyToClipboard: FormulaIntent()
 }

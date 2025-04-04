@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.formula.FormulaIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.formula.FormulaState
+import ua.sviatkuzbyt.yourmath.app.presenter.other.CopyToClipboardFormulaManager
 import ua.sviatkuzbyt.yourmath.app.presenter.other.ErrorData
 import ua.sviatkuzbyt.yourmath.app.presenter.other.safeBackgroundLaunch
 import ua.sviatkuzbyt.yourmath.data.MathException
@@ -20,6 +21,7 @@ import javax.inject.Inject
 class FormulaViewModel @Inject constructor (
     private val getFormulaUseCase: GetFormulaUseCase,
     private val mathFormulaUseCase: MathFormulaUseCase,
+    private val copyManager: CopyToClipboardFormulaManager,
     sentData: SavedStateHandle
 ): ViewModel(){
     private val formulaID: Long = sentData["formulaID"] ?: 0
@@ -35,6 +37,7 @@ class FormulaViewModel @Inject constructor (
             is FormulaIntent.ChangeInputData -> changeInputData(intent.position, intent.newData)
             FormulaIntent.MathFormula -> mathFormula()
             FormulaIntent.CloseDialog -> clearError()
+            FormulaIntent.CopyToClipboard -> copyData()
         }
     }
 
@@ -60,6 +63,15 @@ class FormulaViewModel @Inject constructor (
                     )
                 )
             }
+        } catch (e: Exception){
+            setError(e)
+        }
+    }
+
+    private fun copyData() {
+        try {
+            copyManager.copy(screenState.value.content)
+            copyManager.showToast()
         } catch (e: Exception){
             setError(e)
         }

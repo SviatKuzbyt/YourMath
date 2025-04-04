@@ -21,6 +21,8 @@ hilt = "2.51.1"
 hiltAndroid = "2.51.1"
 hiltAndroidCompiler = "2.51.1"
 hiltNavigationCompose = "1.2.0"
+#python
+chaquopy = "16.0.0"
 
 [libraries]
 #core, compose and tests
@@ -60,3 +62,5 @@ kotlin-serialization = { id="org.jetbrains.kotlin.plugin.serialization", version
 #hilt
 kotlin-kapt = {id = "kotlin-kapt"}
 dagger-hilt = {id = "com.google.dagger.hilt.android", version.ref = "hilt"}
+#python
+chaquo-python = {id = "com.chaquo.python", version.ref = "chaquopy"}

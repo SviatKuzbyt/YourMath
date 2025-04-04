@@ -6,6 +6,8 @@ plugins {
     //hilt
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.dagger.hilt)
+    //python
+    alias(libs.plugins.chaquo.python)
 }
 
 android {
@@ -17,6 +19,10 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+
+        ndk {
+            abiFilters += listOf("arm64-v8a", "x86_64")
+        }
     }
 
     buildTypes {

@@ -10,11 +10,13 @@ import ua.sviatkuzbyt.yourmath.app.presenter.controllers.formula.FormulaState
 import ua.sviatkuzbyt.yourmath.app.presenter.other.ErrorData
 import ua.sviatkuzbyt.yourmath.app.presenter.other.safeBackgroundLaunch
 import ua.sviatkuzbyt.yourmath.domain.usecases.formula.GetFormulaUseCase
+import ua.sviatkuzbyt.yourmath.domain.usecases.formula.MathFormulaUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class FormulaViewModel @Inject constructor (
     private val getFormulaUseCase: GetFormulaUseCase,
+    private val mathFormulaUseCase: MathFormulaUseCase,
     sentData: SavedStateHandle
 ): ViewModel(){
     private val formulaID: Long = sentData["formulaID"] ?: 0
@@ -28,6 +30,7 @@ class FormulaViewModel @Inject constructor (
     fun onIntent(intent: FormulaIntent){
         when(intent){
             is FormulaIntent.ChangeInputData -> changeInputData(intent.position, intent.newData)
+            FormulaIntent.MathFormula -> mathFormula()
         }
     }
 
@@ -56,6 +59,18 @@ class FormulaViewModel @Inject constructor (
         } catch (e: Exception){
             setError()
         }
+    }
+
+    private fun mathFormula(){
+        safeBackgroundLaunch(
+            code = {
+                val result = mathFormulaUseCase.execute(formulaID, _screenState.value.content.inputData)
+                println("SKLT $result")
+            },
+            errorHandling = {
+                println("SKLT ERROR $it")
+            }
+        )
     }
 
     private fun setError(){

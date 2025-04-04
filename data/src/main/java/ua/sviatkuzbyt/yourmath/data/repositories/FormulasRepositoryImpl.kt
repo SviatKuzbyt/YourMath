@@ -3,10 +3,12 @@ package ua.sviatkuzbyt.yourmath.data.repositories
 import ua.sviatkuzbyt.yourmath.data.database.FormulaDao
 import ua.sviatkuzbyt.yourmath.data.structures.formula.FormulaInfoData
 import ua.sviatkuzbyt.yourmath.data.structures.formula.InputDataFormulaData
+import ua.sviatkuzbyt.yourmath.data.structures.formula.ResultDataFormulaData
 import ua.sviatkuzbyt.yourmath.data.structures.main.FormulaItemData
 import ua.sviatkuzbyt.yourmath.domain.repositories.FormulasRepository
 import ua.sviatkuzbyt.yourmath.domain.structures.formula.FormulaInfo
 import ua.sviatkuzbyt.yourmath.domain.structures.formula.InputDataFormula
+import ua.sviatkuzbyt.yourmath.domain.structures.formula.ResultDataFormula
 import ua.sviatkuzbyt.yourmath.domain.structures.main.FormulaItemWithPinned
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -41,6 +43,16 @@ class FormulasRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getFormulaCode(formulaID: Long): String {
+        return formulaDao.getFormulaCode(formulaID)
+    }
+
+    override fun getEmptyResultDataFormula(formulaID: Long): List<ResultDataFormula> {
+        return formulaDao.getOutputData(formulaID).map {
+            mapResultDataFormulaToDomain(it)
+        }
+    }
+
     private fun mapFormulaItemToDomain(item: FormulaItemData): FormulaItemWithPinned {
         return FormulaItemWithPinned(item.formulaID, item.name, item.isPin, item.position)
     }
@@ -50,6 +62,21 @@ class FormulasRepositoryImpl @Inject constructor(
     }
 
     private fun mapInputDataFormulaToDomain(data: InputDataFormulaData): InputDataFormula {
-        return InputDataFormula(data.inputDataID, data.label, data.defaultData, "")
+        return InputDataFormula(
+            id = data.inputDataID,
+            label = data.label,
+            codeLabel = data.codeLabel,
+            defaultData = data.defaultData,
+            data = ""
+        )
+    }
+
+    private fun mapResultDataFormulaToDomain(data: ResultDataFormulaData): ResultDataFormula {
+        return ResultDataFormula(
+            id = data.outputDataID,
+            label = data.label,
+            codeLabel = data.codeLabel,
+            data = ""
+        )
     }
 }

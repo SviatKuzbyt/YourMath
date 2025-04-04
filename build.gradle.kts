@@ -17,4 +17,7 @@ plugins {
 
     //hilt
     alias(libs.plugins.dagger.hilt) apply false
+
+    //python
+    alias(libs.plugins.chaquo.python) apply false
 }

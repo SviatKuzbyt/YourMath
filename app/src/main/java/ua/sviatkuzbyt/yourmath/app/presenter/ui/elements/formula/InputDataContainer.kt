@@ -29,7 +29,8 @@ fun InputDataContainer(
     hint: String?,
     onDataChange: (String) -> Unit,
     isDoneButton: Boolean,
-    focusManager: FocusManager
+    focusManager: FocusManager,
+    onDone: () -> Unit
 ){
     Container {
         Column(modifier = Modifier.padding(AppSizes.dp16)) {
@@ -82,6 +83,7 @@ fun InputDataContainer(
                     },
                     onDone = {
                         focusManager.clearFocus()
+                        onDone()
                     }
                 )
             )

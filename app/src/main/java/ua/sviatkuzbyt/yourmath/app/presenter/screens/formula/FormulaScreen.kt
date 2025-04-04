@@ -116,6 +116,7 @@ fun FormulaContent(
                     hint = inputData.defaultData,
                     onDataChange = { onIntent(FormulaIntent.ChangeInputData(position, it)) },
                     isDoneButton = screenState.content.inputData.lastIndex == position,
+                    onDone = { onIntent(FormulaIntent.MathFormula) },
                     focusManager = focusManager
                 )
             }

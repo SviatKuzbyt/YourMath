@@ -1,5 +1,8 @@
 package ua.sviatkuzbyt.yourmath.app.presenter.screens.formula
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,6 +25,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.MainIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.LocalNavController
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.NavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.AnimateListItem
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ButtonTextPrimary
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.formula.InputDataContainer
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ScreenTopBar
@@ -108,15 +112,24 @@ fun FormulaContent(
                 )
             }
 
-            if (screenState.content.resultData.isNotEmpty()){
+            
+
+            if(screenState.content.resultData.isNotEmpty()){
                 item {
-                    SubTittleText(R.string.result)
+                    AnimateListItem {
+                        SubTittleText(R.string.result)
+                    }
+
                 }
 
                 items(screenState.content.resultData) { result ->
-                    ResultDataContainer(result.label, result.data ?: stringResource(R.string.no_found))
+                    AnimateListItem {
+                        ResultDataContainer(result.label, result.data ?: stringResource(R.string.no_found))
+                    }
+
                 }
             }
+
         }
 
         ButtonTextPrimary(

@@ -1,6 +1,5 @@
 package ua.sviatkuzbyt.yourmath.app.presenter.screens.formula
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.formula.FormulaIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.formula.FormulaState
+import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.MainIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.LocalNavController
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.NavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
@@ -26,6 +26,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ButtonTextPrimary
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.formula.InputDataContainer
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ScreenTopBar
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.SubTittleText
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.dialog.DialogError
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.formula.ResultDataContainer
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppTheme
@@ -37,14 +38,14 @@ fun FormulaScreen(viewModel: FormulaViewModel) {
 
     FormulaContent(
         screenState = screenState,
-        screenIntent = viewModel::onIntent,
+        onIntent = viewModel::onIntent,
         onNavigate = { onNavigateIntent(navController, it) })
 }
 
 @Composable
 fun FormulaContent(
     screenState: FormulaState,
-    screenIntent: (FormulaIntent) -> Unit,
+    onIntent: (FormulaIntent) -> Unit,
     onNavigate: (NavigateIntent) -> Unit
 ){
     val listState = rememberLazyListState()
@@ -101,7 +102,7 @@ fun FormulaContent(
                     label = inputData.label,
                     data = inputData.data,
                     hint = inputData.defaultData,
-                    onDataChange = { screenIntent(FormulaIntent.ChangeInputData(position, it)) },
+                    onDataChange = { onIntent(FormulaIntent.ChangeInputData(position, it)) },
                     isDoneButton = screenState.content.inputData.lastIndex == position,
                     focusManager = focusManager
                 )
@@ -120,7 +121,13 @@ fun FormulaContent(
 
         ButtonTextPrimary(
             textRes = R.string.math,
-            onClick = { screenIntent(FormulaIntent.MathFormula) }
+            onClick = { onIntent(FormulaIntent.MathFormula) }
         )
+    }
+
+    screenState.errorMessage?.let { error ->
+        DialogError(error) {
+            onIntent(FormulaIntent.CloseDialog)
+        }
     }
 }

@@ -19,4 +19,7 @@
     <string name="math">Math</string>
     <string name="result">Result</string>
     <string name="no_found">No found</string>
+    <string name="no_all_data">Not all required data was entered</string>
+    <string name="math_error">Calculation error</string>
+    <string name="math_error_description">An unexpected error occurred while executing the calculation code</string>
 </resources>

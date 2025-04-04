@@ -5,10 +5,13 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.formula.FormulaIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.formula.FormulaState
 import ua.sviatkuzbyt.yourmath.app.presenter.other.ErrorData
 import ua.sviatkuzbyt.yourmath.app.presenter.other.safeBackgroundLaunch
+import ua.sviatkuzbyt.yourmath.data.MathException
+import ua.sviatkuzbyt.yourmath.data.NoAllDataEnterException
 import ua.sviatkuzbyt.yourmath.domain.usecases.formula.GetFormulaUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.formula.MathFormulaUseCase
 import javax.inject.Inject
@@ -31,6 +34,7 @@ class FormulaViewModel @Inject constructor (
         when(intent){
             is FormulaIntent.ChangeInputData -> changeInputData(intent.position, intent.newData)
             FormulaIntent.MathFormula -> mathFormula()
+            FormulaIntent.CloseDialog -> clearError()
         }
     }
 
@@ -41,7 +45,7 @@ class FormulaViewModel @Inject constructor (
                     FormulaState(content = getFormulaUseCase.execute(formulaID))
                 }
             },
-            errorHandling = { setError() }
+            errorHandling = { setError(it) }
         )
     }
 
@@ -57,7 +61,7 @@ class FormulaViewModel @Inject constructor (
                 )
             }
         } catch (e: Exception){
-            setError()
+            setError(e)
         }
     }
 
@@ -75,13 +79,18 @@ class FormulaViewModel @Inject constructor (
                 }
             },
             errorHandling = {
-                setError()
+                setError(it)
             }
         )
     }
 
-    private fun setError(){
-        _screenState.value = _screenState.value.copy(errorMessage = ErrorData())
+    private fun setError(exception: Exception){
+        val errorData = when(exception){
+            is NoAllDataEnterException -> ErrorData(R.string.enter_data, R.string.no_all_data)
+            is MathException -> ErrorData(R.string.math_error, R.string.math_error_description, exception.message)
+            else -> ErrorData()
+        }
+        _screenState.value = _screenState.value.copy(errorMessage = errorData)
     }
 
     private fun clearError(){

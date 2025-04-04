@@ -5,6 +5,7 @@ import com.chaquo.python.Python
 import com.chaquo.python.android.AndroidPlatform
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.json.JSONObject
+import ua.sviatkuzbyt.yourmath.data.MathException
 import ua.sviatkuzbyt.yourmath.data.NoAllDataEnterException
 import ua.sviatkuzbyt.yourmath.domain.repositories.PythonRepository
 import ua.sviatkuzbyt.yourmath.domain.structures.formula.InputDataFormula
@@ -31,16 +32,21 @@ class PythonRepositoryImpl @Inject constructor(
     }
 
     override fun runCode(code: String, inputData: String): String {
-        if (!Python.isStarted()) {
-            Python.start(AndroidPlatform(context))
+        try {
+            if (!Python.isStarted()) {
+                Python.start(AndroidPlatform(context))
+            }
+            val python = Python.getInstance()
+
+            println("SKLT $inputData")
+
+            val module = python.getModule("math_code")
+            val result = module.callAttr("math_code", code.trimIndent(), inputData)
+            return result.toString()
+        } catch (e: Exception){
+            println("SKLT $e || ${e.message}")
+            throw MathException(e.message)
         }
-        val python = Python.getInstance()
-
-        println("SKLT $inputData")
-
-        val module = python.getModule("math_code")
-        val result = module.callAttr("math_code", code.trimIndent(), inputData)
-        return result.toString()
     }
 
     override fun putJSONToResultData(

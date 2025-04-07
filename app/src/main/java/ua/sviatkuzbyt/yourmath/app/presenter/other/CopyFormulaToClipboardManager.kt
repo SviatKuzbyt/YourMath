@@ -6,7 +6,7 @@ import android.content.Context
 import android.widget.Toast
 import dagger.hilt.android.qualifiers.ApplicationContext
 import ua.sviatkuzbyt.yourmath.app.R
-import ua.sviatkuzbyt.yourmath.domain.structures.formula.Formula
+import ua.sviatkuzbyt.yourmath.domain.structures.formula.FormulaContent
 import javax.inject.Inject
 
 class CopyFormulaToClipboardManager @Inject constructor(
@@ -14,13 +14,13 @@ class CopyFormulaToClipboardManager @Inject constructor(
 ) {
     private val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
-    fun copyFormula(data: Formula){
+    fun copyFormula(data: FormulaContent){
         val text = generateFormulaText(data)
         val clip = ClipData.newPlainText(context.getString(R.string.copied_formula), text)
         clipboardManager.setPrimaryClip(clip)
     }
 
-    private fun generateFormulaText(data: Formula): StringBuilder{
+    private fun generateFormulaText(data: FormulaContent): StringBuilder{
         val text = StringBuilder()
         text.append("${context.getString(R.string.formula)}: ${data.info.label}")
 

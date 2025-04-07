@@ -15,12 +15,14 @@ import ua.sviatkuzbyt.yourmath.data.other.MathException
 import ua.sviatkuzbyt.yourmath.data.other.NoAllDataEnterException
 import ua.sviatkuzbyt.yourmath.domain.usecases.formula.GetFormulaUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.formula.MathFormulaUseCase
+import ua.sviatkuzbyt.yourmath.domain.usecases.formula.SaveFormulaToHistoryUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class FormulaViewModel @Inject constructor (
     private val getFormulaUseCase: GetFormulaUseCase,
     private val mathFormulaUseCase: MathFormulaUseCase,
+    private val saveFormulaToHistoryUseCase: SaveFormulaToHistoryUseCase,
     private val copyManager: CopyFormulaToClipboardManager,
     sentData: SavedStateHandle
 ): ViewModel(){
@@ -94,6 +96,9 @@ class FormulaViewModel @Inject constructor (
                         isLoading = false
                     )
                 }
+
+                //save results in history
+                saveFormulaToHistoryUseCase.execute(screenState.value.content, formulaID)
             },
             errorHandling = ::setError
         )

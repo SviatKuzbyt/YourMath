@@ -1,6 +1,6 @@
 package ua.sviatkuzbyt.yourmath.domain.structures.formula
 
-data class Formula(
+data class FormulaContent(
     val info: FormulaInfo,
     val inputData: List<FormulaInput>,
     val resultData: List<FormulaResult>

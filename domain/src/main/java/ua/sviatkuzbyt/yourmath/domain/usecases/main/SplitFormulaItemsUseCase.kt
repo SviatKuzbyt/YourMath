@@ -1,17 +1,17 @@
-package ua.sviatkuzbyt.yourmath.domain.usecases
+package ua.sviatkuzbyt.yourmath.domain.usecases.main
 
 import ua.sviatkuzbyt.yourmath.domain.structures.main.FormulaItem
 import ua.sviatkuzbyt.yourmath.domain.structures.main.FormulaItemWithPinned
-import ua.sviatkuzbyt.yourmath.domain.structures.main.PinUnpinFormulaItems
+import ua.sviatkuzbyt.yourmath.domain.structures.main.SplitFormulaItems
 
-class ConvertToPinUnpinFormulaItemsUseCase {
-    fun execute(formulas: List<FormulaItemWithPinned>): PinUnpinFormulaItems {
+class SplitFormulaItemsUseCase {
+    fun execute(formulas: List<FormulaItemWithPinned>): SplitFormulaItems {
         val (pinList, noPinList) = formulas
             .partition { formula ->
                 formula.isPinned
             }
 
-        return PinUnpinFormulaItems(
+        return SplitFormulaItems(
             pins = pinList.map { mapToFormulaItem(it) },
             unpins = noPinList.map { mapToFormulaItem(it) }
         )

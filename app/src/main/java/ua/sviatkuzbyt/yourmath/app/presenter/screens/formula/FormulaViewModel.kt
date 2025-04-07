@@ -11,8 +11,8 @@ import ua.sviatkuzbyt.yourmath.app.presenter.controllers.formula.FormulaState
 import ua.sviatkuzbyt.yourmath.app.presenter.other.CopyToClipboardFormulaManager
 import ua.sviatkuzbyt.yourmath.app.presenter.other.ErrorData
 import ua.sviatkuzbyt.yourmath.app.presenter.other.safeBackgroundLaunch
-import ua.sviatkuzbyt.yourmath.data.MathException
-import ua.sviatkuzbyt.yourmath.data.NoAllDataEnterException
+import ua.sviatkuzbyt.yourmath.data.other.MathException
+import ua.sviatkuzbyt.yourmath.data.other.NoAllDataEnterException
 import ua.sviatkuzbyt.yourmath.domain.usecases.formula.GetFormulaUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.formula.MathFormulaUseCase
 import javax.inject.Inject
@@ -96,7 +96,7 @@ class FormulaViewModel @Inject constructor (
 
                 val mathResult = mathFormulaUseCase.execute(
                     formulaID = formulaID,
-                    inputData = _screenState.value.content.inputData
+                    formulaInputList = _screenState.value.content.inputData
                 )
                 updateFormulaState { state ->
                     state.copy(

@@ -1,8 +1,6 @@
 package ua.sviatkuzbyt.yourmath.data.database
 
-import android.content.Context
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
 import ua.sviatkuzbyt.yourmath.data.database.entity.FormulaEntity
 import ua.sviatkuzbyt.yourmath.data.database.entity.HistoryFormulaEntity

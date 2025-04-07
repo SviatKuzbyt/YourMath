@@ -7,7 +7,7 @@ class GetFormulaUseCase(private val repository: FormulasRepository) {
     fun execute(formulaID: Long): Formula{
         return Formula(
             info = repository.getFormulaInfo(formulaID),
-            inputData = repository.getInputDataFormula(formulaID),
+            inputData = repository.getFormulaInput(formulaID),
             resultData = listOf()
         )
     }

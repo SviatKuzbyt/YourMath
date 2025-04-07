@@ -1,8 +1,8 @@
 package ua.sviatkuzbyt.yourmath.domain.repositories
 
 import ua.sviatkuzbyt.yourmath.domain.structures.formula.FormulaInfo
-import ua.sviatkuzbyt.yourmath.domain.structures.formula.InputDataFormula
-import ua.sviatkuzbyt.yourmath.domain.structures.formula.ResultDataFormula
+import ua.sviatkuzbyt.yourmath.domain.structures.formula.FormulaInput
+import ua.sviatkuzbyt.yourmath.domain.structures.formula.FormulaResult
 import ua.sviatkuzbyt.yourmath.domain.structures.main.FormulaItemWithPinned
 
 interface FormulasRepository {
@@ -10,7 +10,7 @@ interface FormulasRepository {
     fun changePinFormula(id: Long, isPin: Boolean)
     fun searchFormulas(searchText: String): List<FormulaItemWithPinned>
     fun getFormulaInfo(formulaID: Long): FormulaInfo
-    fun getInputDataFormula(formulaID: Long): List<InputDataFormula>
+    fun getFormulaInput(formulaID: Long): List<FormulaInput>
     fun getFormulaCode(formulaID: Long): String
-    fun getEmptyResultDataFormula(formulaID: Long): List<ResultDataFormula>
+    fun getFormulaResult(formulaID: Long): List<FormulaResult>
 }

@@ -2,13 +2,13 @@ package ua.sviatkuzbyt.yourmath.data.repositories
 
 import ua.sviatkuzbyt.yourmath.data.database.FormulaDao
 import ua.sviatkuzbyt.yourmath.data.structures.formula.FormulaInfoData
-import ua.sviatkuzbyt.yourmath.data.structures.formula.InputDataFormulaData
-import ua.sviatkuzbyt.yourmath.data.structures.formula.ResultDataFormulaData
+import ua.sviatkuzbyt.yourmath.data.structures.formula.FormulaInputData
+import ua.sviatkuzbyt.yourmath.data.structures.formula.FormulaResultData
 import ua.sviatkuzbyt.yourmath.data.structures.main.FormulaItemData
 import ua.sviatkuzbyt.yourmath.domain.repositories.FormulasRepository
 import ua.sviatkuzbyt.yourmath.domain.structures.formula.FormulaInfo
-import ua.sviatkuzbyt.yourmath.domain.structures.formula.InputDataFormula
-import ua.sviatkuzbyt.yourmath.domain.structures.formula.ResultDataFormula
+import ua.sviatkuzbyt.yourmath.domain.structures.formula.FormulaInput
+import ua.sviatkuzbyt.yourmath.domain.structures.formula.FormulaResult
 import ua.sviatkuzbyt.yourmath.domain.structures.main.FormulaItemWithPinned
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -17,6 +17,7 @@ import javax.inject.Singleton
 class FormulasRepositoryImpl @Inject constructor(
     private val formulaDao: FormulaDao
 ): FormulasRepository {
+
     override fun getFormulas(): List<FormulaItemWithPinned> {
         return formulaDao.getFormulas().map { formulaFromDB ->
             mapFormulaItemToDomain(formulaFromDB)
@@ -37,7 +38,7 @@ class FormulasRepositoryImpl @Inject constructor(
         return mapFormulaInfoToDomain(formulaDao.getFormulaInfo(formulaID))
     }
 
-    override fun getInputDataFormula(formulaID: Long): List<InputDataFormula> {
+    override fun getFormulaInput(formulaID: Long): List<FormulaInput> {
         return formulaDao.getFormulaInputData(formulaID).map{ inputData ->
             mapInputDataFormulaToDomain(inputData)
         }
@@ -47,7 +48,7 @@ class FormulasRepositoryImpl @Inject constructor(
         return formulaDao.getFormulaCode(formulaID)
     }
 
-    override fun getEmptyResultDataFormula(formulaID: Long): List<ResultDataFormula> {
+    override fun getFormulaResult(formulaID: Long): List<FormulaResult> {
         return formulaDao.getOutputData(formulaID).map {
             mapResultDataFormulaToDomain(it)
         }
@@ -61,8 +62,8 @@ class FormulasRepositoryImpl @Inject constructor(
         return FormulaInfo(info.name, info.description)
     }
 
-    private fun mapInputDataFormulaToDomain(data: InputDataFormulaData): InputDataFormula {
-        return InputDataFormula(
+    private fun mapInputDataFormulaToDomain(data: FormulaInputData): FormulaInput {
+        return FormulaInput(
             id = data.inputDataID,
             label = data.label,
             codeLabel = data.codeLabel,
@@ -71,12 +72,12 @@ class FormulasRepositoryImpl @Inject constructor(
         )
     }
 
-    private fun mapResultDataFormulaToDomain(data: ResultDataFormulaData): ResultDataFormula {
-        return ResultDataFormula(
+    private fun mapResultDataFormulaToDomain(data: FormulaResultData): FormulaResult {
+        return FormulaResult(
             id = data.outputDataID,
             label = data.label,
             codeLabel = data.codeLabel,
-            data = ""
+            data = null
         )
     }
 }

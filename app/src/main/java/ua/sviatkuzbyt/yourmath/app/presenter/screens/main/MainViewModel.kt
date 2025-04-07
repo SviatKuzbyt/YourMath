@@ -10,8 +10,8 @@ import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.ShowOnScreen
 import ua.sviatkuzbyt.yourmath.app.presenter.other.ErrorData
 import ua.sviatkuzbyt.yourmath.app.presenter.other.safeBackgroundLaunch
 import ua.sviatkuzbyt.yourmath.domain.structures.main.FormulaItem
-import ua.sviatkuzbyt.yourmath.domain.structures.main.PinUnpinFormulaItems
-import ua.sviatkuzbyt.yourmath.domain.usecases.main.GetFormulasUseCase
+import ua.sviatkuzbyt.yourmath.domain.structures.main.SplitFormulaItems
+import ua.sviatkuzbyt.yourmath.domain.usecases.main.GetFormulasListUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.PinFormulaUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.SearchFormulasUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.UnpinFormulaUseCase
@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val getFormulasUseCase: GetFormulasUseCase,
+    private val getFormulasListUseCase: GetFormulasListUseCase,
     private val pinFormulaUseCase: PinFormulaUseCase,
     private val unpinFormulaUseCase: UnpinFormulaUseCase,
     private val searchFormulasUseCase: SearchFormulasUseCase
@@ -36,7 +36,7 @@ class MainViewModel @Inject constructor(
         safeBackgroundLaunch(
             code = {
                 //get all data from DB and set in UI
-                val formulasFromDB = getFormulasUseCase.execute()
+                val formulasFromDB = getFormulasListUseCase.execute()
 
                 val showOnScreen = if (formulasFromDB.isEmpty()){
                     ShowOnScreen.NoFormulas
@@ -90,7 +90,7 @@ class MainViewModel @Inject constructor(
 
                     state.copy(
                         formulas =
-                            PinUnpinFormulaItems(
+                            SplitFormulaItems(
                                 pins = (oldFormulas.pins + formula).sortedBy { it.position },
                                 unpins = oldFormulas.unpins - formula
                             )
@@ -116,7 +116,7 @@ class MainViewModel @Inject constructor(
 
                     state.copy(
                         formulas =
-                            PinUnpinFormulaItems(
+                            SplitFormulaItems(
                                 pins = oldFormulas.pins - formula,
                                 unpins = (oldFormulas.unpins + formula).sortedBy { it.position }
                             )

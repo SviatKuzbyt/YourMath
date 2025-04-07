@@ -3,8 +3,8 @@ package ua.sviatkuzbyt.yourmath.data.database
 import androidx.room.Dao
 import androidx.room.Query
 import ua.sviatkuzbyt.yourmath.data.structures.formula.FormulaInfoData
-import ua.sviatkuzbyt.yourmath.data.structures.formula.InputDataFormulaData
-import ua.sviatkuzbyt.yourmath.data.structures.formula.ResultDataFormulaData
+import ua.sviatkuzbyt.yourmath.data.structures.formula.FormulaInputData
+import ua.sviatkuzbyt.yourmath.data.structures.formula.FormulaResultData
 import ua.sviatkuzbyt.yourmath.data.structures.main.FormulaItemData
 
 @Dao
@@ -22,11 +22,11 @@ interface FormulaDao {
     fun getFormulaInfo(formulaID: Long): FormulaInfoData
 
     @Query("SELECT inputDataID, label, codeLabel, defaultData FROM InputData WHERE formulaID = :formulaID")
-    fun getFormulaInputData(formulaID: Long): List<InputDataFormulaData>
+    fun getFormulaInputData(formulaID: Long): List<FormulaInputData>
 
     @Query("SELECT code FROM Formula WHERE formulaID = :formulaID LIMIT 1")
     fun getFormulaCode(formulaID: Long): String
 
     @Query("SELECT outputDataID, label, codeLabel FROM OutputData WHERE formulaID = :formulaID")
-    fun getOutputData(formulaID: Long): List<ResultDataFormulaData>
+    fun getOutputData(formulaID: Long): List<FormulaResultData>
 }

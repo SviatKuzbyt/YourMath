@@ -3,7 +3,6 @@ package ua.sviatkuzbyt.yourmath.app.presenter.screens.main
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
@@ -26,8 +25,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.home.FieldSearch
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.home.FormulaNoPinItemList
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.home.FormulaPinnedItemList
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.home.HomeTopBar
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
-import ua.sviatkuzbyt.yourmath.domain.structures.main.PinUnpinFormulaItems
+import ua.sviatkuzbyt.yourmath.domain.structures.main.SplitFormulaItems
 
 @Composable
 fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
@@ -91,7 +89,7 @@ fun MainContent(
 
 @Composable
 private fun FormulasList(
-    lists: PinUnpinFormulaItems,
+    lists: SplitFormulaItems,
     onIntent: (MainIntent) -> Unit,
     onNavigate: (NavigateIntent) -> Unit
 ) {

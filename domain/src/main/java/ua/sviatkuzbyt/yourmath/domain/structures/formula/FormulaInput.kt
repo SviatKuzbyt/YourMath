@@ -1,8 +1,9 @@
 package ua.sviatkuzbyt.yourmath.domain.structures.formula
 
-data class ResultDataFormula(
+data class FormulaInput(
     val id: Long,
     val label: String,
     val codeLabel: String,
-    val data: String? = null
+    val defaultData: String?,
+    val data: String
 )

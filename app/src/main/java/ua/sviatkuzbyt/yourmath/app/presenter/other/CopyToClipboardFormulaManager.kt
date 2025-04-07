@@ -14,13 +14,13 @@ class CopyToClipboardFormulaManager @Inject constructor(
 ) {
     private val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
-    fun copy(data: Formula){
-        val text = generateText(data)
+    fun copyFormula(data: Formula){
+        val text = generateFormulaText(data)
         val clip = ClipData.newPlainText(context.getString(R.string.copied_formula), text)
         clipboardManager.setPrimaryClip(clip)
     }
 
-    private fun generateText(data: Formula): StringBuilder{
+    private fun generateFormulaText(data: Formula): StringBuilder{
         val text = StringBuilder()
         text.append("${context.getString(R.string.formula)}: ${data.info.label}")
 
@@ -39,5 +39,10 @@ class CopyToClipboardFormulaManager @Inject constructor(
 
     fun showToast(){
         Toast.makeText(context, R.string.copied, Toast.LENGTH_SHORT).show()
+    }
+
+    fun copyText(text: String){
+        val clip = ClipData.newPlainText(context.getString(R.string.copied_text), text)
+        clipboardManager.setPrimaryClip(clip)
     }
 }

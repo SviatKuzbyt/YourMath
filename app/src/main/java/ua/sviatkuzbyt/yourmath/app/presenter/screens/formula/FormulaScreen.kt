@@ -64,7 +64,7 @@ fun FormulaContent(
                     imageRes = R.drawable.btn_copy,
                     contentDescriptionRes = R.string.copy,
                     onClick = {
-                        onIntent(FormulaIntent.CopyToClipboard)
+                        onIntent(FormulaIntent.CopyFormulaToClipboard)
                     }
                 )
             }
@@ -133,7 +133,11 @@ fun FormulaContent(
 
                 items(screenState.content.resultData) { result ->
                     AnimateListItem {
-                        ResultDataContainer(result.label, result.data ?: stringResource(R.string.no_found))
+                        val data = result.data ?: stringResource(R.string.no_found)
+                        ResultDataContainer(
+                            result.label,
+                            data
+                        ) { onIntent(FormulaIntent.CopyTextToClipboard(data)) }
                     }
 
                 }

@@ -37,7 +37,17 @@ class FormulaViewModel @Inject constructor (
             is FormulaIntent.ChangeInputData -> changeInputData(intent.position, intent.newData)
             FormulaIntent.MathFormula -> mathFormula()
             FormulaIntent.CloseDialog -> clearError()
-            FormulaIntent.CopyToClipboard -> copyData()
+            FormulaIntent.CopyFormulaToClipboard -> copyData()
+            is FormulaIntent.CopyTextToClipboard -> copyTextToClipboard(intent.text)
+        }
+    }
+
+    private fun copyTextToClipboard(text: String){
+        try {
+            copyManager.copyText(text)
+            copyManager.showToast()
+        } catch (e: Exception){
+            setError(e)
         }
     }
 
@@ -70,7 +80,7 @@ class FormulaViewModel @Inject constructor (
 
     private fun copyData() {
         try {
-            copyManager.copy(screenState.value.content)
+            copyManager.copyFormula(screenState.value.content)
             copyManager.showToast()
         } catch (e: Exception){
             setError(e)
@@ -80,17 +90,22 @@ class FormulaViewModel @Inject constructor (
     private fun mathFormula(){
         safeBackgroundLaunch(
             code = {
-                updateLoading(true)
+                updateFormulaState { state ->
+                    state.copy(isLoading = false)
+                }
+
                 val mathResult = mathFormulaUseCase.execute(
                     formulaID = formulaID,
                     inputData = _screenState.value.content.inputData
                 )
                 updateFormulaState { state ->
-                    state.copy(content = state.content.copy(
-                        resultData = mathResult
-                    ))
+                    state.copy(
+                        content = state.content.copy(
+                            resultData = mathResult
+                        ),
+                        isLoading = false
+                    )
                 }
-                updateLoading(false)
             },
             errorHandling = {
                 setError(it)
@@ -102,9 +117,13 @@ class FormulaViewModel @Inject constructor (
         val errorData = when(exception){
             is NoAllDataEnterException -> ErrorData(R.string.enter_data, R.string.no_all_data)
             is MathException -> ErrorData(R.string.math_error, R.string.math_error_description, exception.message)
-            else -> ErrorData()
+            else -> ErrorData(detailStr = exception.message)
         }
-        updateLoading(false)
+        if (_screenState.value.isLoading){
+            updateFormulaState { state ->
+                state.copy(isLoading = false)
+            }
+        }
         _screenState.value = _screenState.value.copy(errorMessage = errorData)
     }
 
@@ -115,13 +134,4 @@ class FormulaViewModel @Inject constructor (
     private inline fun updateFormulaState(update: (FormulaState) -> FormulaState) {
         _screenState.value = update(_screenState.value)
     }
-
-    private fun updateLoading(isLoading: Boolean){
-        if (isLoading != _screenState.value.isLoading){
-            updateFormulaState { state ->
-                state.copy(isLoading = isLoading)
-            }
-        }
-    }
-
 }

@@ -21,12 +21,14 @@ fun ResultDataContainer(
         Column(
             modifier = Modifier.padding(AppSizes.dp16)
         ) {
+            //tittle
             Text(
                 text = title,
                 style = AppTheme.types.basic,
                 modifier = Modifier.padding(bottom = AppSizes.dp4)
             )
 
+            //data
             Text(
                 text = content,
                 style = AppTheme.types.bold,

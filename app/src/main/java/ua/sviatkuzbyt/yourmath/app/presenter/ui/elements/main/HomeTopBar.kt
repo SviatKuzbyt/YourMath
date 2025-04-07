@@ -1,4 +1,4 @@
-package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.home
+package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.main
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,7 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import ua.sviatkuzbyt.yourmath.app.R
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ButtonIconTopBar
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button.ButtonIconTopBar
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppTheme
 

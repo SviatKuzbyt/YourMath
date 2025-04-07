@@ -1,4 +1,4 @@
-package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic
+package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.padding

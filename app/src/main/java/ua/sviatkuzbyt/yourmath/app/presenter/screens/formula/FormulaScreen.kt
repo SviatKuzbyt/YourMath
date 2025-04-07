@@ -2,10 +2,12 @@ package ua.sviatkuzbyt.yourmath.app.presenter.screens.formula
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -14,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import ua.sviatkuzbyt.yourmath.app.R
@@ -23,16 +26,19 @@ import ua.sviatkuzbyt.yourmath.app.presenter.navigation.LocalNavController
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.NavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.AnimateListItem
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ButtonIconTopBar
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ButtonLarge
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ButtonLargeLoad
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button.ButtonLarge
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button.ButtonLargeLoad
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.formula.InputDataContainer
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ScreenTopBar
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.SubTittleText
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.dialog.DialogError
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.SubTittleText
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.TittleText
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.dialog.ShowDialogError
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.formula.CopyButton
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.formula.ResultDataContainer
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppTheme
+import ua.sviatkuzbyt.yourmath.domain.structures.formula.FormulaInput
+import ua.sviatkuzbyt.yourmath.domain.structures.formula.FormulaResult
 
 @Composable
 fun FormulaScreen(viewModel: FormulaViewModel) {
@@ -42,7 +48,8 @@ fun FormulaScreen(viewModel: FormulaViewModel) {
     FormulaContent(
         screenState = screenState,
         onIntent = viewModel::onIntent,
-        onNavigate = { onNavigateIntent(navController, it) })
+        onNavigate = { onNavigateIntent(navController, it) }
+    )
 }
 
 @Composable
@@ -55,111 +62,166 @@ fun FormulaContent(
     val focusManager = LocalFocusManager.current
 
     Column(modifier = Modifier.fillMaxSize()) {
-        ScreenTopBar(
+        TopBar(
             tittle = screenState.content.info.label,
             listState = listState,
-            onBack = { onNavigate(NavigateIntent.NavigateUp) },
-            toolButtons = {
-                ButtonIconTopBar(
-                    imageRes = R.drawable.btn_copy,
-                    contentDescriptionRes = R.string.copy,
-                    onClick = {
-                        onIntent(FormulaIntent.CopyFormulaToClipboard)
-                    }
-                )
+            onBack = {
+                onNavigate(NavigateIntent.NavigateUp)
+            },
+            onCopy = {
+                onIntent(FormulaIntent.CopyFormulaToClipboard)
             }
         )
 
-        LazyColumn(
-            state = listState,
-            modifier = Modifier.weight(1f)
-        ) {
+        ContentList(
+            label = screenState.content.info.label,
+            description = screenState.content.info.description,
+            inputList = screenState.content.inputData,
+            resultList = screenState.content.resultData,
+            listState = listState,
+            focusManager = focusManager,
+            onInputDone = {
+                onIntent(FormulaIntent.MathFormula)
+            },
+            onInputDataChange = { position, text ->
+                onIntent(FormulaIntent.ChangeInputData(position, text))
+            },
+            onCopyResultText = { text ->
+                onIntent(FormulaIntent.CopyTextToClipboard(text))
+            }
+        )
+
+        MathButton(
+            isLoading = screenState.isLoading,
+            onClick = {
+                onIntent(FormulaIntent.MathFormula)
+            }
+        )
+    }
+
+    ShowDialogError(
+        errorData = screenState.errorMessage,
+        onCloseClick = {
+            onIntent(FormulaIntent.CloseDialog)
+        }
+    )
+}
+
+@Composable
+private fun TopBar(
+    tittle: String,
+    onBack: () -> Unit,
+    onCopy: () -> Unit,
+    listState: LazyListState,
+){
+    ScreenTopBar(
+        tittle = tittle,
+        listState = listState,
+        onBack = onBack,
+        toolButtons = {
+            CopyButton(onCopy)
+        }
+    )
+}
+
+@Composable
+private fun ColumnScope.ContentList(
+    label: String,
+    description: String?,
+    inputList: List<FormulaInput>,
+    resultList: List<FormulaResult>,
+    onInputDone: () -> Unit,
+    onInputDataChange: (Int, String) -> Unit,
+    onCopyResultText: (String) -> Unit,
+    listState: LazyListState,
+    focusManager: FocusManager
+){
+    LazyColumn(
+        state = listState,
+        modifier = Modifier.weight(1f)
+    ) {
+        //Name and description
+        item {
+            TittleText(label)
+        }
+
+        description?.let { text ->
             item {
                 Text(
-                    text = screenState.content.info.label,
-                    style = AppTheme.types.tittle,
+                    text = text,
+                    style = AppTheme.types.secondary,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = AppSizes.dp16)
                 )
             }
+        }
 
-            screenState.content.info.description?.let { description ->
-                item {
-                    Text(
-                        text = description,
-                        style = AppTheme.types.secondary,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = AppSizes.dp8)
-                            .padding(horizontal = AppSizes.dp16)
-                    )
-                }
-            }
+        //Input data
+        item {
+            SubTittleText(
+                textRes = R.string.input_data,
+                modifier = Modifier.padding(top = AppSizes.dp16)
+            )
+        }
 
-            item {
-                SubTittleText(
-                    textRes = R.string.input_data,
-                    modifier = Modifier.padding(top = AppSizes.dp16)
-                )
-            }
-
-            itemsIndexed(
-                items = screenState.content.inputData,
-                key = { _, inputData ->
-                    inputData.id
-                }
-            ){ position, inputData ->
+        itemsIndexed(
+            items = inputList,
+            key = { _, inputData ->
+                inputData.id
+            },
+            itemContent = { position, inputData ->
                 InputDataContainer(
                     label = inputData.label,
                     data = inputData.data,
                     hint = inputData.defaultData,
-                    onDataChange = { onIntent(FormulaIntent.ChangeInputData(position, it)) },
-                    isDoneButton = screenState.content.inputData.lastIndex == position,
-                    onDone = { onIntent(FormulaIntent.MathFormula) },
-                    focusManager = focusManager
+                    isDoneButton = inputList.lastIndex == position,
+                    focusManager = focusManager,
+                    onDone = onInputDone,
+                    onDataChange = {
+                        onInputDataChange(position, it)
+                    }
                 )
             }
+        )
 
-            //TODO add loader
-
-            if(screenState.content.resultData.isNotEmpty()){
-                item {
-                    AnimateListItem {
-                        SubTittleText(R.string.result)
-                    }
-
-                }
-
-                items(screenState.content.resultData) { result ->
-                    AnimateListItem {
-                        val data = result.data ?: stringResource(R.string.no_found)
-                        ResultDataContainer(
-                            result.label,
-                            data
-                        ) { onIntent(FormulaIntent.CopyTextToClipboard(data)) }
-                    }
-
+        //Result data
+        if(resultList.isNotEmpty()){
+            item {
+                AnimateListItem {
+                    SubTittleText(R.string.result)
                 }
             }
 
-        }
-
-        Crossfade(screenState.isLoading){
-            if (it){
-                ButtonLargeLoad()
-            } else {
-                ButtonLarge(
-                    textRes = R.string.math,
-                    onClick = { onIntent(FormulaIntent.MathFormula) }
-                )
+            items(resultList) { result ->
+                AnimateListItem {
+                    val data = result.data ?: stringResource(R.string.no_found)
+                    ResultDataContainer(
+                        title = result.label,
+                        content = data,
+                        onTextClick = {
+                            onCopyResultText(data)
+                        }
+                    )
+                }
             }
         }
     }
+}
 
-    screenState.errorMessage?.let { error ->
-        DialogError(error) {
-            onIntent(FormulaIntent.CloseDialog)
+@Composable
+private fun MathButton(
+    isLoading: Boolean,
+    onClick: () -> Unit
+){
+    Crossfade(isLoading){
+        if (it){
+            ButtonLargeLoad()
+        } else {
+            ButtonLarge(
+                textRes = R.string.math,
+                onClick = onClick
+            )
         }
     }
 }

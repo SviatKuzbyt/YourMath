@@ -1,4 +1,4 @@
-package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.home
+package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.main
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height

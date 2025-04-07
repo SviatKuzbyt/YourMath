@@ -1,4 +1,4 @@
-package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic
+package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

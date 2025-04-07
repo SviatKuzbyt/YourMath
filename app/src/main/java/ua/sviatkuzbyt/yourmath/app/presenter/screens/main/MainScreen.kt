@@ -18,13 +18,13 @@ import ua.sviatkuzbyt.yourmath.app.presenter.navigation.LocalNavController
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.NavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.AnimateListItem
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.dialog.DialogError
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.EmptyScreenInList
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.SubTittleText
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.home.FieldSearch
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.home.FormulaNoPinItemList
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.home.FormulaPinnedItemList
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.home.HomeTopBar
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.SubTittleText
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.dialog.ShowDialogError
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.main.FieldSearch
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.main.FormulaNoPinItemList
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.main.FormulaPinnedItemList
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.main.HomeTopBar
 import ua.sviatkuzbyt.yourmath.domain.structures.main.SplitFormulaItems
 
 @Composable
@@ -79,11 +79,12 @@ fun MainContent(
             }
         }
 
-        screenState.errorMessage?.let { error ->
-            DialogError(error) {
+        ShowDialogError(
+            errorData = screenState.errorMessage,
+            onCloseClick = {
                 onIntent(MainIntent.CloseDialog)
             }
-        }
+        )
     }
 }
 

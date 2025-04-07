@@ -1,4 +1,4 @@
-package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.home
+package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.main
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -9,7 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import ua.sviatkuzbyt.yourmath.app.R
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ButtonIconContainer
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button.ButtonIconContainer
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.Container
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppTheme

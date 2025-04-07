@@ -8,7 +8,20 @@ import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.other.ErrorData
 
 @Composable
-fun DialogError(
+fun ShowDialogError(
+    errorData: ErrorData?,
+    onCloseClick: () -> Unit
+){
+    errorData?.let { error ->
+        DialogError(
+            data = error,
+            onCloseClick = onCloseClick
+        )
+    }
+}
+
+@Composable
+private fun DialogError(
     data: ErrorData,
     onCloseClick: () -> Unit
 ) {

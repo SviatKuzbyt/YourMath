@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.formula.FormulaIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.formula.FormulaState
-import ua.sviatkuzbyt.yourmath.app.presenter.other.CopyToClipboardFormulaManager
+import ua.sviatkuzbyt.yourmath.app.presenter.other.CopyFormulaToClipboardManager
 import ua.sviatkuzbyt.yourmath.app.presenter.other.ErrorData
 import ua.sviatkuzbyt.yourmath.app.presenter.other.safeBackgroundLaunch
 import ua.sviatkuzbyt.yourmath.data.other.MathException
@@ -21,10 +21,11 @@ import javax.inject.Inject
 class FormulaViewModel @Inject constructor (
     private val getFormulaUseCase: GetFormulaUseCase,
     private val mathFormulaUseCase: MathFormulaUseCase,
-    private val copyManager: CopyToClipboardFormulaManager,
+    private val copyManager: CopyFormulaToClipboardManager,
     sentData: SavedStateHandle
 ): ViewModel(){
-    private val formulaID: Long = sentData["formulaID"] ?: 0
+
+    private val formulaID: Long = sentData["formulaID"] ?: 0L
     private val _screenState = MutableStateFlow(FormulaState())
     val screenState: StateFlow<FormulaState> = _screenState
 
@@ -36,43 +37,72 @@ class FormulaViewModel @Inject constructor (
         when(intent){
             is FormulaIntent.ChangeInputData -> changeInputData(intent.position, intent.newData)
             FormulaIntent.MathFormula -> mathFormula()
-            FormulaIntent.CloseDialog -> clearError()
             FormulaIntent.CopyFormulaToClipboard -> copyData()
             is FormulaIntent.CopyTextToClipboard -> copyTextToClipboard(intent.text)
-        }
-    }
-
-    private fun copyTextToClipboard(text: String){
-        try {
-            copyManager.copyText(text)
-            copyManager.showToast()
-        } catch (e: Exception){
-            setError(e)
+            FormulaIntent.CloseDialog -> clearError()
         }
     }
 
     private fun loadFormulaData(){
         safeBackgroundLaunch(
             code = {
-                updateFormulaState{
-                    FormulaState(content = getFormulaUseCase.execute(formulaID))
-                }
+                //get empty formula data and set it in UI
+                val formula = getFormulaUseCase.execute(formulaID)
+                _screenState.value = FormulaState(content = formula)
             },
-            errorHandling = { setError(it) }
+            errorHandling = ::setError
         )
     }
 
+    private inline fun updateFormulaState(update: (FormulaState) -> FormulaState) {
+        _screenState.value = update(_screenState.value)
+    }
+
     private fun changeInputData(position: Int, newText: String) {
-        try {
-            updateFormulaState { state ->
-                state.copy(
-                    content = state.content.copy(
-                        inputData = state.content.inputData.mapIndexed { index, item ->
-                            if (index == position) item.copy(data = newText) else item
-                        }
-                    )
-                )
+        updateFormulaState { state ->
+            //set changed text in list
+            val updatedInputs = state.content.inputData.mapIndexed { index, item ->
+                if (index == position) item.copy(data = newText) else item
             }
+            //update UI
+            state.copy(
+                content = state.content.copy(inputData = updatedInputs)
+            )
+        }
+    }
+
+    private fun mathFormula(){
+        safeBackgroundLaunch(
+            code = {
+                //set loading
+                updateFormulaState { state ->
+                    state.copy(isLoading = true)
+                }
+
+                //calculate the formula
+                val mathResult = mathFormulaUseCase.execute(
+                    formulaID = formulaID,
+                    formulaInputList = _screenState.value.content.inputData
+                )
+
+                //set UI
+                updateFormulaState { state ->
+                    state.copy(
+                        content = state.content.copy(
+                            resultData = mathResult
+                        ),
+                        isLoading = false
+                    )
+                }
+            },
+            errorHandling = ::setError
+        )
+    }
+
+    private fun copyTextToClipboard(text: String){
+        try {
+            copyManager.copyText(text)
+            copyManager.showToast()
         } catch (e: Exception){
             setError(e)
         }
@@ -87,51 +117,31 @@ class FormulaViewModel @Inject constructor (
         }
     }
 
-    private fun mathFormula(){
-        safeBackgroundLaunch(
-            code = {
-                updateFormulaState { state ->
-                    state.copy(isLoading = false)
-                }
-
-                val mathResult = mathFormulaUseCase.execute(
-                    formulaID = formulaID,
-                    formulaInputList = _screenState.value.content.inputData
-                )
-                updateFormulaState { state ->
-                    state.copy(
-                        content = state.content.copy(
-                            resultData = mathResult
-                        ),
-                        isLoading = false
-                    )
-                }
-            },
-            errorHandling = {
-                setError(it)
-            }
-        )
-    }
-
     private fun setError(exception: Exception){
+        //set error info
         val errorData = when(exception){
-            is NoAllDataEnterException -> ErrorData(R.string.enter_data, R.string.no_all_data)
-            is MathException -> ErrorData(R.string.math_error, R.string.math_error_description, exception.message)
+            is NoAllDataEnterException -> ErrorData(
+                tittleRes = R.string.enter_data,
+                detailRes = R.string.no_all_data
+            )
+            is MathException -> ErrorData(
+                tittleRes = R.string.math_error,
+                detailRes = R.string.math_error_description,
+                detailStr = exception.message
+            )
             else -> ErrorData(detailStr = exception.message)
         }
-        if (_screenState.value.isLoading){
-            updateFormulaState { state ->
-                state.copy(isLoading = false)
-            }
+
+        //show dialog in UI
+        updateFormulaState { state ->
+            state.copy(
+                isLoading = false,
+                errorMessage = errorData
+            )
         }
-        _screenState.value = _screenState.value.copy(errorMessage = errorData)
     }
 
     private fun clearError(){
         _screenState.value = _screenState.value.copy(errorMessage = null)
-    }
-
-    private inline fun updateFormulaState(update: (FormulaState) -> FormulaState) {
-        _screenState.value = update(_screenState.value)
     }
 }

@@ -52,18 +52,12 @@ class MainViewModel @Inject constructor(
                     )
                 }
             },
-            errorHandling = {
-                setError()
-            }
+            errorHandling = ::setError
         )
     }
 
     private inline fun updateMainState(update: (MainState) -> MainState) {
         _screenState.value = update(_screenState.value)
-    }
-
-    private fun setError(){
-        _screenState.value = _screenState.value.copy(errorMessage = ErrorData())
     }
 
     fun onIntent(intent: MainIntent){
@@ -98,9 +92,7 @@ class MainViewModel @Inject constructor(
 
                 }
             },
-            errorHandling = {
-                setError()
-            }
+            errorHandling = ::setError
         )
     }
 
@@ -124,9 +116,7 @@ class MainViewModel @Inject constructor(
                     )
                 }
             },
-            errorHandling = {
-                setError()
-            }
+            errorHandling = ::setError
         )
     }
 
@@ -162,10 +152,14 @@ class MainViewModel @Inject constructor(
                     }
                 }
             },
-            errorHandling = {
-                setError()
-            }
+            errorHandling = ::setError
         )
+    }
+
+    private fun setError(exception: Exception){
+        updateMainState { state ->
+            state.copy(errorMessage = ErrorData(detailStr = exception.message))
+        }
     }
 
     private fun clearError(){

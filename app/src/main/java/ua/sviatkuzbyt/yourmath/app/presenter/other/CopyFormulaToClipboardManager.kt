@@ -9,7 +9,7 @@ import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.domain.structures.formula.Formula
 import javax.inject.Inject
 
-class CopyToClipboardFormulaManager @Inject constructor(
+class CopyFormulaToClipboardManager @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
     private val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager

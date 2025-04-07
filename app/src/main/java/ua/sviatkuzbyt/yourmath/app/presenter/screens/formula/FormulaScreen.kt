@@ -138,7 +138,7 @@ private fun ColumnScope.ContentList(
 ){
     LazyColumn(
         state = listState,
-        modifier = Modifier.weight(1f)
+        modifier = Modifier.fillMaxWidth().weight(1f)
     ) {
         //Name and description
         item {

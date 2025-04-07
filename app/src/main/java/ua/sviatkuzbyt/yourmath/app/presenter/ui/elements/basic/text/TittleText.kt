@@ -1,10 +1,12 @@
 package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppTheme
 
@@ -20,5 +22,16 @@ fun TittleText(
             .fillMaxWidth()
             .padding(horizontal = AppSizes.dp16)
             .padding(bottom = AppSizes.dp8)
+    )
+}
+
+@Composable
+fun TittleText(
+    @StringRes textRes: Int,
+    modifier: Modifier = Modifier
+){
+    TittleText(
+        text = stringResource(textRes),
+        modifier = modifier
     )
 }

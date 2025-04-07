@@ -1,6 +1,5 @@
 package ua.sviatkuzbyt.yourmath.data.repositories
 
-import ua.sviatkuzbyt.yourmath.data.database.FormulaDao
 import ua.sviatkuzbyt.yourmath.data.database.HistoryDao
 import ua.sviatkuzbyt.yourmath.data.database.entity.HistoryFormulaEntity
 import ua.sviatkuzbyt.yourmath.data.database.entity.HistoryInputDataEntity

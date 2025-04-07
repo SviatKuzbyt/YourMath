@@ -22,6 +22,7 @@ import androidx.navigation.compose.rememberNavController
 import ua.sviatkuzbyt.yourmath.app.presenter.screens.EmptyScreen
 import ua.sviatkuzbyt.yourmath.app.presenter.screens.formula.FormulaScreen
 import ua.sviatkuzbyt.yourmath.app.presenter.screens.formula.FormulaViewModel
+import ua.sviatkuzbyt.yourmath.app.presenter.screens.history.HistoryScreen
 import ua.sviatkuzbyt.yourmath.app.presenter.screens.main.MainScreen
 
 val LocalNavController: ProvidableCompositionLocal<NavController> = staticCompositionLocalOf {
@@ -84,7 +85,7 @@ fun AppNavigation(){
             }
 
             composable<HistoryRoute> {
-                EmptyScreen()
+                HistoryScreen()
             }
 
             composable<EditorRoute> {

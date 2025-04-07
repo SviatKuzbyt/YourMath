@@ -28,4 +28,6 @@
     <string name="formula">Formula</string>
     <string name="load">Loading</string>
     <string name="copied_text">Copied text from YourMath</string>
+    <string name="open_filters">Open filters</string>
+    <string name="clear_history">Clear history</string>
 </resources>

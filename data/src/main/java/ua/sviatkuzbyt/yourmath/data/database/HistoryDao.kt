@@ -51,4 +51,7 @@ interface HistoryDao{
         WHERE hod.historyFormulaID = :historyID
     """)
     fun getOutputData(historyID: Long): List<FormulaResultWithValueData>
+
+    @Query("DELETE FROM HistoryFormula")
+    fun deleteAll()
 }

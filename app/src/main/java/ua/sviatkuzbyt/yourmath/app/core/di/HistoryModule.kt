@@ -5,7 +5,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import ua.sviatkuzbyt.yourmath.domain.repositories.HistoryRepository
-import ua.sviatkuzbyt.yourmath.domain.usecases.GetHistoryUseCase
+import ua.sviatkuzbyt.yourmath.domain.usecases.history.CleanHistoryUseCase
+import ua.sviatkuzbyt.yourmath.domain.usecases.history.GetHistoryUseCase
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -13,5 +14,10 @@ object HistoryModule{
     @Provides
     fun provideGetHistoryUseCase(repository: HistoryRepository): GetHistoryUseCase {
         return GetHistoryUseCase(repository)
+    }
+
+    @Provides
+    fun provideCleanHistoryUseCase(repository: HistoryRepository): CleanHistoryUseCase {
+        return CleanHistoryUseCase(repository)
     }
 }

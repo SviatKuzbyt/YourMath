@@ -50,6 +50,10 @@ class HistoryRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun cleanHistory() {
+        historyDao.deleteAll()
+    }
+
     private fun mapToHistoryListItem(items: HistoryListItemData): HistoryListItem{
         return HistoryListItem(
             historyId = items.historyId,

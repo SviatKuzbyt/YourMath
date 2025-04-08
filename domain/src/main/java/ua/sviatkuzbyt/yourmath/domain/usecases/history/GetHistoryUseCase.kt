@@ -1,4 +1,4 @@
-package ua.sviatkuzbyt.yourmath.domain.usecases
+package ua.sviatkuzbyt.yourmath.domain.usecases.history
 
 import ua.sviatkuzbyt.yourmath.domain.repositories.HistoryRepository
 import ua.sviatkuzbyt.yourmath.domain.structures.history.HistoryListItem

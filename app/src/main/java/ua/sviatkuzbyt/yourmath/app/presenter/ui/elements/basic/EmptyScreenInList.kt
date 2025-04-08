@@ -25,12 +25,13 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppTheme
 @Composable
 fun EmptyScreenInList(
     @StringRes textRes: Int,
-    @DrawableRes iconRes: Int
+    @DrawableRes iconRes: Int,
+    modifier: Modifier = Modifier
 ){
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize().padding(horizontal = AppSizes.dp32)
+        modifier = modifier.fillMaxSize().padding(horizontal = AppSizes.dp32)
     ) {
         Icon(
             imageVector = ImageVector.vectorResource(iconRes),

@@ -31,4 +31,8 @@
     <string name="open_filters">Open filters</string>
     <string name="clear_history">Clear history</string>
     <string name="load_more">Load more</string>
+    <string name="clear_history_content">Delete all records in the history? This will not affect the formulas. You will not be able to restore the history later</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="no_history">The history is empty. Perform the calculation and it will be saved in the history</string>
 </resources>

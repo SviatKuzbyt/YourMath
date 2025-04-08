@@ -1,8 +1,10 @@
 package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.dialog
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,7 +25,7 @@ fun DialogBasic(
     content: String,
     modifier: Modifier = Modifier,
     onClose: () -> Unit = {},
-    buttons: @Composable ColumnScope.() -> Unit
+    buttons: @Composable RowScope.() -> Unit
 ) {
     BasicAlertDialog(onDismissRequest = onClose) {
         //Background
@@ -55,7 +57,12 @@ fun DialogBasic(
             Spacer(Modifier.height(AppSizes.dp4))
 
             //Buttons
-            buttons()
+            Row(
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                buttons()
+            }
         }
     }
 }

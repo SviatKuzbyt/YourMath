@@ -26,10 +26,13 @@ import ua.sviatkuzbyt.yourmath.app.presenter.other.GlobalEvent
 import ua.sviatkuzbyt.yourmath.app.presenter.other.GlobalEventType
 import ua.sviatkuzbyt.yourmath.app.presenter.other.HistoryItem
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.AnimateListItem
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.EmptyScreenInList
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ScreenTopBar
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.dialog.ShowDialogError
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.SubTittleText
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.TittleText
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.ClearButton
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.ClearDialog
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.FilterButton
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.HistoryContainer
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.LoadMoreButton
@@ -62,7 +65,7 @@ fun HistoryContent(
     Column(modifier = Modifier.fillMaxSize()) {
         TopBar(
             onBack = {onNavigate(NavigateIntent.NavigateBack)},
-            onClear = {},
+            onClear = {onIntent(HistoryIntent.SetCleanDialog(true))},
             onFilter = {},
             listState = listState
         )
@@ -74,8 +77,24 @@ fun HistoryContent(
             showLoadMoreButton = !screenState.allDataIsLoaded,
             onOpenFormula = { formulaID, historyID ->
                 onNavigate(NavigateIntent.OpenFormulaScreenHistory(formulaID, historyID))
+            },
+            isRecords = screenState.isRecords
+        )
+    }
+
+    if (screenState.showCleanDialog){
+        ClearDialog(
+            onClose = {
+                onIntent(HistoryIntent.SetCleanDialog(false))
+            },
+            onClear = {
+                onIntent(HistoryIntent.CleanHistory)
             }
         )
+    }
+
+    ShowDialogError(screenState.errorMessage) {
+        onIntent(HistoryIntent.CloseErrorDialog)
     }
 }
 
@@ -118,7 +137,8 @@ private fun HistoryList(
     data: List<HistoryItem>,
     showLoadMoreButton: Boolean,
     onLoadMore: () -> Unit,
-    onOpenFormula: (Long, Long) -> Unit
+    onOpenFormula: (Long, Long) -> Unit,
+    isRecords: Boolean
 ){
     LazyColumn(
         state = listState,
@@ -132,37 +152,49 @@ private fun HistoryList(
             )
         }
 
-        items(
-            items = data,
-            key = {
-                when(it){
-                    is HistoryItem.Date -> "d${it.id}"
-                    is HistoryItem.Formula -> "f${it.historyID}"
-                }
-            }) { historyItem ->
-            AnimateListItem {
-                when (historyItem) {
-                    is HistoryItem.Date -> {
-                        SubTittleText(text = historyItem.dateStr)
+        if (isRecords){
+            items(
+                items = data,
+                key = {
+                    when(it){
+                        is HistoryItem.Date -> "d${it.id}"
+                        is HistoryItem.Formula -> "f${it.historyID}"
                     }
+                }) { historyItem ->
+                AnimateListItem {
+                    when (historyItem) {
+                        is HistoryItem.Date -> {
+                            SubTittleText(text = historyItem.dateStr)
+                        }
 
-                    is HistoryItem.Formula -> {
-                        HistoryContainer(
-                            formulaName = historyItem.name,
-                            formulaData = historyItem.inputOutputData,
-                            onClick = {
-                                onOpenFormula(historyItem.formulaID, historyItem.historyID)
-                            }
-                        )
+                        is HistoryItem.Formula -> {
+                            HistoryContainer(
+                                formulaName = historyItem.name,
+                                formulaData = historyItem.inputOutputData,
+                                onClick = {
+                                    onOpenFormula(historyItem.formulaID, historyItem.historyID)
+                                }
+                            )
+                        }
                     }
                 }
             }
-        }
 
-        item {
-            AnimateListItem {
-                if (showLoadMoreButton) {
-                    LoadMoreButton(onLoadMore)
+            item {
+                AnimateListItem {
+                    if (showLoadMoreButton) {
+                        LoadMoreButton(onLoadMore)
+                    }
+                }
+            }
+        } else {
+            item {
+                AnimateListItem {
+                    EmptyScreenInList(
+                        textRes = R.string.no_history,
+                        iconRes = R.drawable.ic_no_history,
+                        modifier = Modifier.fillParentMaxHeight()
+                    )
                 }
             }
         }

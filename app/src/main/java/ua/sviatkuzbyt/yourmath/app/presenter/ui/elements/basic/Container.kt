@@ -17,7 +17,6 @@ fun Container(
 ){
     Box(
         modifier
-            .padding(horizontal = AppSizes.dp16)
             .padding(bottom = AppSizes.dp16)
             .fillMaxWidth()
             .background(

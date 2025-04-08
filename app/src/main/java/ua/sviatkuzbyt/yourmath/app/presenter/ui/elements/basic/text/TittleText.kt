@@ -20,7 +20,6 @@ fun TittleText(
         style = AppTheme.types.tittle,
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = AppSizes.dp16)
             .padding(bottom = AppSizes.dp8)
     )
 }

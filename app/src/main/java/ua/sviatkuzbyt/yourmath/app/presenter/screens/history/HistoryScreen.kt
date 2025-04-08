@@ -1,6 +1,7 @@
 package ua.sviatkuzbyt.yourmath.app.presenter.screens.history
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -93,7 +94,8 @@ private fun HistoryList(
 ){
     LazyColumn(
         state = listState,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(horizontal = AppSizes.dp16)
     ) {
         item {
             TittleText(

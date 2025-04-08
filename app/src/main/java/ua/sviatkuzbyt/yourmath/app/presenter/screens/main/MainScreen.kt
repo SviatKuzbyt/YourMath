@@ -2,6 +2,7 @@ package ua.sviatkuzbyt.yourmath.app.presenter.screens.main
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -25,6 +26,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.main.FieldSearch
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.main.FormulaNoPinItemList
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.main.FormulaPinnedItemList
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.main.HomeTopBar
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
 import ua.sviatkuzbyt.yourmath.domain.structures.main.SplitFormulaItems
 
 @Composable
@@ -94,7 +96,10 @@ private fun FormulasList(
     onIntent: (MainIntent) -> Unit,
     onNavigate: (NavigateIntent) -> Unit
 ) {
-    LazyColumn(Modifier.fillMaxSize()) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(horizontal = AppSizes.dp16)
+    ) {
         //Pinned formulas
         if (lists.pins.isNotEmpty()) {
             item {

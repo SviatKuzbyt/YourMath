@@ -3,6 +3,7 @@ package ua.sviatkuzbyt.yourmath.app.presenter.screens.formula
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -138,7 +139,8 @@ private fun ColumnScope.ContentList(
 ){
     LazyColumn(
         state = listState,
-        modifier = Modifier.fillMaxWidth().weight(1f)
+        modifier = Modifier.fillMaxWidth().weight(1f),
+        contentPadding = PaddingValues(horizontal = AppSizes.dp16)
     ) {
         //Name and description
         item {
@@ -152,7 +154,6 @@ private fun ColumnScope.ContentList(
                     style = AppTheme.types.secondary,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = AppSizes.dp16)
                 )
             }
         }

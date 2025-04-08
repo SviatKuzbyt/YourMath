@@ -15,12 +15,12 @@ class SaveFormulaToHistoryUseCase(
         val historyID = historyRepository.addHistoryFormulaAndGetID(date, formulaID)
 
         formulaContent.inputData.forEach { input ->
-            val data = HistoryDataItem(input.data, input.id)
+            val data = HistoryDataItem(input.data.ifBlank { input.defaultData ?: "0" }, input.id)
             historyRepository.addHistoryInputData(data, historyID)
         }
 
         formulaContent.resultData.forEach { result ->
-            val data = HistoryDataItem(result.data.orEmpty(), result.id)
+            val data = HistoryDataItem(result.data?: "0", result.id)
             historyRepository.addHistoryOutputData(data, historyID)
         }
     }

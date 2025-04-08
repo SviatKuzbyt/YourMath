@@ -20,18 +20,21 @@ private fun FormulaItemList(
     pinButton: @Composable () -> Unit,
     onClick: () -> Unit,
 ){
-    Container {
+    Container(
+        Modifier
+            .clickable(
+            onClick = onClick,
+            role = Role.Button,
+            interactionSource = null,
+            indication = null
+        )
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .padding(vertical = AppSizes.dp8)
                 .padding(start = AppSizes.dp20, end = AppSizes.dp4)
-                .clickable(
-                    onClick = onClick,
-                    role = Role.Button,
-                    interactionSource = null,
-                    indication = null
-                )
+
         ) {
             Text(
                 text = text,

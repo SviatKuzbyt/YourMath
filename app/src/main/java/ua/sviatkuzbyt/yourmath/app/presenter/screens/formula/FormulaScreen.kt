@@ -66,7 +66,7 @@ fun FormulaContent(
             tittle = screenState.content.info.label,
             listState = listState,
             onBack = {
-                onNavigate(NavigateIntent.NavigateUp)
+                onNavigate(NavigateIntent.NavigateBack)
             },
             onCopy = {
                 onIntent(FormulaIntent.CopyFormulaToClipboard)

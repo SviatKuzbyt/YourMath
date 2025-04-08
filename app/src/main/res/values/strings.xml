@@ -30,4 +30,5 @@
     <string name="copied_text">Copied text from YourMath</string>
     <string name="open_filters">Open filters</string>
     <string name="clear_history">Clear history</string>
+    <string name="load_more">Load more</string>
 </resources>

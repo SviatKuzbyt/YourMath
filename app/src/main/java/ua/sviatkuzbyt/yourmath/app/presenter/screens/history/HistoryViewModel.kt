@@ -6,14 +6,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.HistoryIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.HistoryState
-import ua.sviatkuzbyt.yourmath.app.presenter.other.HistoryItem
 import ua.sviatkuzbyt.yourmath.app.presenter.other.HistoryListManager
 import ua.sviatkuzbyt.yourmath.app.presenter.other.safeBackgroundLaunch
-import ua.sviatkuzbyt.yourmath.domain.structures.history.HistoryListItem
 import ua.sviatkuzbyt.yourmath.domain.usecases.GetHistoryUseCase
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,6 +19,10 @@ class HistoryViewModel @Inject constructor(
 
     private val _screenState = MutableStateFlow(HistoryState())
     val screenState: StateFlow<HistoryState> = _screenState
+
+    init {
+        loadData()
+    }
 
     fun onIntent(intent: HistoryIntent){
         when(intent){

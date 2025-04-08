@@ -7,44 +7,51 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.HistoryIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.HistoryState
+import ua.sviatkuzbyt.yourmath.app.presenter.navigation.LocalNavController
+import ua.sviatkuzbyt.yourmath.app.presenter.navigation.NavigateIntent
+import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.other.HistoryItem
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.AnimateListItem
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ScreenTopBar
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.SubTittleText
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.TittleText
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.ClearButton
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.FilterButton
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.HistoryContainer
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.LoadMoreButton
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppTheme
 
 @Composable
 fun HistoryScreen(viewModel: HistoryViewModel = hiltViewModel()){
     val screenState by viewModel.screenState.collectAsState()
-    HistoryContent(screenState, viewModel::onIntent)
+    val navController = LocalNavController.current
+
+    HistoryContent(
+        screenState,
+        viewModel::onIntent,
+        onNavigate = { onNavigateIntent(navController, it) })
 }
 
 @Composable
 fun HistoryContent(
     screenState: HistoryState,
-    onIntent: (HistoryIntent) -> Unit
+    onIntent: (HistoryIntent) -> Unit,
+    onNavigate: (NavigateIntent) -> Unit
 ){
     val listState = rememberLazyListState()
 
     Column(modifier = Modifier.fillMaxSize()) {
         TopBar(
-            onBack = {},
+            onBack = {onNavigate(NavigateIntent.NavigateBack)},
             onClear = {},
             onFilter = {},
             listState = listState
@@ -52,7 +59,7 @@ fun HistoryContent(
 
         HistoryList(
             listState,
-            list = screenState.items,
+            data = screenState.items,
             onLoadMore = { onIntent(HistoryIntent.LoadNewItems) },
             showLoadMoreButton = !screenState.allDataIsLoaded
         )
@@ -80,39 +87,50 @@ private fun TopBar(
 @Composable
 private fun HistoryList(
     listState: LazyListState,
-    list: List<HistoryItem>,
+    data: List<HistoryItem>,
+    showLoadMoreButton: Boolean,
     onLoadMore: () -> Unit,
-    showLoadMoreButton: Boolean
 ){
     LazyColumn(
         state = listState,
         modifier = Modifier.fillMaxSize()
-    ){
+    ) {
         item {
-            TittleText(R.string.history)
+            TittleText(
+                textRes = R.string.history,
+                modifier = Modifier.padding(bottom = AppSizes.dp8)
+            )
         }
 
-        items(list){
-            when(it){
-                is HistoryItem.Date -> Text(
-                    text = it.string,
-                    style = AppTheme.types.bold,
-                    modifier = Modifier.padding(AppSizes.dp16)
-                )
-                is HistoryItem.Formula -> Text(
-                    text = it.toString(),
-                    style = AppTheme.types.basic,
-                    modifier = Modifier.padding(AppSizes.dp16)
-                )
+        items(
+            items = data,
+            key = {
+                when(it){
+                    is HistoryItem.Date -> "d${it.id}"
+                    is HistoryItem.Formula -> "f${it.historyID}"
+                }
+            }) { historyItem ->
+            AnimateListItem {
+                when (historyItem) {
+                    is HistoryItem.Date -> {
+                        SubTittleText(text = historyItem.dateStr)
+                    }
+
+                    is HistoryItem.Formula -> {
+                        HistoryContainer(
+                            formulaName = historyItem.name,
+                            formulaData = historyItem.inputOutputData,
+                            onClick = {}
+                        )
+                    }
+                }
             }
         }
 
-        if (showLoadMoreButton){
-            item {
-                Button(
-                    onClick = onLoadMore
-                ) {
-                    Text("Load more")
+        item {
+            AnimateListItem {
+                if (showLoadMoreButton) {
+                    LoadMoreButton(onLoadMore)
                 }
             }
         }

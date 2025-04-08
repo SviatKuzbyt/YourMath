@@ -7,7 +7,8 @@ data object MainRoute
 
 @Serializable
 data class FormulaRoute(
-    val formulaID: Long
+    val formulaID: Long,
+    val historyID: Long? = null
 )
 
 @Serializable

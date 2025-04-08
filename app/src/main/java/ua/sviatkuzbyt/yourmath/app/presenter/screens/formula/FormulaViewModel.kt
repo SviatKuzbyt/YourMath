@@ -14,6 +14,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.other.safeBackgroundLaunch
 import ua.sviatkuzbyt.yourmath.data.other.MathException
 import ua.sviatkuzbyt.yourmath.data.other.NoAllDataEnterException
 import ua.sviatkuzbyt.yourmath.domain.usecases.formula.GetFormulaUseCase
+import ua.sviatkuzbyt.yourmath.domain.usecases.formula.GetFormulaWithHistoryDataUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.formula.MathFormulaUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.formula.SaveFormulaToHistoryUseCase
 import javax.inject.Inject
@@ -23,11 +24,13 @@ class FormulaViewModel @Inject constructor (
     private val getFormulaUseCase: GetFormulaUseCase,
     private val mathFormulaUseCase: MathFormulaUseCase,
     private val saveFormulaToHistoryUseCase: SaveFormulaToHistoryUseCase,
+    private val getFormulaWithHistoryDataUseCase: GetFormulaWithHistoryDataUseCase,
     private val copyManager: CopyFormulaToClipboardManager,
     sentData: SavedStateHandle
 ): ViewModel(){
 
     private val formulaID: Long = sentData["formulaID"] ?: 0L
+    private val historyID: Long? = sentData["historyID"]
     private val _screenState = MutableStateFlow(FormulaState())
     val screenState: StateFlow<FormulaState> = _screenState
 
@@ -49,7 +52,11 @@ class FormulaViewModel @Inject constructor (
         safeBackgroundLaunch(
             code = {
                 //get empty formula data and set it in UI
-                val formula = getFormulaUseCase.execute(formulaID)
+                val formula = if(historyID != null){
+                    getFormulaWithHistoryDataUseCase.execute(formulaID, historyID)
+                } else {
+                    getFormulaUseCase.execute(formulaID)
+                }
                 _screenState.value = FormulaState(content = formula)
             },
             errorHandling = ::setError

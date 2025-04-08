@@ -62,7 +62,10 @@ fun HistoryContent(
             listState,
             data = screenState.items,
             onLoadMore = { onIntent(HistoryIntent.LoadNewItems) },
-            showLoadMoreButton = !screenState.allDataIsLoaded
+            showLoadMoreButton = !screenState.allDataIsLoaded,
+            onOpenFormula = { formulaID, historyID ->
+                onNavigate(NavigateIntent.OpenFormulaScreenHistory(formulaID, historyID))
+            }
         )
     }
 }
@@ -91,6 +94,7 @@ private fun HistoryList(
     data: List<HistoryItem>,
     showLoadMoreButton: Boolean,
     onLoadMore: () -> Unit,
+    onOpenFormula: (Long, Long) -> Unit
 ){
     LazyColumn(
         state = listState,
@@ -122,7 +126,9 @@ private fun HistoryList(
                         HistoryContainer(
                             formulaName = historyItem.name,
                             formulaData = historyItem.inputOutputData,
-                            onClick = {}
+                            onClick = {
+                                onOpenFormula(historyItem.formulaID, historyItem.historyID)
+                            }
                         )
                     }
                 }

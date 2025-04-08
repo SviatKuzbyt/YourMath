@@ -6,6 +6,8 @@ import androidx.room.Query
 import ua.sviatkuzbyt.yourmath.data.database.entity.HistoryFormulaEntity
 import ua.sviatkuzbyt.yourmath.data.database.entity.HistoryInputDataEntity
 import ua.sviatkuzbyt.yourmath.data.database.entity.HistoryOutputDataEntity
+import ua.sviatkuzbyt.yourmath.data.structures.history.FormulaInputWithValueData
+import ua.sviatkuzbyt.yourmath.data.structures.history.FormulaResultWithValueData
 import ua.sviatkuzbyt.yourmath.data.structures.history.HistoryListItemData
 
 @Dao
@@ -35,4 +37,18 @@ interface HistoryDao{
         ORDER BY hf.historyFormulaID DESC LIMIT :limit OFFSET :offset
     """)
     fun getHistoryItems(offset: Int, limit: Int): List<HistoryListItemData>
+
+    @Query("""
+        SELECT id.inputDataID, id.label, id.codeLabel, id.defaultData, hid.value FROM HistoryInputData hid
+        INNER JOIN InputData id ON hid.inputDataID = id.inputDataID 
+        WHERE hid.historyFormulaID = :historyID
+    """)
+    fun getInputData(historyID: Long): List<FormulaInputWithValueData>
+
+    @Query("""
+        SELECT od.outputDataID, od.label, od.codeLabel, hod.value FROM HistoryOutputData hod 
+        INNER JOIN OutputData od ON hod.outputDataID = od.outputDataID
+        WHERE hod.historyFormulaID = :historyID
+    """)
+    fun getOutputData(historyID: Long): List<FormulaResultWithValueData>
 }

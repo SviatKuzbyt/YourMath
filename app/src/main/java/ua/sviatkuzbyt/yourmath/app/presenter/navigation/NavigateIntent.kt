@@ -7,6 +7,10 @@ sealed class NavigateIntent {
     data class OpenFormulaScreen(val formulaID: Long): NavigateIntent()
     data object OpenHistoryScreen: NavigateIntent()
     data object OpenEditorScreen: NavigateIntent()
+    data class OpenFormulaScreenHistory(
+        val formulaID: Long,
+        val historyID: Long
+    ): NavigateIntent()
 }
 
 fun onNavigateIntent(
@@ -14,9 +18,19 @@ fun onNavigateIntent(
     intent: NavigateIntent
 ) {
     when(intent){
-        NavigateIntent.NavigateBack -> navController.navigateUp()
-        NavigateIntent.OpenEditorScreen -> navController.navigate(EditorRoute)
-        is NavigateIntent.OpenFormulaScreen -> navController.navigate(FormulaRoute(intent.formulaID))
-        NavigateIntent.OpenHistoryScreen -> navController.navigate(HistoryRoute)
+        NavigateIntent.NavigateBack ->
+            navController.navigateUp()
+
+        NavigateIntent.OpenEditorScreen ->
+            navController.navigate(EditorRoute)
+
+        is NavigateIntent.OpenFormulaScreen ->
+            navController.navigate(FormulaRoute(intent.formulaID))
+
+        NavigateIntent.OpenHistoryScreen ->
+            navController.navigate(HistoryRoute)
+
+        is NavigateIntent.OpenFormulaScreenHistory ->
+            navController.navigate(FormulaRoute(intent.formulaID, intent.historyID))
     }
 }

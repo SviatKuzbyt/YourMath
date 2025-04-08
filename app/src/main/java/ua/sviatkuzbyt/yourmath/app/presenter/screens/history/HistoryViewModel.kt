@@ -27,7 +27,14 @@ class HistoryViewModel @Inject constructor(
     fun onIntent(intent: HistoryIntent){
         when(intent){
             HistoryIntent.LoadNewItems -> loadData()
+            HistoryIntent.ReloadItems -> reloadData()
         }
+    }
+
+    private fun reloadData(){
+        listManager.clearData()
+        _screenState.value = HistoryState()
+        loadData()
     }
 
     private fun loadData(){

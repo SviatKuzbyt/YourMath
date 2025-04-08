@@ -9,17 +9,21 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.flow.collectLatest
 import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.HistoryIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.HistoryState
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.LocalNavController
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.NavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
+import ua.sviatkuzbyt.yourmath.app.presenter.other.GlobalEvent
+import ua.sviatkuzbyt.yourmath.app.presenter.other.GlobalEventType
 import ua.sviatkuzbyt.yourmath.app.presenter.other.HistoryItem
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.AnimateListItem
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ScreenTopBar
@@ -39,8 +43,11 @@ fun HistoryScreen(viewModel: HistoryViewModel = hiltViewModel()){
     HistoryContent(
         screenState,
         viewModel::onIntent,
-        onNavigate = { onNavigateIntent(navController, it) })
+        onNavigate = { onNavigateIntent(navController, it) }
+    )
 }
+
+
 
 @Composable
 fun HistoryContent(
@@ -49,6 +56,8 @@ fun HistoryContent(
     onNavigate: (NavigateIntent) -> Unit
 ){
     val listState = rememberLazyListState()
+
+    ObserveHistoryChange{ onIntent(HistoryIntent.ReloadItems) }
 
     Column(modifier = Modifier.fillMaxSize()) {
         TopBar(
@@ -67,6 +76,21 @@ fun HistoryContent(
                 onNavigate(NavigateIntent.OpenFormulaScreenHistory(formulaID, historyID))
             }
         )
+    }
+}
+
+@Composable
+fun ObserveHistoryChange(
+    onReload: () -> Unit
+){
+    LaunchedEffect(Unit) {
+        GlobalEvent.event.collectLatest { event ->
+            if (event == GlobalEventType.AddHistoryRecord){
+                onReload()
+
+                GlobalEvent.clearEvent()
+            }
+        }
     }
 }
 

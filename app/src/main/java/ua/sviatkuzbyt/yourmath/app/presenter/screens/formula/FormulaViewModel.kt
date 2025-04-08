@@ -10,6 +10,8 @@ import ua.sviatkuzbyt.yourmath.app.presenter.controllers.formula.FormulaIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.formula.FormulaState
 import ua.sviatkuzbyt.yourmath.app.presenter.other.CopyFormulaToClipboardManager
 import ua.sviatkuzbyt.yourmath.app.presenter.other.ErrorData
+import ua.sviatkuzbyt.yourmath.app.presenter.other.GlobalEvent
+import ua.sviatkuzbyt.yourmath.app.presenter.other.GlobalEventType
 import ua.sviatkuzbyt.yourmath.app.presenter.other.safeBackgroundLaunch
 import ua.sviatkuzbyt.yourmath.data.other.MathException
 import ua.sviatkuzbyt.yourmath.data.other.NoAllDataEnterException
@@ -106,6 +108,10 @@ class FormulaViewModel @Inject constructor (
 
                 //save results in history
                 saveFormulaToHistoryUseCase.execute(screenState.value.content, formulaID)
+
+                historyID?.let {
+                    GlobalEvent.sendEvent(GlobalEventType.AddHistoryRecord)
+                }
             },
             errorHandling = ::setError
         )

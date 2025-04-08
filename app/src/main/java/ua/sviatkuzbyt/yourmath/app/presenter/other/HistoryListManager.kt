@@ -17,6 +17,13 @@ class HistoryListManager @Inject constructor() {
     private var lastDate = ""
     private var dateID = 1
 
+    fun clearData(){
+        loadOffset = 0
+        allDataIsLoaded = false
+        lastDate = ""
+        dateID = 1
+    }
+
     fun convertList(inputList: List<HistoryListItem>): List<HistoryItem>{
         val newList = mutableListOf<HistoryItem>()
 

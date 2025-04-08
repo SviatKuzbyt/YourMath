@@ -21,7 +21,7 @@ android {
         consumerProguardFiles("consumer-rules.pro")
 
         ndk {
-            abiFilters += listOf("arm64-v8a", "x86_64")
+            abiFilters += listOf("arm64-v8a", "x86_64", "x86") //todo delete x86 in prod
         }
     }
 

@@ -1,6 +1,6 @@
 package ua.sviatkuzbyt.yourmath.domain.structures.history
 
-data class HistoryListItem(
+data class HistoryNoFormatItem(
     val historyId: Long,
     val formulaId: Long,
     val name: String,

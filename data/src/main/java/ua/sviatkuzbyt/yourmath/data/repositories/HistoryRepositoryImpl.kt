@@ -10,8 +10,7 @@ import ua.sviatkuzbyt.yourmath.data.structures.history.HistoryListItemData
 import ua.sviatkuzbyt.yourmath.domain.repositories.HistoryRepository
 import ua.sviatkuzbyt.yourmath.domain.structures.formula.FormulaInput
 import ua.sviatkuzbyt.yourmath.domain.structures.formula.FormulaResult
-import ua.sviatkuzbyt.yourmath.domain.structures.history.HistoryDataItem
-import ua.sviatkuzbyt.yourmath.domain.structures.history.HistoryListItem
+import ua.sviatkuzbyt.yourmath.domain.structures.history.HistoryNoFormatItem
 import javax.inject.Inject
 
 class HistoryRepositoryImpl @Inject constructor(
@@ -22,17 +21,17 @@ class HistoryRepositoryImpl @Inject constructor(
         return historyDao.insertHistoryFormula(entity)
     }
 
-    override fun addHistoryInputData(data: HistoryDataItem, historyID: Long) {
-        val entity = HistoryInputDataEntity(0, data.data, data.placeID, historyID)
+    override fun addHistoryInputData(data: String, inputID: Long, historyID: Long) {
+        val entity = HistoryInputDataEntity(0, data, inputID, historyID)
         historyDao.insertHistoryInputData(entity)
     }
 
-    override fun addHistoryOutputData(data: HistoryDataItem, historyID: Long) {
-        val entity = HistoryOutputDataEntity(0, data.data, data.placeID, historyID)
+    override fun addHistoryOutputData(data: String, outputID: Long, historyID: Long) {
+        val entity = HistoryOutputDataEntity(0, data, outputID, historyID)
         historyDao.insertHistoryOutputData(entity)
     }
 
-    override fun getHistoryItems(offset: Int, limit: Int): List<HistoryListItem> {
+    override fun getHistoryItems(offset: Int, limit: Int): List<HistoryNoFormatItem> {
         return historyDao.getHistoryItems(offset, limit).map { item ->
             mapToHistoryListItem(item)
         }
@@ -54,8 +53,8 @@ class HistoryRepositoryImpl @Inject constructor(
         historyDao.deleteAll()
     }
 
-    private fun mapToHistoryListItem(items: HistoryListItemData): HistoryListItem{
-        return HistoryListItem(
+    private fun mapToHistoryListItem(items: HistoryListItemData): HistoryNoFormatItem{
+        return HistoryNoFormatItem(
             historyId = items.historyId,
             formulaId = items.formulaId,
             name = items.name,

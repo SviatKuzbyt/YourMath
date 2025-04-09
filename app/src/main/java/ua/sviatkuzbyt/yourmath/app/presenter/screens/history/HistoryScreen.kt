@@ -24,7 +24,6 @@ import ua.sviatkuzbyt.yourmath.app.presenter.navigation.NavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.other.GlobalEvent
 import ua.sviatkuzbyt.yourmath.app.presenter.other.GlobalEventType
-import ua.sviatkuzbyt.yourmath.app.presenter.other.HistoryItem
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.AnimateListItem
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.EmptyScreenInList
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ScreenTopBar
@@ -37,6 +36,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.FilterButton
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.HistoryContainer
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.LoadMoreButton
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
+import ua.sviatkuzbyt.yourmath.domain.structures.history.HistoryItem
 
 @Composable
 fun HistoryScreen(viewModel: HistoryViewModel = hiltViewModel()){
@@ -157,7 +157,7 @@ private fun HistoryList(
                 items = data,
                 key = {
                     when(it){
-                        is HistoryItem.Date -> "d${it.id}"
+                        is HistoryItem.Date -> "d${it.dateLong}"
                         is HistoryItem.Formula -> "f${it.historyID}"
                     }
                 }) { historyItem ->

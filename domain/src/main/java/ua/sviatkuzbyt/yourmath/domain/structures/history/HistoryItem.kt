@@ -1,10 +1,11 @@
-package ua.sviatkuzbyt.yourmath.app.presenter.other
+package ua.sviatkuzbyt.yourmath.domain.structures.history
 
-sealed class HistoryItem{
+sealed class HistoryItem {
     data class Date(
-        val id: Int,
-        val dateStr: String
+        val dateStr: String,
+        val dateLong: Long
     ): HistoryItem()
+
     data class Formula(
         val name: String,
         val inputOutputData: String,

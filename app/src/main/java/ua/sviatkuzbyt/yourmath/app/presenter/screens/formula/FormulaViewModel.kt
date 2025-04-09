@@ -19,6 +19,7 @@ import ua.sviatkuzbyt.yourmath.domain.usecases.formula.GetFormulaUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.formula.GetFormulaWithHistoryDataUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.formula.MathFormulaUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.formula.SaveFormulaToHistoryUseCase
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -107,7 +108,11 @@ class FormulaViewModel @Inject constructor (
                 }
 
                 //save results in history
-                saveFormulaToHistoryUseCase.execute(screenState.value.content, formulaID)
+                saveFormulaToHistoryUseCase.execute(
+                    formulaContent = screenState.value.content,
+                    formulaID = formulaID,
+                    date = LocalDate.now().toEpochDay()
+                )
 
                 historyID?.let {
                     GlobalEvent.sendEvent(GlobalEventType.AddHistoryRecord)

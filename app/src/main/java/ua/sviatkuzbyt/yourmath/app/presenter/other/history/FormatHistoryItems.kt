@@ -1,4 +1,4 @@
-package ua.sviatkuzbyt.yourmath.app.presenter.other
+package ua.sviatkuzbyt.yourmath.app.presenter.other.history
 
 import ua.sviatkuzbyt.yourmath.domain.structures.history.HistoryNoFormatItem
 import java.time.LocalDate
@@ -38,7 +38,7 @@ class FormatHistoryItems @Inject constructor() {
         return formattedDate
     }
 
-    private fun convertToHistoryItemFormula(item: HistoryNoFormatItem): HistoryItem.Formula{
+    private fun convertToHistoryItemFormula(item: HistoryNoFormatItem): HistoryItem.Formula {
         return HistoryItem.Formula(
             name = item.name,
             inputOutputData = "${item.valueInput} / ${item.valueOutput}",

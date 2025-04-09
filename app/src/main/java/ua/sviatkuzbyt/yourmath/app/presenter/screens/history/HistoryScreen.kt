@@ -30,8 +30,8 @@ import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.HistoryState
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.LocalNavController
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.NavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
-import ua.sviatkuzbyt.yourmath.app.presenter.other.GlobalEvent
-import ua.sviatkuzbyt.yourmath.app.presenter.other.GlobalEventType
+import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.GlobalEvent
+import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.GlobalEventType
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.AnimateListItem
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.EmptyScreenInList
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ScreenTopBar
@@ -45,7 +45,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.FilterSheet
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.HistoryContainer
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.LoadMoreButton
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
-import ua.sviatkuzbyt.yourmath.app.presenter.other.HistoryItem
+import ua.sviatkuzbyt.yourmath.app.presenter.other.history.HistoryItem
 
 @Composable
 fun HistoryScreen(viewModel: HistoryViewModel = hiltViewModel()){

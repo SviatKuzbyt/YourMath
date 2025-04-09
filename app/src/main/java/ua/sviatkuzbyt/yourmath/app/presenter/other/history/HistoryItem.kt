@@ -1,4 +1,4 @@
-package ua.sviatkuzbyt.yourmath.app.presenter.other
+package ua.sviatkuzbyt.yourmath.app.presenter.other.history
 
 sealed class HistoryItem {
     data class Date(

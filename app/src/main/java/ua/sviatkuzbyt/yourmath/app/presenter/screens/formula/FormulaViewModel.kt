@@ -8,11 +8,11 @@ import kotlinx.coroutines.flow.StateFlow
 import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.formula.FormulaIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.formula.FormulaState
-import ua.sviatkuzbyt.yourmath.app.presenter.other.CopyFormulaToClipboardManager
-import ua.sviatkuzbyt.yourmath.app.presenter.other.ErrorData
-import ua.sviatkuzbyt.yourmath.app.presenter.other.GlobalEvent
-import ua.sviatkuzbyt.yourmath.app.presenter.other.GlobalEventType
-import ua.sviatkuzbyt.yourmath.app.presenter.other.safeBackgroundLaunch
+import ua.sviatkuzbyt.yourmath.app.presenter.other.formula.CopyFormulaToClipboardManager
+import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.ErrorData
+import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.GlobalEvent
+import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.GlobalEventType
+import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.safeBackgroundLaunch
 import ua.sviatkuzbyt.yourmath.data.other.MathException
 import ua.sviatkuzbyt.yourmath.data.other.NoAllDataEnterException
 import ua.sviatkuzbyt.yourmath.domain.usecases.formula.GetFormulaUseCase

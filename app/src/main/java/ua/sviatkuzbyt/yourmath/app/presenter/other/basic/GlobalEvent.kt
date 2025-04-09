@@ -1,4 +1,4 @@
-package ua.sviatkuzbyt.yourmath.app.presenter.other
+package ua.sviatkuzbyt.yourmath.app.presenter.other.basic
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

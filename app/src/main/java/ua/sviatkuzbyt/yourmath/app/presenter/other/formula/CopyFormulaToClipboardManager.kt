@@ -1,4 +1,4 @@
-package ua.sviatkuzbyt.yourmath.app.presenter.other
+package ua.sviatkuzbyt.yourmath.app.presenter.other.formula
 
 import android.content.ClipData
 import android.content.ClipboardManager

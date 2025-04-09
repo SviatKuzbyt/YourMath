@@ -1,0 +1,21 @@
+package ua.sviatkuzbyt.yourmath.app.presenter.other.basic
+
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import ua.sviatkuzbyt.yourmath.app.R
+
+data class EmptyScreenInfo(
+    @StringRes val message: Int,
+    @DrawableRes val icon: Int
+){
+    companion object{
+        fun noItemsInHistory() = EmptyScreenInfo(
+            message = R.string.no_history,
+            icon = R.drawable.ic_no_history
+        )
+        fun noFilterResultHistory() = EmptyScreenInfo(
+            message = R.string.no_history_by_filter,
+            icon = R.drawable.ic_no_filters
+        )
+    }
+}

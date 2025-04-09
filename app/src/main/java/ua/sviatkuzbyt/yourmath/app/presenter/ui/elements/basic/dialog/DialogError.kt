@@ -3,7 +3,7 @@ package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.dialog
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import ua.sviatkuzbyt.yourmath.app.R
-import ua.sviatkuzbyt.yourmath.app.presenter.other.ErrorData
+import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.ErrorData
 
 @Composable
 fun ShowDialogError(

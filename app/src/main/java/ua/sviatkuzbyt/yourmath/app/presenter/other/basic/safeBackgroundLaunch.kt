@@ -1,4 +1,4 @@
-package ua.sviatkuzbyt.yourmath.app.presenter.other
+package ua.sviatkuzbyt.yourmath.app.presenter.other.basic
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.StateFlow
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.MainIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.MainState
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.ShowOnMainScreen
-import ua.sviatkuzbyt.yourmath.app.presenter.other.ErrorData
-import ua.sviatkuzbyt.yourmath.app.presenter.other.safeBackgroundLaunch
+import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.ErrorData
+import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.safeBackgroundLaunch
 import ua.sviatkuzbyt.yourmath.domain.structures.main.FormulaItem
 import ua.sviatkuzbyt.yourmath.domain.structures.main.SplitFormulaItems
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.GetFormulasListUseCase

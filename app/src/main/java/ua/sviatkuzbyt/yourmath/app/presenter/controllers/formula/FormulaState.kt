@@ -1,6 +1,6 @@
 package ua.sviatkuzbyt.yourmath.app.presenter.controllers.formula
 
-import ua.sviatkuzbyt.yourmath.app.presenter.other.ErrorData
+import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.ErrorData
 import ua.sviatkuzbyt.yourmath.domain.structures.formula.FormulaContent
 import ua.sviatkuzbyt.yourmath.domain.structures.formula.FormulaInfo
 

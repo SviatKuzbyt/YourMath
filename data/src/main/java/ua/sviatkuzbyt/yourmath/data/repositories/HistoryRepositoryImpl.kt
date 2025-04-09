@@ -53,6 +53,16 @@ class HistoryRepositoryImpl @Inject constructor(
         historyDao.deleteAll()
     }
 
+    override fun getHistoryByFormulaIDItems(
+        formulaID: Long,
+        offset: Int,
+        limit: Int
+    ): List<HistoryNoFormatItem> {
+        return historyDao.getHistoryItemsByFormulaID(formulaID, offset, limit).map { item ->
+            mapToHistoryListItem(item)
+        }
+    }
+
     private fun mapToHistoryListItem(items: HistoryListItemData): HistoryNoFormatItem{
         return HistoryNoFormatItem(
             historyId = items.historyId,

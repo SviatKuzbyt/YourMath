@@ -12,4 +12,5 @@ interface HistoryRepository {
     fun getFormulaInput(historyID: Long): List<FormulaInput>
     fun getFormulaResult(historyID: Long): List<FormulaResult>
     fun cleanHistory()
+    fun getHistoryByFormulaIDItems(formulaID: Long, offset: Int, limit: Int): List<HistoryNoFormatItem>
 }

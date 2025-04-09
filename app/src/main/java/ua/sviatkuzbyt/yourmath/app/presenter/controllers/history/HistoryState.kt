@@ -9,7 +9,11 @@ data class HistoryState(
     val errorMessage: ErrorData? = null,
     val allDataIsLoaded: Boolean = true,
     val showCleanDialog: Boolean = false,
-    val isRecords: Boolean = true,
+    val showOnHistoryScreen: ShowOnHistoryScreen = ShowOnHistoryScreen.Nothing,
     val filterList: List<FormulaFilterItem> = listOf(),
     val showFilterList: Boolean = false
 )
+
+enum class ShowOnHistoryScreen{
+    Items, NoItems, NoItemsByFilter, Nothing
+}

@@ -6,10 +6,10 @@ import ua.sviatkuzbyt.yourmath.domain.structures.main.SplitFormulaItems
 data class MainState(
     val searchText: String = "",
     val formulas: SplitFormulaItems = SplitFormulaItems(listOf(), listOf()),
-    val showOnScreen: ShowOnScreen = ShowOnScreen.Nothing,
+    val showOnMainScreen: ShowOnMainScreen = ShowOnMainScreen.Nothing,
     val errorMessage: ErrorData? = null,
 )
 
-enum class ShowOnScreen{
+enum class ShowOnMainScreen{
     Formulas, NoFormulas, NoSearchResult, Nothing
 }

@@ -38,4 +38,7 @@
     <string name="drag">Drag handle</string>
     <string name="filer">Filter by formula</string>
     <string name="all_formulas">All formulas</string>
+    <string name="no_history_by_filter">No records for these filters</string>
+    <string name="selected">Selected</string>
+    <string name="no_selected">No selected</string>
 </resources>

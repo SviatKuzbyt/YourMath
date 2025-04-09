@@ -39,6 +39,24 @@ interface HistoryDao{
     fun getHistoryItems(offset: Int, limit: Int): List<HistoryListItemData>
 
     @Query("""
+        SELECT 
+            hf.historyFormulaID as 'historyId', 
+            hf.formulaID as 'formulaId', 
+            f.name as 'name', 
+            hid.value as 'valueInput', 
+            hod.value as 'valueOutput',
+            hf.date as 'date'
+        FROM HistoryFormula hf 
+            INNER JOIN Formula f ON hf.formulaID = f.formulaID 
+            INNER JOIN HistoryInputData hid ON hf.historyFormulaID = hid.historyFormulaID 
+            INNER JOIN HistoryOutputData hod ON hf.historyFormulaID = hod.historyFormulaID
+        WHERE hf.formulaID = :formulaID
+        GROUP BY hf.historyFormulaID
+        ORDER BY hf.historyFormulaID DESC LIMIT :limit OFFSET :offset
+    """)
+    fun getHistoryItemsByFormulaID(formulaID: Long, offset: Int, limit: Int): List<HistoryListItemData>
+
+    @Query("""
         SELECT id.inputDataID, id.label, id.codeLabel, id.defaultData, hid.value FROM HistoryInputData hid
         INNER JOIN InputData id ON hid.inputDataID = id.inputDataID 
         WHERE hid.historyFormulaID = :historyID

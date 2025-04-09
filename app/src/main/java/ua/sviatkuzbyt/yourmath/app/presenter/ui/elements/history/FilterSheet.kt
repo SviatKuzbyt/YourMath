@@ -1,5 +1,6 @@
 package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,12 +15,14 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.semantics.Role
 import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.SubTittleText
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppShapes
@@ -89,20 +92,43 @@ private fun FilterRadioItem(
     isSelect: Boolean,
     onClick: () -> Unit
 ){
-    Row(verticalAlignment = Alignment.CenterVertically) {
-
-        RadioButton(
-            selected = isSelect,
-            onClick = onClick,
-            colors = RadioButtonDefaults.colors(
-                selectedColor = AppTheme.colors.primary,
-                unselectedColor = AppTheme.colors.textPrimary
-            ),
-            modifier = Modifier.size(AppSizes.dp48)
-        )
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(
+                onClick = onClick,
+                role = Role.RadioButton,
+                interactionSource = null,
+                indication = ripple(color = AppTheme.colors.textSecondary)
+            )
+    ) {
+        RadioIcon(isSelect)
         Text(
             text = text,
             style = AppTheme.types.basic
         )
     }
+}
+
+@Composable
+fun RadioIcon(isSelect: Boolean){
+    val iconRes =
+        if (isSelect) R.drawable.ic_radio_selected
+        else R.drawable.ic_radio
+
+    val descriptionRes =
+        if (isSelect) R.string.selected
+        else R.string.no_selected
+
+    val color =
+        if(isSelect) AppTheme.colors.primary
+        else AppTheme.colors.textPrimary
+
+    Icon(
+        imageVector = ImageVector.vectorResource(iconRes),
+        contentDescription = stringResource(descriptionRes),
+        tint = color,
+        modifier = Modifier.size(AppSizes.dp48)
+    )
 }

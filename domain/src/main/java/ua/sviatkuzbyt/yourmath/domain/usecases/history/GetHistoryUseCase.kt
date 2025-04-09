@@ -11,12 +11,16 @@ class GetHistoryUseCase(private val repository: HistoryRepository) {
     var isAllLoaded = false
         private set
 
-    fun execute(loadFromStart: Boolean): List<HistoryItem>{
+    fun execute(loadFromStart: Boolean, formulaID: Long): List<HistoryItem>{
         if (loadFromStart){
             clearData()
         }
 
-        val noFormatHistory = repository.getHistoryItems(loadOffset, loadLimit)
+        val noFormatHistory = if (formulaID == 0L){
+            repository.getHistoryItems(loadOffset, loadLimit)
+        } else{
+            repository.getHistoryByFormulaIDItems(formulaID, loadOffset, loadLimit)
+        }
 
         if (noFormatHistory.size < loadLimit){
             isAllLoaded = true
@@ -28,6 +32,7 @@ class GetHistoryUseCase(private val repository: HistoryRepository) {
     private fun clearData(){
         loadOffset = 0
         lastDate = 0L
+        isAllLoaded = false
     }
 
     private fun convertList(inputList: List<HistoryNoFormatItem>): List<HistoryItem>{

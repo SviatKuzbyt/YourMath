@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.HistoryIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.HistoryState
+import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.ShowOnHistoryScreen
 import ua.sviatkuzbyt.yourmath.app.presenter.other.ErrorData
 import ua.sviatkuzbyt.yourmath.app.presenter.other.safeBackgroundLaunch
 import ua.sviatkuzbyt.yourmath.domain.usecases.history.GetFiltersUseCase
@@ -15,6 +16,8 @@ import ua.sviatkuzbyt.yourmath.domain.usecases.history.GetHistoryUseCase
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
+
+private const val ALL_ITEMS = 0L
 
 @HiltViewModel
 class HistoryViewModel @Inject constructor(
@@ -26,7 +29,7 @@ class HistoryViewModel @Inject constructor(
     private val _screenState = MutableStateFlow(HistoryState())
     val screenState: StateFlow<HistoryState> = _screenState
     private val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
-    private var filterFormulaID = 0L
+    private var filterFormulaID = ALL_ITEMS
 
     init {
         loadData(false)
@@ -66,9 +69,10 @@ class HistoryViewModel @Inject constructor(
             updateHistoryState { state ->
                 state.copy(
                     filterList = updatedFilterList,
-//                    showFilterList = false
                 )
             }
+
+            reloadData()
         }
     }
 
@@ -105,23 +109,33 @@ class HistoryViewModel @Inject constructor(
     }
 
     private fun reloadData(){
-        _screenState.value = HistoryState()
+        updateHistoryState { state ->
+            state.copy( items = listOf())
+        }
         loadData(true)
     }
 
     private fun loadData(loadFromStart: Boolean){
         safeBackgroundLaunch(
             code = {
-                val newRecords = getHistoryUseCase.execute(loadFromStart)
+                val newRecords = getHistoryUseCase.execute(loadFromStart, filterFormulaID)
                 if (newRecords.isEmpty()){
-                    _screenState.value = HistoryState(isRecords = false)
+                    val showOnScreen = if (filterFormulaID == ALL_ITEMS){
+                        ShowOnHistoryScreen.NoItems
+                    } else{
+                        ShowOnHistoryScreen.NoItemsByFilter
+                    }
+                    updateHistoryState { state ->
+                        state.copy(showOnHistoryScreen = showOnScreen)
+                    }
                 } else{
                     val formatedNewRecords = formatDateInList(newRecords)
 
                     updateHistoryState { state ->
                         state.copy(
                             items = state.items + formatedNewRecords,
-                            allDataIsLoaded = getHistoryUseCase.isAllLoaded
+                            allDataIsLoaded = getHistoryUseCase.isAllLoaded,
+                            showOnHistoryScreen = ShowOnHistoryScreen.Items
                         )
                     }
                 }
@@ -150,7 +164,7 @@ class HistoryViewModel @Inject constructor(
         safeBackgroundLaunch(
             code = {
                 cleanHistoryUseCase.execute()
-                _screenState.value = HistoryState(isRecords = false)
+                _screenState.value = HistoryState(showOnHistoryScreen = ShowOnHistoryScreen.NoItems)
             },
             errorHandling = ::setError
         )

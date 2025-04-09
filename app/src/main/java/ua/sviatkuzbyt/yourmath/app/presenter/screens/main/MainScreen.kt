@@ -14,7 +14,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.MainIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.MainState
-import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.ShowOnScreen
+import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.ShowOnMainScreen
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.LocalNavController
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.NavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
@@ -62,22 +62,22 @@ fun MainContent(
         }
 
         //Main content, formulas
-        Crossfade(targetState = screenState.showOnScreen) { showOnScreen ->
+        Crossfade(targetState = screenState.showOnMainScreen) { showOnScreen ->
             when (showOnScreen) {
-                ShowOnScreen.Formulas -> FormulasList(
+                ShowOnMainScreen.Formulas -> FormulasList(
                     lists = screenState.formulas,
                     onIntent = onIntent,
                     onNavigate = onNavigate
                 )
-                ShowOnScreen.NoFormulas -> EmptyScreenInList(
+                ShowOnMainScreen.NoFormulas -> EmptyScreenInList(
                     textRes = R.string.no_formulas,
                     iconRes = R.drawable.ic_no_formulas
                 )
-                ShowOnScreen.NoSearchResult -> EmptyScreenInList(
+                ShowOnMainScreen.NoSearchResult -> EmptyScreenInList(
                     textRes = R.string.no_search_result,
                     iconRes = R.drawable.ic_no_results
                 )
-                ShowOnScreen.Nothing -> {}
+                ShowOnMainScreen.Nothing -> {}
             }
         }
 

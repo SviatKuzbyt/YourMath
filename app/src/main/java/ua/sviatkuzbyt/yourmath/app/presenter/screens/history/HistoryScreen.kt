@@ -25,6 +25,7 @@ import kotlinx.coroutines.launch
 import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.HistoryIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.HistoryState
+import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.ShowOnHistoryScreen
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.LocalNavController
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.NavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
@@ -85,7 +86,7 @@ fun HistoryContent(
             onOpenFormula = { formulaID, historyID ->
                 onNavigate(NavigateIntent.OpenFormulaScreenHistory(formulaID, historyID))
             },
-            isRecords = screenState.isRecords
+            showOnScreen = screenState.showOnHistoryScreen
         )
     }
 
@@ -163,7 +164,7 @@ private fun HistoryList(
     showLoadMoreButton: Boolean,
     onLoadMore: () -> Unit,
     onOpenFormula: (Long, Long) -> Unit,
-    isRecords: Boolean
+    showOnScreen: ShowOnHistoryScreen
 ){
     LazyColumn(
         state = listState,
@@ -177,51 +178,64 @@ private fun HistoryList(
             )
         }
 
-        if (isRecords){
-            items(
-                items = data,
-                key = {
-                    when(it){
-                        is HistoryItem.Date -> "d${it.dateLong}"
-                        is HistoryItem.Formula -> "f${it.historyID}"
-                    }
-                }) { historyItem ->
-                AnimateListItem {
-                    when (historyItem) {
-                        is HistoryItem.Date -> {
-                            SubTittleText(text = historyItem.dateStr)
+        when(showOnScreen){
+            ShowOnHistoryScreen.Items -> {
+                items(
+                    items = data,
+                    key = {
+                        when(it){
+                            is HistoryItem.Date -> "d${it.dateLong}"
+                            is HistoryItem.Formula -> "f${it.historyID}"
                         }
+                    }) { historyItem ->
+                    AnimateListItem {
+                        when (historyItem) {
+                            is HistoryItem.Date -> {
+                                SubTittleText(text = historyItem.dateStr)
+                            }
 
-                        is HistoryItem.Formula -> {
-                            HistoryContainer(
-                                formulaName = historyItem.name,
-                                formulaData = historyItem.inputOutputData,
-                                onClick = {
-                                    onOpenFormula(historyItem.formulaID, historyItem.historyID)
-                                }
-                            )
+                            is HistoryItem.Formula -> {
+                                HistoryContainer(
+                                    formulaName = historyItem.name,
+                                    formulaData = historyItem.inputOutputData,
+                                    onClick = {
+                                        onOpenFormula(historyItem.formulaID, historyItem.historyID)
+                                    }
+                                )
+                            }
+                        }
+                    }
+                }
+
+                item {
+                    AnimateListItem {
+                        if (showLoadMoreButton) {
+                            LoadMoreButton(onLoadMore)
                         }
                     }
                 }
             }
-
-            item {
-                AnimateListItem {
-                    if (showLoadMoreButton) {
-                        LoadMoreButton(onLoadMore)
+            ShowOnHistoryScreen.NoItems -> {
+                item {
+                    AnimateListItem {
+                        EmptyScreenInList(
+                            textRes = R.string.no_history,
+                            iconRes = R.drawable.ic_no_history,
+                            modifier = Modifier.fillParentMaxHeight()
+                        )
                     }
                 }
             }
-        } else {
-            item {
+            ShowOnHistoryScreen.NoItemsByFilter -> item {
                 AnimateListItem {
                     EmptyScreenInList(
-                        textRes = R.string.no_history,
-                        iconRes = R.drawable.ic_no_history,
+                        textRes = R.string.no_history_by_filter,
+                        iconRes = R.drawable.ic_no_filters,
                         modifier = Modifier.fillParentMaxHeight()
                     )
                 }
             }
+            ShowOnHistoryScreen.Nothing -> {}
         }
     }
 }

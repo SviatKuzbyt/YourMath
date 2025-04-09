@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.MainIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.MainState
-import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.ShowOnScreen
+import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.ShowOnMainScreen
 import ua.sviatkuzbyt.yourmath.app.presenter.other.ErrorData
 import ua.sviatkuzbyt.yourmath.app.presenter.other.safeBackgroundLaunch
 import ua.sviatkuzbyt.yourmath.domain.structures.main.FormulaItem
@@ -38,16 +38,16 @@ class MainViewModel @Inject constructor(
                 //get all data from DB and set in UI
                 val formulasFromDB = getFormulasListUseCase.execute()
 
-                val showOnScreen = if (formulasFromDB.isEmpty()){
-                    ShowOnScreen.NoFormulas
+                val showOnMainScreen = if (formulasFromDB.isEmpty()){
+                    ShowOnMainScreen.NoFormulas
                 } else {
-                    ShowOnScreen.Formulas
+                    ShowOnMainScreen.Formulas
                 }
 
                 //update UI
                 updateMainState { state ->
                     state.copy(
-                        showOnScreen = showOnScreen,
+                        showOnMainScreen = showOnMainScreen,
                         formulas = formulasFromDB
                     )
                 }
@@ -133,20 +133,20 @@ class MainViewModel @Inject constructor(
                 val searchFormulas = searchFormulasUseCase.execute(newText)
 
                 //update UI if it necessary
-                val showOnScreen = if (searchFormulas.isEmpty()) {
-                    ShowOnScreen.NoSearchResult
+                val showOnMainScreen = if (searchFormulas.isEmpty()) {
+                    ShowOnMainScreen.NoSearchResult
                 } else {
-                    ShowOnScreen.Formulas
+                    ShowOnMainScreen.Formulas
                 }
 
                 if (
-                    _screenState.value.showOnScreen != showOnScreen ||
+                    _screenState.value.showOnMainScreen != showOnMainScreen ||
                     _screenState.value.formulas != searchFormulas
                     )
                 {
                     updateMainState{ state ->
                         state.copy(
-                            showOnScreen = showOnScreen,
+                            showOnMainScreen = showOnMainScreen,
                             formulas = searchFormulas
                         )
                     }

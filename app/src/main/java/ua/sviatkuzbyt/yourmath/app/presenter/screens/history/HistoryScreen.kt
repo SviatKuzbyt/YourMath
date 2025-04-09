@@ -1,12 +1,12 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
 package ua.sviatkuzbyt.yourmath.app.presenter.screens.history
-
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -23,9 +23,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ua.sviatkuzbyt.yourmath.app.R
+import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.HistoryAboveScreenContent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.HistoryIntent
+import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.HistoryListContent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.HistoryState
-import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.ShowOnHistoryScreen
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.LocalNavController
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.NavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
@@ -34,7 +35,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.other.GlobalEventType
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.AnimateListItem
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.EmptyScreenInList
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ScreenTopBar
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.dialog.ShowDialogError
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.dialog.DialogError
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.SubTittleText
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.TittleText
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.ClearButton
@@ -44,7 +45,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.FilterSheet
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.HistoryContainer
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.LoadMoreButton
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
-import ua.sviatkuzbyt.yourmath.domain.structures.history.HistoryItem
+import ua.sviatkuzbyt.yourmath.app.presenter.other.HistoryItem
 
 @Composable
 fun HistoryScreen(viewModel: HistoryViewModel = hiltViewModel()){
@@ -65,63 +66,33 @@ fun HistoryContent(
     onNavigate: (NavigateIntent) -> Unit
 ){
     val listState = rememberLazyListState()
-    val sheetState = rememberModalBottomSheetState()
-    val coroutineScope = rememberCoroutineScope()
 
     ObserveHistoryChange{ onIntent(HistoryIntent.ReloadItems) }
 
     Column(modifier = Modifier.fillMaxSize()) {
         TopBar(
-            onBack = {onNavigate(NavigateIntent.NavigateBack)},
-            onClear = {onIntent(HistoryIntent.SetCleanDialog(true))},
-            onFilter = {onIntent(HistoryIntent.OpenFilters)},
+            onBack = { onNavigate(NavigateIntent.NavigateBack) },
+            onClear = { onIntent(HistoryIntent.OpenCleanDialog) },
+            onFilter = { onIntent(HistoryIntent.OpenFilters) },
             listState = listState
         )
 
-        HistoryList(
-            listState,
-            data = screenState.items,
+        ContentList(
+            listState = listState,
+            content = screenState.listContent,
             onLoadMore = { onIntent(HistoryIntent.LoadNewItems) },
-            showLoadMoreButton = !screenState.allDataIsLoaded,
             onOpenFormula = { formulaID, historyID ->
                 onNavigate(NavigateIntent.OpenFormulaScreenHistory(formulaID, historyID))
-            },
-            showOnScreen = screenState.showOnHistoryScreen
-        )
-    }
-
-    if (screenState.showCleanDialog){
-        ClearDialog(
-            onClose = {
-                onIntent(HistoryIntent.SetCleanDialog(false))
-            },
-            onClear = {
-                onIntent(HistoryIntent.CleanHistory)
             }
         )
     }
 
-    ShowDialogError(screenState.errorMessage) {
-        onIntent(HistoryIntent.CloseErrorDialog)
-    }
-
-    if (screenState.showFilterList){
-        FilterSheet(
-            filterList = screenState.filterList,
-            onSelect = { formulaID ->
-                onIntent(HistoryIntent.SelectFilter(formulaID))
-                coroutineScope.launch { sheetState.hide() }.invokeOnCompletion {
-                    if (!sheetState.isVisible){
-                        onIntent(HistoryIntent.CloseFilters)
-                    }
-                }
-            },
-            onClose = {
-                onIntent(HistoryIntent.CloseFilters)
-            },
-            state = sheetState
-        )
-    }
+    AboveScreenContent(
+        content = screenState.aboveScreenContent,
+        onClear = { onIntent(HistoryIntent.CleanHistory) },
+        onClose = { onIntent(HistoryIntent.CloseAboveScreenContentDialog) },
+        onSelectFilter = { formulaID -> onIntent(HistoryIntent.SelectFilter(formulaID)) }
+    )
 }
 
 @Composable
@@ -132,7 +103,6 @@ fun ObserveHistoryChange(
         GlobalEvent.event.collectLatest { event ->
             if (event == GlobalEventType.AddHistoryRecord){
                 onReload()
-
                 GlobalEvent.clearEvent()
             }
         }
@@ -158,13 +128,11 @@ private fun TopBar(
 }
 
 @Composable
-private fun HistoryList(
+private fun ContentList(
     listState: LazyListState,
-    data: List<HistoryItem>,
-    showLoadMoreButton: Boolean,
+    content: HistoryListContent,
     onLoadMore: () -> Unit,
     onOpenFormula: (Long, Long) -> Unit,
-    showOnScreen: ShowOnHistoryScreen
 ){
     LazyColumn(
         state = listState,
@@ -178,64 +146,89 @@ private fun HistoryList(
             )
         }
 
-        when(showOnScreen){
-            ShowOnHistoryScreen.Items -> {
-                items(
-                    items = data,
-                    key = {
-                        when(it){
-                            is HistoryItem.Date -> "d${it.dateLong}"
-                            is HistoryItem.Formula -> "f${it.historyID}"
-                        }
-                    }) { historyItem ->
-                    AnimateListItem {
-                        when (historyItem) {
-                            is HistoryItem.Date -> {
-                                SubTittleText(text = historyItem.dateStr)
-                            }
-
-                            is HistoryItem.Formula -> {
-                                HistoryContainer(
-                                    formulaName = historyItem.name,
-                                    formulaData = historyItem.inputOutputData,
-                                    onClick = {
-                                        onOpenFormula(historyItem.formulaID, historyItem.historyID)
-                                    }
-                                )
-                            }
-                        }
-                    }
-                }
-
-                item {
-                    AnimateListItem {
-                        if (showLoadMoreButton) {
-                            LoadMoreButton(onLoadMore)
-                        }
-                    }
-                }
-            }
-            ShowOnHistoryScreen.NoItems -> {
-                item {
-                    AnimateListItem {
-                        EmptyScreenInList(
-                            textRes = R.string.no_history,
-                            iconRes = R.drawable.ic_no_history,
-                            modifier = Modifier.fillParentMaxHeight()
-                        )
-                    }
-                }
-            }
-            ShowOnHistoryScreen.NoItemsByFilter -> item {
+        when(content){
+            is HistoryListContent.EmptyScreen -> item {
                 AnimateListItem {
                     EmptyScreenInList(
-                        textRes = R.string.no_history_by_filter,
-                        iconRes = R.drawable.ic_no_filters,
+                        textRes = content.info.message,
+                        iconRes = content.info.icon,
                         modifier = Modifier.fillParentMaxHeight()
                     )
                 }
             }
-            ShowOnHistoryScreen.Nothing -> {}
+            is HistoryListContent.Items -> {
+                items(
+                    items = content.list,
+                    key = { historyItem -> getItemKey(historyItem) },
+                    itemContent = { historyItem -> ItemList(historyItem, onOpenFormula) }
+                )
+
+                item {
+                    AnimateListItem {
+                        if (content.isLoadMore) { LoadMoreButton(onLoadMore) }
+                    }
+                }
+            }
+            HistoryListContent.Nothing -> {}
         }
+    }
+}
+
+private fun getItemKey(item: HistoryItem) = when(item){
+    is HistoryItem.Date -> "d${item.dateLong}"
+    is HistoryItem.Formula -> "f${item.historyID}"
+}
+
+@Composable
+fun LazyItemScope.ItemList(
+    item: HistoryItem,
+    onClick: (Long, Long) -> Unit
+){
+    AnimateListItem {
+        when (item) {
+            is HistoryItem.Date -> SubTittleText(text = item.dateStr)
+
+            is HistoryItem.Formula -> HistoryContainer(
+                formulaName = item.name,
+                formulaData = item.inputOutputData,
+                onClick = { onClick(item.formulaID, item.historyID) }
+            )
+        }
+    }
+}
+
+@Composable
+private fun AboveScreenContent(
+    content: HistoryAboveScreenContent,
+    onClear: () -> Unit,
+    onClose: () -> Unit,
+    onSelectFilter: (Long) -> Unit
+){
+    val sheetState = rememberModalBottomSheetState()
+    val coroutineScope = rememberCoroutineScope()
+
+    when(content){
+        HistoryAboveScreenContent.CleanDialog -> ClearDialog(
+            onClose = onClose,
+            onClear = onClear
+        )
+        is HistoryAboveScreenContent.ErrorDialog -> DialogError(
+            data = content.data,
+            onCloseClick = onClose,
+        )
+        is HistoryAboveScreenContent.FilterSheet -> FilterSheet(
+            filterList = content.list,
+            onSelect = { formulaID ->
+                onSelectFilter(formulaID)
+                coroutineScope.launch { sheetState.hide() }.invokeOnCompletion {
+                    if (!sheetState.isVisible) {
+                        onClose()
+                    }
+                }
+            },
+            onClose = onClose,
+            state = sheetState
+        )
+        HistoryAboveScreenContent.Nothing -> {}
     }
 }

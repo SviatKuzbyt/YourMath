@@ -17,11 +17,11 @@ fun ClearDialog(
         onClose = onClose,
         buttons = {
             DialogButton(
-                R.string.no,
+                textRes = R.string.no,
                 onClick = onClose
             )
             DialogButton(
-                R.string.yes,
+                textRes = R.string.yes,
                 onClick = onClear
             )
         }

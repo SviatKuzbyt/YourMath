@@ -1,61 +1,14 @@
 package ua.sviatkuzbyt.yourmath.domain.usecases.history
 
 import ua.sviatkuzbyt.yourmath.domain.repositories.HistoryRepository
-import ua.sviatkuzbyt.yourmath.domain.structures.history.HistoryItem
 import ua.sviatkuzbyt.yourmath.domain.structures.history.HistoryNoFormatItem
 
 class GetHistoryUseCase(private val repository: HistoryRepository) {
-    private val loadLimit = 25
-    private var loadOffset = 0
-    private var lastDate = 0L
-    var isAllLoaded = false
-        private set
-
-    fun execute(loadFromStart: Boolean, formulaID: Long): List<HistoryItem>{
-        if (loadFromStart){
-            clearData()
-        }
-
-        val noFormatHistory = if (formulaID == 0L){
-            repository.getHistoryItems(loadOffset, loadLimit)
+    fun execute(formulaID: Long, offset: Int, limit: Int): List<HistoryNoFormatItem>{
+        return if (formulaID == 0L){
+            repository.getHistoryItems(offset, limit)
         } else{
-            repository.getHistoryByFormulaIDItems(formulaID, loadOffset, loadLimit)
+            repository.getHistoryByFormulaIDItems(formulaID, offset, limit)
         }
-
-        if (noFormatHistory.size < loadLimit){
-            isAllLoaded = true
-        }
-
-        return convertList(noFormatHistory)
-    }
-
-    private fun clearData(){
-        loadOffset = 0
-        lastDate = 0L
-        isAllLoaded = false
-    }
-
-    private fun convertList(inputList: List<HistoryNoFormatItem>): List<HistoryItem>{
-        val newList = mutableListOf<HistoryItem>()
-
-        inputList.forEach {
-            if (it.date != lastDate){
-                lastDate = it.date
-                newList.add(HistoryItem.Date("", it.date))
-            }
-            newList.add(convertToHistoryItemFormula(it))
-        }
-
-        loadOffset += loadLimit
-        return newList
-    }
-
-    private fun convertToHistoryItemFormula(item: HistoryNoFormatItem): HistoryItem.Formula{
-        return HistoryItem.Formula(
-            name = item.name,
-            inputOutputData = "${item.valueInput} / ${item.valueOutput}",
-            formulaID = item.formulaId,
-            historyID = item.historyId
-        )
     }
 }

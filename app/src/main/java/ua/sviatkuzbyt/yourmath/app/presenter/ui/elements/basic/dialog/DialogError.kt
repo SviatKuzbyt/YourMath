@@ -19,7 +19,7 @@ fun ShowDialogError(
 }
 
 @Composable
-private fun DialogError(
+fun DialogError(
     data: ErrorData,
     onCloseClick: () -> Unit
 ) {

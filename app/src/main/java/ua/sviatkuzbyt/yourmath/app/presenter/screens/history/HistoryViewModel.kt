@@ -4,17 +4,20 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
+import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.EmptyScreenInfo
+import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.HistoryAboveScreenContent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.HistoryIntent
+import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.HistoryListContent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.HistoryState
-import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.ShowOnHistoryScreen
 import ua.sviatkuzbyt.yourmath.app.presenter.other.ErrorData
+import ua.sviatkuzbyt.yourmath.app.presenter.other.FormatHistoryItems
 import ua.sviatkuzbyt.yourmath.app.presenter.other.safeBackgroundLaunch
+import ua.sviatkuzbyt.yourmath.domain.structures.history.FormulaFilterItem
 import ua.sviatkuzbyt.yourmath.domain.usecases.history.GetFiltersUseCase
-import ua.sviatkuzbyt.yourmath.domain.structures.history.HistoryItem
+import ua.sviatkuzbyt.yourmath.app.presenter.other.HistoryItem
 import ua.sviatkuzbyt.yourmath.domain.usecases.history.CleanHistoryUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.history.GetHistoryUseCase
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 private const val ALL_ITEMS = 0L
@@ -23,164 +26,138 @@ private const val ALL_ITEMS = 0L
 class HistoryViewModel @Inject constructor(
     private val getHistoryUseCase: GetHistoryUseCase,
     private val cleanHistoryUseCase: CleanHistoryUseCase,
-    private val getFiltersUseCase: GetFiltersUseCase
+    private val getFiltersUseCase: GetFiltersUseCase,
+    private val formatHistoryItems: FormatHistoryItems
 ): ViewModel() {
 
     private val _screenState = MutableStateFlow(HistoryState())
     val screenState: StateFlow<HistoryState> = _screenState
-    private val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
+
     private var filterFormulaID = ALL_ITEMS
+    private val itemList = mutableListOf<HistoryItem>()
+    private val filterList = mutableListOf<FormulaFilterItem>()
+    private var isLoadMore = true
 
     init {
-        loadData(false)
+        loadData()
     }
 
     fun onIntent(intent: HistoryIntent){
         when(intent){
-            HistoryIntent.LoadNewItems -> loadData(false)
+            HistoryIntent.LoadNewItems -> loadData()
             HistoryIntent.ReloadItems -> reloadData()
+            HistoryIntent.OpenCleanDialog -> updateAboveScreenContent(HistoryAboveScreenContent.CleanDialog)
             HistoryIntent.CleanHistory -> clearHistory()
-            is HistoryIntent.SetCleanDialog -> setCleanDialog(intent.isShow)
-            HistoryIntent.CloseErrorDialog -> clearError()
-            HistoryIntent.CloseFilters -> closeFilters()
-            HistoryIntent.OpenFilters -> {
-                openFilters()
-                getFilters()
-            }
+            HistoryIntent.OpenFilters -> openFilters()
             is HistoryIntent.SelectFilter -> selectFilter(intent.formulaID)
+            HistoryIntent.CloseAboveScreenContentDialog -> closeAboveScreenContentDialog()
         }
     }
 
-    private fun selectFilter(formulaID: Long){
+    private fun loadData() = safeBackgroundLaunch(
+        code = {
+            val newRecords = getHistoryUseCase.execute(
+                formulaID = filterFormulaID,
+                offset = formatHistoryItems.loadOffset,
+                limit = formatHistoryItems.loadLimit
+            )
 
+            val listContent = if(newRecords.isEmpty()){
+                val info = if(filterFormulaID == ALL_ITEMS)
+                    EmptyScreenInfo.noItemsInHistory()
+                else
+                    EmptyScreenInfo.noFilterResultHistory()
+                HistoryListContent.EmptyScreen(info)
+            }
+                else {
+                    val formatedNewRecords = formatHistoryItems.convertList(newRecords)
+                    itemList.addAll(formatedNewRecords)
+
+                    if (newRecords.size < formatHistoryItems.loadLimit){
+                        isLoadMore = false
+                    }
+
+                    HistoryListContent.Items(itemList.toList(), isLoadMore)
+                }
+
+            _screenState.update { state ->
+                state.copy(listContent = listContent)
+            }
+        },
+        errorHandling = ::setError
+    )
+
+
+    private fun reloadData(){
+        itemList.clear()
+        formatHistoryItems.clear()
+        isLoadMore = true
+        loadData()
+    }
+
+    private fun clearHistory() = safeBackgroundLaunch(
+        code = {
+            cleanHistoryUseCase.execute()
+            _screenState.value = HistoryState(
+                listContent = HistoryListContent.EmptyScreen(
+                    EmptyScreenInfo.noItemsInHistory()
+                )
+            )
+            filterList.clear()
+            filterFormulaID = ALL_ITEMS
+        },
+        errorHandling = ::setError
+    )
+
+    private fun openFilters() = safeBackgroundLaunch(
+        code = {
+            if (filterList.isEmpty()){
+                filterList.addAll(getFiltersUseCase.execute())
+            }
+
+            updateAboveScreenContent(
+                HistoryAboveScreenContent.FilterSheet(filterList.toList())
+            )
+        },
+        errorHandling = ::setError
+    )
+
+    private fun selectFilter(formulaID: Long){
         if (formulaID != filterFormulaID){
             filterFormulaID = formulaID
 
-            val updatedFilterList = screenState.value.filterList.map { filter ->
-                if (filter.isSelected){
-                    filter.copy(isSelected = false)
-                } else if(filter.formulaID == formulaID){
-                    filter.copy(isSelected = true)
-                } else{
-                    filter
-                }
+            val toSelectIndex = filterList.indexOfFirst { it.formulaID == formulaID }
+            val toUnselectIndex = filterList.indexOfFirst { it.isSelected }
+
+            if (toSelectIndex >= 0) {
+                filterList[toSelectIndex] = filterList[toSelectIndex].copy(isSelected = true)
+            }
+            if (toUnselectIndex >= 0) {
+                filterList[toUnselectIndex] = filterList[toUnselectIndex].copy(isSelected = false)
             }
 
-            updateHistoryState { state ->
-                state.copy(
-                    filterList = updatedFilterList,
-                )
-            }
-
+            updateAboveScreenContent(HistoryAboveScreenContent.Nothing)
             reloadData()
         }
     }
 
-    private fun closeFilters(){
-        updateHistoryState{state ->
-            state.copy(showFilterList = false)
+    private fun updateAboveScreenContent(content: HistoryAboveScreenContent) {
+        _screenState.update { it.copy(aboveScreenContent = content) }
+    }
+
+    private fun closeAboveScreenContentDialog(){
+        _screenState.update { state ->
+            state.copy(aboveScreenContent = HistoryAboveScreenContent.Nothing)
         }
-    }
-
-    private fun openFilters(){
-        updateHistoryState{state ->
-            state.copy(showFilterList = true)
-        }
-    }
-
-    private fun getFilters(){
-        if (screenState.value.filterList.isEmpty()){
-            safeBackgroundLaunch(
-                code = {
-                    val filterList = getFiltersUseCase.execute()
-                    updateHistoryState{state ->
-                        state.copy(filterList = filterList)
-                    }
-                },
-                errorHandling = ::setError
-            )
-        }
-    }
-
-    private fun setCleanDialog(isShow: Boolean){
-        updateHistoryState{state ->
-            state.copy(showCleanDialog = isShow)
-        }
-    }
-
-    private fun reloadData(){
-        updateHistoryState { state ->
-            state.copy( items = listOf())
-        }
-        loadData(true)
-    }
-
-    private fun loadData(loadFromStart: Boolean){
-        safeBackgroundLaunch(
-            code = {
-                val newRecords = getHistoryUseCase.execute(loadFromStart, filterFormulaID)
-                if (newRecords.isEmpty()){
-                    val showOnScreen = if (filterFormulaID == ALL_ITEMS){
-                        ShowOnHistoryScreen.NoItems
-                    } else{
-                        ShowOnHistoryScreen.NoItemsByFilter
-                    }
-                    updateHistoryState { state ->
-                        state.copy(showOnHistoryScreen = showOnScreen)
-                    }
-                } else{
-                    val formatedNewRecords = formatDateInList(newRecords)
-
-                    updateHistoryState { state ->
-                        state.copy(
-                            items = state.items + formatedNewRecords,
-                            allDataIsLoaded = getHistoryUseCase.isAllLoaded,
-                            showOnHistoryScreen = ShowOnHistoryScreen.Items
-                        )
-                    }
-                }
-            },
-            errorHandling = ::setError
-        )
-    }
-
-    private fun formatDateInList(list: List<HistoryItem>): List<HistoryItem>{
-        return list.map { item ->
-            if (item is HistoryItem.Date){
-                formatDateItem(item)
-            } else{
-                item
-            }
-        }
-    }
-
-    private fun formatDateItem(item: HistoryItem.Date): HistoryItem.Date{
-        val localDate = LocalDate.ofEpochDay(item.dateLong)
-        val formattedDate = localDate.format(formatter)
-        return HistoryItem.Date(formattedDate, item.dateLong)
-    }
-
-    private fun clearHistory(){
-        safeBackgroundLaunch(
-            code = {
-                cleanHistoryUseCase.execute()
-                _screenState.value = HistoryState(showOnHistoryScreen = ShowOnHistoryScreen.NoItems)
-            },
-            errorHandling = ::setError
-        )
     }
 
     private fun setError(exception: Exception){
-        updateHistoryState { state ->
-            state.copy(errorMessage = ErrorData(detailStr = exception.message))
+        _screenState.update { state ->
+            state.copy(
+                aboveScreenContent = HistoryAboveScreenContent.ErrorDialog(
+                    ErrorData(detailStr = exception.message)
+                )
+            )
         }
-    }
-
-    private fun clearError(){
-        _screenState.value = _screenState.value.copy(errorMessage = null)
-    }
-
-    private inline fun updateHistoryState(update: (HistoryState) -> HistoryState) {
-        _screenState.value = update(_screenState.value)
     }
 }

@@ -7,6 +7,5 @@ class GetFiltersUseCase(private val formulasRepository: FormulasRepository) {
     fun execute(): List<FormulaFilterItem>{
         return listOf(FormulaFilterItem(0, "", true)) +
                 formulasRepository.getFormulaFilterList()
-
     }
 }

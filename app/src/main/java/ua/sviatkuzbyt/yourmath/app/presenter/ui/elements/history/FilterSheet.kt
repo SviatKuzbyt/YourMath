@@ -11,8 +11,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.RadioButton
-import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.ripple
@@ -49,13 +47,10 @@ fun FilterSheet(
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxWidth(),
-            contentPadding = PaddingValues(start = AppSizes.dp8, end = AppSizes.dp16, bottom = AppSizes.dp16)
+            contentPadding = PaddingValues(start = AppSizes.dp16, end = AppSizes.dp16, bottom = AppSizes.dp16)
         ) {
             item {
-                SubTittleText(
-                    textRes = R.string.filer,
-                    modifier = Modifier.padding(start = AppSizes.dp8)
-                )
+                SubTittleText(R.string.filer)
             }
             itemsIndexed(filterList){ position, filter ->
                 Row(verticalAlignment = Alignment.CenterVertically) {

@@ -8,7 +8,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.HistoryIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.HistoryState
 import ua.sviatkuzbyt.yourmath.app.presenter.other.ErrorData
 import ua.sviatkuzbyt.yourmath.app.presenter.other.safeBackgroundLaunch
-import ua.sviatkuzbyt.yourmath.domain.structures.history.GetFiltersUseCase
+import ua.sviatkuzbyt.yourmath.domain.usecases.history.GetFiltersUseCase
 import ua.sviatkuzbyt.yourmath.domain.structures.history.HistoryItem
 import ua.sviatkuzbyt.yourmath.domain.usecases.history.CleanHistoryUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.history.GetHistoryUseCase
@@ -66,7 +66,7 @@ class HistoryViewModel @Inject constructor(
             updateHistoryState { state ->
                 state.copy(
                     filterList = updatedFilterList,
-                    showFilterList = false
+//                    showFilterList = false
                 )
             }
         }

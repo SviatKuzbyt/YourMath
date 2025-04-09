@@ -6,7 +6,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import ua.sviatkuzbyt.yourmath.domain.repositories.FormulasRepository
 import ua.sviatkuzbyt.yourmath.domain.repositories.HistoryRepository
-import ua.sviatkuzbyt.yourmath.domain.structures.history.GetFiltersUseCase
+import ua.sviatkuzbyt.yourmath.domain.usecases.history.GetFiltersUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.history.CleanHistoryUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.history.GetHistoryUseCase
 

@@ -1,6 +1,7 @@
 package ua.sviatkuzbyt.yourmath.app.presenter.controllers.history
 
 import ua.sviatkuzbyt.yourmath.app.presenter.other.ErrorData
+import ua.sviatkuzbyt.yourmath.domain.structures.history.FormulaFilterItem
 import ua.sviatkuzbyt.yourmath.domain.structures.history.HistoryItem
 
 data class HistoryState(
@@ -8,5 +9,7 @@ data class HistoryState(
     val errorMessage: ErrorData? = null,
     val allDataIsLoaded: Boolean = true,
     val showCleanDialog: Boolean = false,
-    val isRecords: Boolean = true
+    val isRecords: Boolean = true,
+    val filterList: List<FormulaFilterItem> = listOf(),
+    val showFilterList: Boolean = false
 )

@@ -8,6 +8,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.HistoryIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.HistoryState
 import ua.sviatkuzbyt.yourmath.app.presenter.other.ErrorData
 import ua.sviatkuzbyt.yourmath.app.presenter.other.safeBackgroundLaunch
+import ua.sviatkuzbyt.yourmath.domain.structures.history.GetFiltersUseCase
 import ua.sviatkuzbyt.yourmath.domain.structures.history.HistoryItem
 import ua.sviatkuzbyt.yourmath.domain.usecases.history.CleanHistoryUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.history.GetHistoryUseCase
@@ -19,11 +20,13 @@ import javax.inject.Inject
 class HistoryViewModel @Inject constructor(
     private val getHistoryUseCase: GetHistoryUseCase,
     private val cleanHistoryUseCase: CleanHistoryUseCase,
+    private val getFiltersUseCase: GetFiltersUseCase
 ): ViewModel() {
 
     private val _screenState = MutableStateFlow(HistoryState())
     val screenState: StateFlow<HistoryState> = _screenState
     private val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
+    private var filterFormulaID = 0L
 
     init {
         loadData(false)
@@ -36,6 +39,62 @@ class HistoryViewModel @Inject constructor(
             HistoryIntent.CleanHistory -> clearHistory()
             is HistoryIntent.SetCleanDialog -> setCleanDialog(intent.isShow)
             HistoryIntent.CloseErrorDialog -> clearError()
+            HistoryIntent.CloseFilters -> closeFilters()
+            HistoryIntent.OpenFilters -> {
+                openFilters()
+                getFilters()
+            }
+            is HistoryIntent.SelectFilter -> selectFilter(intent.formulaID)
+        }
+    }
+
+    private fun selectFilter(formulaID: Long){
+
+        if (formulaID != filterFormulaID){
+            filterFormulaID = formulaID
+
+            val updatedFilterList = screenState.value.filterList.map { filter ->
+                if (filter.isSelected){
+                    filter.copy(isSelected = false)
+                } else if(filter.formulaID == formulaID){
+                    filter.copy(isSelected = true)
+                } else{
+                    filter
+                }
+            }
+
+            updateHistoryState { state ->
+                state.copy(
+                    filterList = updatedFilterList,
+                    showFilterList = false
+                )
+            }
+        }
+    }
+
+    private fun closeFilters(){
+        updateHistoryState{state ->
+            state.copy(showFilterList = false)
+        }
+    }
+
+    private fun openFilters(){
+        updateHistoryState{state ->
+            state.copy(showFilterList = true)
+        }
+    }
+
+    private fun getFilters(){
+        if (screenState.value.filterList.isEmpty()){
+            safeBackgroundLaunch(
+                code = {
+                    val filterList = getFiltersUseCase.execute()
+                    updateHistoryState{state ->
+                        state.copy(filterList = filterList)
+                    }
+                },
+                errorHandling = ::setError
+            )
         }
     }
 

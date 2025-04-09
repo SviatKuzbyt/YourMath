@@ -1,21 +1,37 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package ua.sviatkuzbyt.yourmath.app.presenter.screens.history
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.HistoryIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.HistoryState
@@ -36,6 +52,8 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.FilterButton
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.HistoryContainer
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.LoadMoreButton
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppTheme
+import ua.sviatkuzbyt.yourmath.domain.structures.history.FormulaFilterItem
 import ua.sviatkuzbyt.yourmath.domain.structures.history.HistoryItem
 
 @Composable
@@ -49,8 +67,6 @@ fun HistoryScreen(viewModel: HistoryViewModel = hiltViewModel()){
         onNavigate = { onNavigateIntent(navController, it) }
     )
 }
-
-
 
 @Composable
 fun HistoryContent(
@@ -66,7 +82,7 @@ fun HistoryContent(
         TopBar(
             onBack = {onNavigate(NavigateIntent.NavigateBack)},
             onClear = {onIntent(HistoryIntent.SetCleanDialog(true))},
-            onFilter = {},
+            onFilter = {onIntent(HistoryIntent.OpenFilters)},
             listState = listState
         )
 
@@ -96,6 +112,17 @@ fun HistoryContent(
     ShowDialogError(screenState.errorMessage) {
         onIntent(HistoryIntent.CloseErrorDialog)
     }
+
+    FilterSheet(
+        isShow = screenState.showFilterList,
+        filterList = screenState.filterList,
+        onClose = {
+            onIntent(HistoryIntent.CloseFilters)
+        },
+        onSelect = { formulaID ->
+            onIntent(HistoryIntent.SelectFilter(formulaID))
+        }
+    )
 }
 
 @Composable
@@ -195,6 +222,42 @@ private fun HistoryList(
                         iconRes = R.drawable.ic_no_history,
                         modifier = Modifier.fillParentMaxHeight()
                     )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun FilterSheet(
+    isShow: Boolean,
+    filterList: List<FormulaFilterItem>,
+    onClose: () -> Unit,
+    onSelect: (Long) -> Unit
+){
+    if (isShow){
+        ModalBottomSheet (
+            onDismissRequest = onClose
+        ) {
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(horizontal = AppSizes.dp16)
+            ) {
+                items(filterList){ filter ->
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        RadioButton(
+                            selected = filter.isSelected,
+                            onClick = {
+                                onSelect(filter.formulaID)
+                                onClose()
+                            },
+                            modifier = Modifier.size(AppSizes.dp48)
+                        )
+                        Text(
+                            text = filter.name,
+                            style = AppTheme.types.basic
+                        )
+                    }
                 }
             }
         }

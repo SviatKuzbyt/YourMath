@@ -8,6 +8,6 @@ class GetFormulasListUseCase(
     private val splitFormulas: SplitFormulaItemsUseCase
 ) {
     fun execute(): SplitFormulaItems {
-        return splitFormulas.execute(repository.getFormulas())
+        return splitFormulas.execute(repository.getFormulaWithPinnedList())
     }
 }

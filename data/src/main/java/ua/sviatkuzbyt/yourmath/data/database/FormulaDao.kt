@@ -5,6 +5,7 @@ import androidx.room.Query
 import ua.sviatkuzbyt.yourmath.data.structures.formula.FormulaInfoData
 import ua.sviatkuzbyt.yourmath.data.structures.formula.FormulaInputData
 import ua.sviatkuzbyt.yourmath.data.structures.formula.FormulaResultData
+import ua.sviatkuzbyt.yourmath.data.structures.history.FormulaFilterItemData
 import ua.sviatkuzbyt.yourmath.data.structures.main.FormulaItemData
 
 @Dao
@@ -29,4 +30,7 @@ interface FormulaDao {
 
     @Query("SELECT outputDataID, label, codeLabel FROM OutputData WHERE formulaID = :formulaID")
     fun getOutputData(formulaID: Long): List<FormulaResultData>
+
+    @Query("SELECT formulaID, name FROM Formula ORDER BY position")
+    fun getFormulaFilterItemList(): List<FormulaFilterItemData>
 }

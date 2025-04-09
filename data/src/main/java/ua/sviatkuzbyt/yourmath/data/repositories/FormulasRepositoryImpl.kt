@@ -4,11 +4,13 @@ import ua.sviatkuzbyt.yourmath.data.database.FormulaDao
 import ua.sviatkuzbyt.yourmath.data.structures.formula.FormulaInfoData
 import ua.sviatkuzbyt.yourmath.data.structures.formula.FormulaInputData
 import ua.sviatkuzbyt.yourmath.data.structures.formula.FormulaResultData
+import ua.sviatkuzbyt.yourmath.data.structures.history.FormulaFilterItemData
 import ua.sviatkuzbyt.yourmath.data.structures.main.FormulaItemData
 import ua.sviatkuzbyt.yourmath.domain.repositories.FormulasRepository
 import ua.sviatkuzbyt.yourmath.domain.structures.formula.FormulaInfo
 import ua.sviatkuzbyt.yourmath.domain.structures.formula.FormulaInput
 import ua.sviatkuzbyt.yourmath.domain.structures.formula.FormulaResult
+import ua.sviatkuzbyt.yourmath.domain.structures.history.FormulaFilterItem
 import ua.sviatkuzbyt.yourmath.domain.structures.main.FormulaItemWithPinned
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -18,7 +20,7 @@ class FormulasRepositoryImpl @Inject constructor(
     private val formulaDao: FormulaDao
 ): FormulasRepository {
 
-    override fun getFormulas(): List<FormulaItemWithPinned> {
+    override fun getFormulaWithPinnedList(): List<FormulaItemWithPinned> {
         return formulaDao.getFormulas().map { formulaFromDB ->
             mapFormulaItemToDomain(formulaFromDB)
         }
@@ -54,6 +56,12 @@ class FormulasRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getFormulaFilterList(): List<FormulaFilterItem> {
+        return formulaDao.getFormulaFilterItemList().map {
+            mapFormulaFilterItemToDomain(it)
+        }
+    }
+
     private fun mapFormulaItemToDomain(item: FormulaItemData): FormulaItemWithPinned {
         return FormulaItemWithPinned(item.formulaID, item.name, item.isPin, item.position)
     }
@@ -79,5 +87,9 @@ class FormulasRepositoryImpl @Inject constructor(
             codeLabel = data.codeLabel,
             data = null
         )
+    }
+
+    private fun mapFormulaFilterItemToDomain(data: FormulaFilterItemData): FormulaFilterItem {
+        return FormulaFilterItem(data.formulaID, data.name)
     }
 }

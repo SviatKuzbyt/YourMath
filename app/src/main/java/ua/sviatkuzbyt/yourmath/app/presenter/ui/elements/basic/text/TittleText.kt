@@ -1,6 +1,7 @@
 package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
@@ -13,6 +14,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppTheme
 @Composable
 fun TittleText(
     text: String,
+    padding: PaddingValues = PaddingValues(bottom = AppSizes.dp16),
     modifier: Modifier = Modifier
 ){
     Text(
@@ -20,17 +22,19 @@ fun TittleText(
         style = AppTheme.types.tittle,
         modifier = modifier
             .fillMaxWidth()
-            .padding(bottom = AppSizes.dp8)
+            .padding(padding)
     )
 }
 
 @Composable
 fun TittleText(
     @StringRes textRes: Int,
+    padding: PaddingValues = PaddingValues(bottom = AppSizes.dp16),
     modifier: Modifier = Modifier
 ){
     TittleText(
         text = stringResource(textRes),
+        padding = padding,
         modifier = modifier
     )
 }

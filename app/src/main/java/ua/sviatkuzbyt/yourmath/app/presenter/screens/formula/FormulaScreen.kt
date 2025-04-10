@@ -144,7 +144,10 @@ private fun ColumnScope.ContentList(
     ) {
         //Name and description
         item {
-            TittleText(label)
+            TittleText(
+                text = label ,
+                padding = PaddingValues(bottom = AppSizes.dp8)
+            )
         }
 
         description?.let { text ->

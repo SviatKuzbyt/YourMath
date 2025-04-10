@@ -39,6 +39,12 @@
     <string name="filer">Filter by formula</string>
     <string name="all_formulas">All formulas</string>
     <string name="no_history_by_filter">No records for these filters</string>
-    <string name="selected">Selected</string>
+    <string name="selected_filter">Selected</string>
     <string name="no_selected">No selected</string>
+    <string name="actions">Actions</string>
+    <string name="icon_for_button">Icon for button</string>
+    <string name="import_formulas">Import formulas</string>
+    <string name="export_formulas">Export formulas</string>
+    <string name="delete_formulas">Delete all formulas</string>
+    <string name="formulas">Formulas</string>
 </resources>

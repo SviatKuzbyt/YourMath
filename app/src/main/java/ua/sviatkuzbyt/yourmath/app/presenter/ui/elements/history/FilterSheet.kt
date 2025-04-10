@@ -31,13 +31,11 @@ import ua.sviatkuzbyt.yourmath.domain.structures.history.FormulaFilterItem
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FilterSheet(
-    state: SheetState,
     filterList: List<FormulaFilterItem>,
     onSelect: (Long) -> Unit,
     onClose: () -> Unit
 ){
     ModalBottomSheet (
-        sheetState = state,
         onDismissRequest = onClose,
         containerColor = AppTheme.colors.container,
         dragHandle = {
@@ -113,7 +111,7 @@ fun RadioIcon(isSelect: Boolean){
         else R.drawable.ic_radio
 
     val descriptionRes =
-        if (isSelect) R.string.selected
+        if (isSelect) R.string.selected_filter
         else R.string.no_selected
 
     val color =

@@ -140,10 +140,7 @@ private fun ContentList(
         contentPadding = PaddingValues(horizontal = AppSizes.dp16)
     ) {
         item {
-            TittleText(
-                textRes = R.string.history,
-                modifier = Modifier.padding(bottom = AppSizes.dp8)
-            )
+            TittleText(R.string.history)
         }
 
         when(content){
@@ -200,9 +197,6 @@ private fun AboveScreenContent(
     onClose: () -> Unit,
     onSelectFilter: (Long) -> Unit
 ){
-    val sheetState = rememberModalBottomSheetState()
-    val coroutineScope = rememberCoroutineScope()
-
     when(content){
         HistoryAboveScreenContent.CleanDialog -> ClearDialog(
             onClose = onClose,
@@ -216,14 +210,8 @@ private fun AboveScreenContent(
             filterList = content.list,
             onSelect = { formulaID ->
                 onSelectFilter(formulaID)
-                coroutineScope.launch { sheetState.hide() }.invokeOnCompletion {
-                    if (!sheetState.isVisible) {
-                        onClose()
-                    }
-                }
             },
-            onClose = onClose,
-            state = sheetState
+            onClose = onClose
         )
         HistoryAboveScreenContent.Nothing -> {}
     }

@@ -4,10 +4,13 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
+import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorDialogContent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorListContent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorState
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.EmptyScreenInfo
+import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.ErrorData
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.safeBackgroundLaunch
 import ua.sviatkuzbyt.yourmath.domain.usecases.editor.GetFormulasToEditUseCase
 import javax.inject.Inject
@@ -31,6 +34,7 @@ class EditorViewModel @Inject constructor(
             EditorIntent.ExportFormulas -> println("SKLT $intent")
             EditorIntent.ImportFormulas -> println("SKLT $intent")
             is EditorIntent.DeleteFormula -> println("SKLT $intent")
+            EditorIntent.CloseDialog -> closeContentDialog()
         }
     }
 
@@ -45,6 +49,22 @@ class EditorViewModel @Inject constructor(
 
             _screenState.value = EditorState(listContent = listContent)
         },
-        errorHandling = {} //TODO
+        errorHandling = ::setError
     )
+
+    private fun closeContentDialog(){
+        _screenState.update { state ->
+            state.copy(dialogContent = EditorDialogContent.Nothing)
+        }
+    }
+
+    private fun setError(exception: Exception){
+        _screenState.update { state ->
+            state.copy(
+                dialogContent = EditorDialogContent.ErrorDialog(
+                    ErrorData(detailStr = exception.message)
+                )
+            )
+        }
+    }
 }

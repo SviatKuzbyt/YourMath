@@ -1,6 +1,7 @@
 package ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor
 
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.EmptyScreenInfo
+import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.ErrorData
 import ua.sviatkuzbyt.yourmath.domain.structures.main.FormulaItem
 
 data class EditorState(
@@ -16,4 +17,5 @@ sealed class EditorListContent{
 
 sealed class EditorDialogContent {
     data object Nothing: EditorDialogContent()
+    data class ErrorDialog(val data: ErrorData): EditorDialogContent()
 }

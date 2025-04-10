@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import ua.sviatkuzbyt.yourmath.app.R
+import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorDialogContent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorListContent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorState
@@ -27,6 +28,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.AnimateListItem
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.EmptyScreenInListInSize
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ScreenTopBar
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button.AddButton
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.dialog.DialogError
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editor.ActionsItems
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.SubTittleText
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.TittleText
@@ -119,5 +121,13 @@ fun EditorContent(
         AddButton(R.string.add_formula) {
             onIntent(EditorIntent.AddFormula)
         }
+    }
+
+    when(screenState.dialogContent){
+        is EditorDialogContent.ErrorDialog -> DialogError(
+            data = screenState.dialogContent.data,
+            onCloseClick = { onIntent(EditorIntent.CloseDialog) },
+        )
+        EditorDialogContent.Nothing -> {}
     }
 }

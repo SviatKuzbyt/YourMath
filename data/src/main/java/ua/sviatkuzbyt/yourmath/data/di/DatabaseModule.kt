@@ -8,6 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ua.sviatkuzbyt.yourmath.data.database.AppDatabase
+import ua.sviatkuzbyt.yourmath.data.database.EditFormulaDao
 import ua.sviatkuzbyt.yourmath.data.database.FormulaDao
 import ua.sviatkuzbyt.yourmath.data.database.HistoryDao
 import javax.inject.Singleton
@@ -36,5 +37,10 @@ object DatabaseModule {
     @Provides
     fun provideHistoryDao(database: AppDatabase): HistoryDao {
         return database.historyDao()
+    }
+
+    @Provides
+    fun provideEditFormulaDao(database: AppDatabase): EditFormulaDao {
+        return database.editFormulaDao()
     }
 }

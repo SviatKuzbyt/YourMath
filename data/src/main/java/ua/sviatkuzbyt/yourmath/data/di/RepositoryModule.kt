@@ -4,10 +4,12 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import ua.sviatkuzbyt.yourmath.data.repositories.EditFormulaRepositoryImpl
 import ua.sviatkuzbyt.yourmath.data.repositories.FormulasRepositoryImpl
 import ua.sviatkuzbyt.yourmath.data.repositories.HistoryRepositoryImpl
 import ua.sviatkuzbyt.yourmath.data.repositories.JsonRepositoryImpl
 import ua.sviatkuzbyt.yourmath.data.repositories.PythonRepositoryImpl
+import ua.sviatkuzbyt.yourmath.domain.repositories.EditFormulaRepository
 import ua.sviatkuzbyt.yourmath.domain.repositories.FormulasRepository
 import ua.sviatkuzbyt.yourmath.domain.repositories.HistoryRepository
 import ua.sviatkuzbyt.yourmath.domain.repositories.JsonRepository
@@ -27,4 +29,7 @@ abstract class RepositoryModule{
 
     @Binds
     abstract fun bindHistoryRepository(impl: HistoryRepositoryImpl): HistoryRepository
+
+    @Binds
+    abstract fun bindEditFormulaRepository(impl: EditFormulaRepositoryImpl): EditFormulaRepository
 }

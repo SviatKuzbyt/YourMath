@@ -5,7 +5,7 @@ import ua.sviatkuzbyt.yourmath.data.structures.formula.FormulaInfoData
 import ua.sviatkuzbyt.yourmath.data.structures.formula.FormulaInputData
 import ua.sviatkuzbyt.yourmath.data.structures.formula.FormulaResultData
 import ua.sviatkuzbyt.yourmath.data.structures.history.FormulaFilterItemData
-import ua.sviatkuzbyt.yourmath.data.structures.main.FormulaItemData
+import ua.sviatkuzbyt.yourmath.data.structures.main.FormulaItemWithPinnedData
 import ua.sviatkuzbyt.yourmath.domain.repositories.FormulasRepository
 import ua.sviatkuzbyt.yourmath.domain.structures.formula.FormulaInfo
 import ua.sviatkuzbyt.yourmath.domain.structures.formula.FormulaInput
@@ -62,7 +62,7 @@ class FormulasRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun mapFormulaItemToDomain(item: FormulaItemData): FormulaItemWithPinned {
+    private fun mapFormulaItemToDomain(item: FormulaItemWithPinnedData): FormulaItemWithPinned {
         return FormulaItemWithPinned(item.formulaID, item.name, item.isPin, item.position)
     }
 

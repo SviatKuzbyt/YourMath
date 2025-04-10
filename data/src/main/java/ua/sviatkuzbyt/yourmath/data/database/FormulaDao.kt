@@ -6,18 +6,18 @@ import ua.sviatkuzbyt.yourmath.data.structures.formula.FormulaInfoData
 import ua.sviatkuzbyt.yourmath.data.structures.formula.FormulaInputData
 import ua.sviatkuzbyt.yourmath.data.structures.formula.FormulaResultData
 import ua.sviatkuzbyt.yourmath.data.structures.history.FormulaFilterItemData
-import ua.sviatkuzbyt.yourmath.data.structures.main.FormulaItemData
+import ua.sviatkuzbyt.yourmath.data.structures.main.FormulaItemWithPinnedData
 
 @Dao
 interface FormulaDao {
     @Query("SELECT formulaID, name, isPin, position FROM Formula")
-    fun getFormulas(): List<FormulaItemData>
+    fun getFormulas(): List<FormulaItemWithPinnedData>
 
     @Query("UPDATE Formula SET isPin=:isPin WHERE formulaID=:id")
     fun changePinFormula(id: Long, isPin: Boolean)
 
     @Query("SELECT formulaID, name, isPin, position FROM Formula WHERE name LIKE :searchText")
-    fun searchFormulas(searchText: String): List<FormulaItemData>
+    fun searchFormulas(searchText: String): List<FormulaItemWithPinnedData>
 
     @Query("SELECT name, description FROM Formula WHERE formulaID = :formulaID LIMIT 1")
     fun getFormulaInfo(formulaID: Long): FormulaInfoData

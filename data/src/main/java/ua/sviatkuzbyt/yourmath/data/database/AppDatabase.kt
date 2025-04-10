@@ -23,4 +23,5 @@ import ua.sviatkuzbyt.yourmath.data.database.entity.OutputDataEntity
 abstract class AppDatabase: RoomDatabase() {
     abstract fun formulaDao(): FormulaDao
     abstract fun historyDao(): HistoryDao
+    abstract fun editFormulaDao(): EditFormulaDao
 }

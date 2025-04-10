@@ -24,7 +24,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.navigation.LocalNavController
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.NavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.AnimateListItem
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.EmptyScreenInList
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.EmptyScreenInListInSize
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ScreenTopBar
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button.AddButton
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editor.ActionsItems
@@ -87,7 +87,7 @@ fun EditorContent(
 
                 when(screenState.listContent){
                     is EditorListContent.EmptyScreen -> item(key = "empty") {
-                        EmptyScreenInList(screenState.listContent.info)
+                        EmptyScreenInListInSize(screenState.listContent.info)
                     }
                     is EditorListContent.FormulaList ->{
                         items(

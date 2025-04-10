@@ -18,7 +18,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.navigation.LocalNavController
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.NavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.AnimateListItem
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.EmptyScreenInList
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.EmptyScreenInListFullSize
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.SubTittleText
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.dialog.ShowDialogError
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.main.FieldSearch
@@ -130,7 +130,7 @@ private fun ListContent(
             }
             is MainListContent.EmptyScreen -> item(key = "e0"){
                 AnimateListItem {
-                    EmptyScreenInList(listContent.info)
+                    EmptyScreenInListFullSize(listContent.info)
                 }
             }
             MainListContent.Nothing -> {}

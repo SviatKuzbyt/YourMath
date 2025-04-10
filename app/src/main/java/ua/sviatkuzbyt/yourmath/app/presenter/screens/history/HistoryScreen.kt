@@ -26,7 +26,6 @@ import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.GlobalEvent
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.GlobalEventType
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.AnimateListItem
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.EmptyScreenInList
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ScreenTopBar
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.dialog.DialogError
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.SubTittleText
@@ -39,6 +38,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.HistoryContaine
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.LoadMoreButton
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
 import ua.sviatkuzbyt.yourmath.app.presenter.other.history.HistoryItem
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.EmptyScreenInListFullSize
 
 @Composable
 fun HistoryScreen(viewModel: HistoryViewModel = hiltViewModel()){
@@ -139,7 +139,7 @@ private fun ContentList(
         when(content){
             is HistoryListContent.EmptyScreen -> item {
                 AnimateListItem {
-                    EmptyScreenInList(content.info)
+                    EmptyScreenInListFullSize(content.info)
                 }
             }
             is HistoryListContent.Items -> {

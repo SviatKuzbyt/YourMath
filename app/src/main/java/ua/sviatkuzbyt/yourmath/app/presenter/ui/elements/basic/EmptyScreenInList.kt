@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -23,7 +24,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppTheme
 
 @Composable
-fun LazyItemScope.EmptyScreenInList(
+private fun EmptyScreenInList(
     info: EmptyScreenInfo,
     modifier: Modifier = Modifier
 ){
@@ -32,7 +33,6 @@ fun LazyItemScope.EmptyScreenInList(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .fillMaxWidth()
-            .fillParentMaxHeight()
             .padding(horizontal = AppSizes.dp16)
     ) {
         Icon(
@@ -50,4 +50,26 @@ fun LazyItemScope.EmptyScreenInList(
             textAlign = TextAlign.Center
         )
     }
+}
+
+@Composable
+fun LazyItemScope.EmptyScreenInListFullSize(
+    info: EmptyScreenInfo,
+    modifier: Modifier = Modifier
+){
+    EmptyScreenInList(
+        info = info,
+        modifier = modifier.fillParentMaxHeight()
+    )
+}
+
+@Composable
+fun EmptyScreenInListInSize(
+    info: EmptyScreenInfo,
+    modifier: Modifier = Modifier
+){
+    EmptyScreenInList(
+        info = info,
+        modifier = modifier.padding(top = AppSizes.dp72)
+    )
 }

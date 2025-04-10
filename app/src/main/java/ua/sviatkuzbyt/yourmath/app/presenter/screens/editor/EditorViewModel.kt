@@ -12,6 +12,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorState
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.EmptyScreenInfo
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.ErrorData
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.safeBackgroundLaunch
+import ua.sviatkuzbyt.yourmath.domain.usecases.editor.DeleteAllFormulasUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.editor.DeleteFormulaUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.editor.GetFormulasToEditUseCase
 import javax.inject.Inject
@@ -19,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class EditorViewModel @Inject constructor(
     private val getFormulasToEditUseCase: GetFormulasToEditUseCase,
-    private val deleteFormulaUseCase: DeleteFormulaUseCase
+    private val deleteFormulaUseCase: DeleteFormulaUseCase,
+    private val deleteAllFormulasUseCase: DeleteAllFormulasUseCase
 ) : ViewModel() {
 
     private val _screenState = MutableStateFlow(EditorState())
@@ -32,7 +34,7 @@ class EditorViewModel @Inject constructor(
     fun onIntent(intent: EditorIntent){
         when(intent){
             EditorIntent.AddFormula -> println("SKLT $intent")
-            EditorIntent.DeleteAllFormulas -> println("SKLT $intent")
+            EditorIntent.DeleteAllFormulas -> deleteAllFormulas()
             EditorIntent.ExportFormulas -> println("SKLT $intent")
             EditorIntent.ImportFormulas -> println("SKLT $intent")
             is EditorIntent.OpenDialog -> updateDialogContent(intent.dialog)
@@ -40,6 +42,17 @@ class EditorViewModel @Inject constructor(
             is EditorIntent.DeleteFormula -> deleteFormula(intent.formulaID)
         }
     }
+
+    private fun deleteAllFormulas() = safeBackgroundLaunch(
+        code = {
+            deleteAllFormulasUseCase.execute()
+            _screenState.value = EditorState(
+                listContent = EditorListContent.EmptyScreen(EmptyScreenInfo.noEditFormulas()),
+                dialogContent = EditorDialogContent.Nothing
+            )
+        },
+        errorHandling = ::setError
+    )
 
     private fun deleteFormula(formulaID: Long) = safeBackgroundLaunch(
         code = {

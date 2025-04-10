@@ -11,4 +11,7 @@ interface EditFormulaDao {
 
     @Query("DELETE FROM Formula WHERE formulaID = :formulaID")
     fun deleteFormula(formulaID: Long)
+
+    @Query("DELETE FROM Formula")
+    fun deleteAll()
 }

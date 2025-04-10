@@ -5,6 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import ua.sviatkuzbyt.yourmath.domain.repositories.EditFormulaRepository
+import ua.sviatkuzbyt.yourmath.domain.usecases.editor.DeleteAllFormulasUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.editor.DeleteFormulaUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.editor.GetFormulasToEditUseCase
 
@@ -22,5 +23,12 @@ object EditorModule{
     @Provides
     fun provideDeleteFormulaUseCase(repository: EditFormulaRepository): DeleteFormulaUseCase{
         return DeleteFormulaUseCase(repository)
+    }
+
+    @Provides
+    fun provideDeleteAllFormulasUseCase(
+        repository: EditFormulaRepository
+    ): DeleteAllFormulasUseCase {
+        return DeleteAllFormulasUseCase(repository)
     }
 }

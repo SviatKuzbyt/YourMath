@@ -4,9 +4,11 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
+import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.MainListContent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.MainIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.MainState
-import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.ShowOnMainScreen
+import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.EmptyScreenInfo
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.ErrorData
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.safeBackgroundLaunch
 import ua.sviatkuzbyt.yourmath.domain.structures.main.FormulaItem
@@ -38,26 +40,18 @@ class MainViewModel @Inject constructor(
                 //get all data from DB and set in UI
                 val formulasFromDB = getFormulasListUseCase.execute()
 
-                val showOnMainScreen = if (formulasFromDB.isEmpty()){
-                    ShowOnMainScreen.NoFormulas
-                } else {
-                    ShowOnMainScreen.Formulas
+                val listContent = if(formulasFromDB.isEmpty()){
+                    MainListContent.EmptyScreen(EmptyScreenInfo.noFormulas())
+                } else{
+                    MainListContent.FormulaList(formulasFromDB)
                 }
 
-                //update UI
-                updateMainState { state ->
-                    state.copy(
-                        showOnMainScreen = showOnMainScreen,
-                        formulas = formulasFromDB
-                    )
+                _screenState.update { state ->
+                    state.copy(listContent = listContent)
                 }
             },
             errorHandling = ::setError
         )
-    }
-
-    private inline fun updateMainState(update: (MainState) -> MainState) {
-        _screenState.value = update(_screenState.value)
     }
 
     fun onIntent(intent: MainIntent){
@@ -78,18 +72,16 @@ class MainViewModel @Inject constructor(
                 //update record in DB
                 pinFormulaUseCase.execute(formula)
 
-                //move formula up in UI
-                updateMainState{ state ->
-                    val oldFormulas = state.formulas
-
+                _screenState.update { state ->
+                    val oldFormulas = (state.listContent as MainListContent.FormulaList).formulas
                     state.copy(
-                        formulas =
+                        listContent = MainListContent.FormulaList(
                             SplitFormulaItems(
                                 pins = (oldFormulas.pins + formula).sortedBy { it.position },
                                 unpins = oldFormulas.unpins - formula
                             )
                         )
-
+                    )
                 }
             },
             errorHandling = ::setError
@@ -102,17 +94,15 @@ class MainViewModel @Inject constructor(
                 //update record in DB
                 unpinFormulaUseCase.execute(formula)
 
-                //move formula down in UI
-                updateMainState{ state ->
-                    val oldFormulas = state.formulas
-
+                _screenState.update { state ->
+                    val oldFormulas = (state.listContent as MainListContent.FormulaList).formulas
                     state.copy(
-                        formulas =
+                        listContent = MainListContent.FormulaList(
                             SplitFormulaItems(
                                 pins = oldFormulas.pins - formula,
                                 unpins = (oldFormulas.unpins + formula).sortedBy { it.position }
                             )
-
+                        )
                     )
                 }
             },
@@ -121,7 +111,7 @@ class MainViewModel @Inject constructor(
     }
 
     private fun updateSearchText(newText: String){
-        updateMainState{ state ->
+        _screenState.update { state ->
             state.copy(searchText = newText)
         }
     }
@@ -133,23 +123,14 @@ class MainViewModel @Inject constructor(
                 val searchFormulas = searchFormulasUseCase.execute(newText)
 
                 //update UI if it necessary
-                val showOnMainScreen = if (searchFormulas.isEmpty()) {
-                    ShowOnMainScreen.NoSearchResult
-                } else {
-                    ShowOnMainScreen.Formulas
+                val listContent = if(searchFormulas.isEmpty()){
+                    MainListContent.EmptyScreen(EmptyScreenInfo.noSearchResult())
+                } else{
+                    MainListContent.FormulaList(searchFormulas)
                 }
 
-                if (
-                    _screenState.value.showOnMainScreen != showOnMainScreen ||
-                    _screenState.value.formulas != searchFormulas
-                    )
-                {
-                    updateMainState{ state ->
-                        state.copy(
-                            showOnMainScreen = showOnMainScreen,
-                            formulas = searchFormulas
-                        )
-                    }
+                _screenState.update { state ->
+                    state.copy(listContent = listContent)
                 }
             },
             errorHandling = ::setError
@@ -157,7 +138,7 @@ class MainViewModel @Inject constructor(
     }
 
     private fun setError(exception: Exception){
-        updateMainState { state ->
+        _screenState.update { state ->
             state.copy(errorMessage = ErrorData(detailStr = exception.message))
         }
     }

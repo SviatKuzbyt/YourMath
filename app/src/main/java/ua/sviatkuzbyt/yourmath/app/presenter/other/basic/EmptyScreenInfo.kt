@@ -9,6 +9,14 @@ data class EmptyScreenInfo(
     @DrawableRes val icon: Int
 ){
     companion object{
+        fun noFormulas() = EmptyScreenInfo(
+            message = R.string.no_formulas,
+            icon = R.drawable.ic_no_formulas
+        )
+        fun noSearchResult() = EmptyScreenInfo(
+            message = R.string.no_search_result,
+            icon = R.drawable.ic_no_results
+        )
         fun noItemsInHistory() = EmptyScreenInfo(
             message = R.string.no_history,
             icon = R.drawable.ic_no_history
@@ -17,5 +25,6 @@ data class EmptyScreenInfo(
             message = R.string.no_history_by_filter,
             icon = R.drawable.ic_no_filters
         )
+
     }
 }

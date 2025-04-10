@@ -1,6 +1,5 @@
 package ua.sviatkuzbyt.yourmath.app.presenter.screens.main
 
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,8 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.MainIntent
+import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.MainListContent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.MainState
-import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.ShowOnMainScreen
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.LocalNavController
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.NavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
@@ -27,7 +26,6 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.main.FormulaNoPinItemLi
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.main.FormulaPinnedItemList
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.main.HomeTopBar
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
-import ua.sviatkuzbyt.yourmath.domain.structures.main.SplitFormulaItems
 
 @Composable
 fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
@@ -62,24 +60,11 @@ fun MainContent(
         }
 
         //Main content, formulas
-        Crossfade(targetState = screenState.showOnMainScreen) { showOnScreen ->
-            when (showOnScreen) {
-                ShowOnMainScreen.Formulas -> FormulasList(
-                    lists = screenState.formulas,
-                    onIntent = onIntent,
-                    onNavigate = onNavigate
-                )
-                ShowOnMainScreen.NoFormulas -> EmptyScreenInList(
-                    textRes = R.string.no_formulas,
-                    iconRes = R.drawable.ic_no_formulas
-                )
-                ShowOnMainScreen.NoSearchResult -> EmptyScreenInList(
-                    textRes = R.string.no_search_result,
-                    iconRes = R.drawable.ic_no_results
-                )
-                ShowOnMainScreen.Nothing -> {}
-            }
-        }
+        ListContent(
+            listContent = screenState.listContent,
+            onIntent = onIntent,
+            onNavigate = onNavigate
+        )
 
         ShowDialogError(
             errorData = screenState.errorMessage,
@@ -91,8 +76,8 @@ fun MainContent(
 }
 
 @Composable
-private fun FormulasList(
-    lists: SplitFormulaItems,
+private fun ListContent(
+    listContent: MainListContent,
     onIntent: (MainIntent) -> Unit,
     onNavigate: (NavigateIntent) -> Unit
 ) {
@@ -100,43 +85,55 @@ private fun FormulasList(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(horizontal = AppSizes.dp16)
     ) {
-        //Pinned formulas
-        if (lists.pins.isNotEmpty()) {
-            item {
-                SubTittleText(R.string.pinned) }
-            items(lists.pins, key = { it.id }) { formula ->
-                AnimateListItem {
-                    FormulaPinnedItemList(
-                        text = formula.name,
-                        onClick = {
-                            onNavigate(NavigateIntent.OpenFormulaScreen(formulaID = formula.id))
-                        },
-                        unpinOnClick = {
-                            onIntent(MainIntent.UnPinFormula(formula))
+        when(listContent){
+            is MainListContent.FormulaList -> {
+                if (listContent.formulas.pins.isNotEmpty()) {
+                    item (key = "s1") {
+                        AnimateListItem {
+                            SubTittleText(R.string.pinned)
                         }
-                    )
+                    }
+                    items(listContent.formulas.pins, key = { it.id }) { formula ->
+                        AnimateListItem {
+                            FormulaPinnedItemList(
+                                text = formula.name,
+                                onClick = {
+                                    onNavigate(NavigateIntent.OpenFormulaScreen(formulaID = formula.id))
+                                },
+                                unpinOnClick = {
+                                    onIntent(MainIntent.UnPinFormula(formula))
+                                }
+                            )
+                        }
+                    }
                 }
-            }
-        }
 
-        //Other formulas
-        if (lists.unpins.isNotEmpty()) {
-            if (lists.pins.isNotEmpty()) {
-                item { AnimateListItem { SubTittleText(R.string.other) } }
-            }
-            items(lists.unpins, key = { it.id }) { formula ->
-                AnimateListItem {
-                    FormulaNoPinItemList(
-                        text = formula.name,
-                        onClick = {
-                            onNavigate(NavigateIntent.OpenFormulaScreen(formulaID = formula.id))
-                        },
-                        pinOnClick = {
-                            onIntent(MainIntent.PinFormula(formula))
+                //Other formulas
+                if (listContent.formulas.unpins.isNotEmpty()) {
+                    if (listContent.formulas.pins.isNotEmpty()) {
+                        item(key = "s2") { AnimateListItem { SubTittleText(R.string.other) } }
+                    }
+                    items(listContent.formulas.unpins, key = { it.id }) { formula ->
+                        AnimateListItem {
+                            FormulaNoPinItemList(
+                                text = formula.name,
+                                onClick = {
+                                    onNavigate(NavigateIntent.OpenFormulaScreen(formulaID = formula.id))
+                                },
+                                pinOnClick = {
+                                    onIntent(MainIntent.PinFormula(formula))
+                                }
+                            )
                         }
-                    )
+                    }
                 }
             }
+            is MainListContent.EmptyScreen -> item(key = "e0"){
+                AnimateListItem {
+                    EmptyScreenInList(listContent.info)
+                }
+            }
+            MainListContent.Nothing -> {}
         }
     }
 }

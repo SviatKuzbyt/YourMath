@@ -149,11 +149,7 @@ private fun ContentList(
         when(content){
             is HistoryListContent.EmptyScreen -> item {
                 AnimateListItem {
-                    EmptyScreenInList(
-                        textRes = content.info.message,
-                        iconRes = content.info.icon,
-                        modifier = Modifier.fillParentMaxHeight()
-                    )
+                    EmptyScreenInList(content.info)
                 }
             }
             is HistoryListContent.Items -> {

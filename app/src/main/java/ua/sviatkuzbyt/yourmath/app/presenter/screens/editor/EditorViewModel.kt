@@ -33,10 +33,33 @@ class EditorViewModel @Inject constructor(
             EditorIntent.DeleteAllFormulas -> println("SKLT $intent")
             EditorIntent.ExportFormulas -> println("SKLT $intent")
             EditorIntent.ImportFormulas -> println("SKLT $intent")
-            is EditorIntent.DeleteFormula -> println("SKLT $intent")
+            is EditorIntent.OpenDialog -> updateDialogContent(intent.dialog)
             EditorIntent.CloseDialog -> closeContentDialog()
+            is EditorIntent.DeleteFormula -> deleteFormula(intent.formulaID)
         }
     }
+
+    private fun deleteFormula(formulaID: Long) = safeBackgroundLaunch(
+        code = {
+            //TODO put usecase here
+            _screenState.update { state ->
+                val oldList = (state.listContent as EditorListContent.FormulaList).formulas
+                val formulaToDelete = oldList.first { it.id == formulaID }
+                val newList = oldList - formulaToDelete
+
+                val listContent = if(newList.isEmpty()){
+                    EditorListContent.EmptyScreen(EmptyScreenInfo.noEditFormulas())
+                } else{
+                    EditorListContent.FormulaList(newList)
+                }
+                state.copy(
+                    listContent = listContent,
+                    dialogContent = EditorDialogContent.Nothing
+                )
+            }
+        },
+        errorHandling = ::setError
+    )
 
     private fun loadFormulas() = safeBackgroundLaunch(
         code = {
@@ -66,5 +89,9 @@ class EditorViewModel @Inject constructor(
                 )
             )
         }
+    }
+
+    private fun updateDialogContent(content: EditorDialogContent) {
+        _screenState.update { it.copy(dialogContent = content) }
     }
 }

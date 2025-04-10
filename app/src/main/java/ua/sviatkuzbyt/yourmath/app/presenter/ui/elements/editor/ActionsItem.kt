@@ -56,7 +56,7 @@ fun ActionsItems(
             )
             ActionItem(
                 iconRes = R.drawable.ic_delete_small,
-                textRes = R.string.delete_formulas,
+                textRes = R.string.delete_all_formulas,
                 onClick = onClearClick
             )
         }

@@ -18,4 +18,6 @@ sealed class EditorListContent{
 sealed class EditorDialogContent {
     data object Nothing: EditorDialogContent()
     data class ErrorDialog(val data: ErrorData): EditorDialogContent()
+    data object DeleteAll: EditorDialogContent()
+    data class DeleteFormula(val formulaID: Long, val formulaName: String): EditorDialogContent()
 }

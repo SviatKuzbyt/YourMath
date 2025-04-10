@@ -5,6 +5,7 @@ sealed class EditorIntent{
     data object ExportFormulas: EditorIntent()
     data object DeleteAllFormulas: EditorIntent()
     data object AddFormula: EditorIntent()
+    data class OpenDialog(val dialog: EditorDialogContent): EditorIntent()
     data class DeleteFormula(val formulaID: Long): EditorIntent()
     data object CloseDialog: EditorIntent()
 }

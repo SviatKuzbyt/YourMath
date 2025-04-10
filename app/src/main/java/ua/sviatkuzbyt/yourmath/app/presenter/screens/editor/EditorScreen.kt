@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
@@ -32,6 +33,8 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.dialog.DialogErro
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editor.ActionsItems
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.SubTittleText
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.TittleText
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editor.DialogDeleteAll
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editor.DialogDeleteFormula
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editor.EditFormulaItem
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
 
@@ -63,59 +66,19 @@ fun EditorContent(
                 onBack = { onNavigate(NavigateIntent.NavigateBack) }
             )
 
-            LazyColumn(
-                state = listState,
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(horizontal = AppSizes.dp16)
-            ) {
-                item{
-                    TittleText(R.string.editor)
-                }
-
-                item {
-                    ActionsItems(
-                        onImportClick = { onIntent(EditorIntent.ImportFormulas) },
-                        onExportClick = { onIntent(EditorIntent.ExportFormulas) },
-                        onClearClick = { onIntent(EditorIntent.DeleteAllFormulas) }
-                    )
-                }
-
-                item {
-                    SubTittleText(
-                        textRes = R.string.formulas,
-                        modifier = Modifier.padding(top = AppSizes.dp16)
-                    )
-                }
-
-                when(screenState.listContent){
-                    is EditorListContent.EmptyScreen -> item(key = "empty") {
-                        EmptyScreenInListInSize(screenState.listContent.info)
-                    }
-                    is EditorListContent.FormulaList ->{
-                        items(
-                            items = screenState.listContent.formulas,
-                            key = {formula -> formula.id}
-                        ){ formula ->
-                            AnimateListItem {
-                                EditFormulaItem(
-                                    name = formula.name,
-                                    onClick = {
-                                        onNavigate(NavigateIntent.OpenFormulaEdit(formula.id))
-                                    },
-                                    onDelete = {
-                                        onIntent(EditorIntent.DeleteFormula(formula.id))
-                                    }
-                                )
-                            }
-                        }
-                        item {
-                            Spacer(Modifier.height(AppSizes.dp72))
-                        }
-                    }
-
-                    EditorListContent.Nothing -> {}
-                }
-            }
+            EditorContent(
+                listContent = screenState.listContent,
+                listState = listState,
+                onImportFormulas = { onIntent(EditorIntent.ImportFormulas) },
+                onExportClick = { onIntent(EditorIntent.ExportFormulas) },
+                onClearClick = {
+                    onIntent(EditorIntent.OpenDialog(EditorDialogContent.DeleteAll))
+                },
+                onOpenFormula = {
+                    onNavigate(NavigateIntent.OpenFormulaEdit(it))
+                },
+                onDeleteFormula = {onIntent(EditorIntent.OpenDialog(it))}
+            )
         }
 
         AddButton(R.string.add_formula) {
@@ -129,5 +92,84 @@ fun EditorContent(
             onCloseClick = { onIntent(EditorIntent.CloseDialog) },
         )
         EditorDialogContent.Nothing -> {}
+        EditorDialogContent.DeleteAll -> DialogDeleteAll(
+            onClose = {onIntent(EditorIntent.CloseDialog)},
+            onDelete = {onIntent(EditorIntent.DeleteAllFormulas)}
+        )
+        is EditorDialogContent.DeleteFormula -> DialogDeleteFormula(
+            formulaName = screenState.dialogContent.formulaName,
+            onClose = { onIntent(EditorIntent.CloseDialog) },
+            onDelete = {
+                onIntent(EditorIntent.DeleteFormula(screenState.dialogContent.formulaID))
+            }
+        )
+    }
+}
+
+@Composable
+fun EditorContent(
+    listContent: EditorListContent,
+    listState: LazyListState,
+    onImportFormulas: () -> Unit,
+    onExportClick: () -> Unit,
+    onClearClick: () -> Unit,
+    onOpenFormula: (Long) -> Unit,
+    onDeleteFormula: (EditorDialogContent) -> Unit
+){
+    LazyColumn(
+        state = listState,
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(horizontal = AppSizes.dp16)
+    ) {
+        item{
+            TittleText(R.string.editor)
+        }
+
+        item {
+            ActionsItems(
+                onImportClick = onImportFormulas,
+                onExportClick = onExportClick,
+                onClearClick = onClearClick
+            )
+        }
+
+        item {
+            SubTittleText(
+                textRes = R.string.formulas,
+                modifier = Modifier.padding(top = AppSizes.dp16)
+            )
+        }
+
+        when(listContent){
+            is EditorListContent.EmptyScreen -> item(key = "empty") {
+                EmptyScreenInListInSize(listContent.info)
+            }
+            is EditorListContent.FormulaList ->{
+                items(
+                    items = listContent.formulas,
+                    key = {formula -> formula.id}
+                ){ formula ->
+                    AnimateListItem {
+                        EditFormulaItem(
+                            name = formula.name,
+                            onClick = {onOpenFormula(formula.id)},
+                            onDelete = {
+                                onDeleteFormula(
+                                    EditorDialogContent.DeleteFormula(
+                                        formulaID = formula.id,
+                                        formulaName = formula.name
+                                    )
+                                )
+                            }
+                        )
+                    }
+                }
+                item {
+                    Spacer(Modifier.height(AppSizes.dp72))
+                }
+            }
+
+            EditorListContent.Nothing -> {}
+        }
     }
 }

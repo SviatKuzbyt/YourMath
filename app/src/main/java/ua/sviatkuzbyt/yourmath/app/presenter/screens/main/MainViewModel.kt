@@ -63,6 +63,7 @@ class MainViewModel @Inject constructor(
                 searchFormulas(intent.newText)
             }
             MainIntent.CloseDialog -> clearError()
+            MainIntent.Reload -> reloadFormulas()
         }
     }
 
@@ -135,6 +136,14 @@ class MainViewModel @Inject constructor(
             },
             errorHandling = ::setError
         )
+    }
+
+    private fun reloadFormulas(){
+        if(screenState.value.searchText.isNotEmpty()){
+            searchFormulas(screenState.value.searchText)
+        } else {
+            loadFormulas()
+        }
     }
 
     private fun setError(exception: Exception){

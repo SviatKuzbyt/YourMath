@@ -11,8 +11,10 @@ object GlobalEvent {
     private val _event = MutableStateFlow(GlobalEventType.Nothing)
     val event: StateFlow<GlobalEventType> = _event
 
-    fun sendEvent(event: GlobalEventType) {
-        _event.value = event
+    fun sendEvent(newEvent: GlobalEventType) {
+        if (newEvent != _event.value){
+            _event.value = newEvent
+        }
     }
 
     fun clearEvent() {

@@ -7,4 +7,5 @@ sealed class MainIntent {
     data class UnPinFormula(val formula: FormulaItem): MainIntent()
     data object CloseDialog: MainIntent()
     data class ChangeSearchText(val newText: String): MainIntent()
+    data object Reload: MainIntent()
 }

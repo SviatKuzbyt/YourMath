@@ -11,6 +11,8 @@ import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorListConten
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorState
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.EmptyScreenInfo
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.ErrorData
+import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.GlobalEvent
+import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.GlobalEventType
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.safeBackgroundLaunch
 import ua.sviatkuzbyt.yourmath.domain.usecases.editor.DeleteAllFormulasUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.editor.DeleteFormulaUseCase
@@ -50,6 +52,8 @@ class EditorViewModel @Inject constructor(
                 listContent = EditorListContent.EmptyScreen(EmptyScreenInfo.noEditFormulas()),
                 dialogContent = EditorDialogContent.Nothing
             )
+
+            GlobalEvent.sendEvent(GlobalEventType.ChangeFormulaList)
         },
         errorHandling = ::setError
     )
@@ -72,6 +76,7 @@ class EditorViewModel @Inject constructor(
                     dialogContent = EditorDialogContent.Nothing
                 )
             }
+            GlobalEvent.sendEvent(GlobalEventType.ChangeFormulaList)
         },
         errorHandling = ::setError
     )

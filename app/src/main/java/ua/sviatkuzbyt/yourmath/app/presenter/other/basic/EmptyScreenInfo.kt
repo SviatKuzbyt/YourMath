@@ -25,6 +25,10 @@ data class EmptyScreenInfo(
             message = R.string.no_history_by_filter,
             icon = R.drawable.ic_no_filters
         )
+        fun noEditFormulas() = EmptyScreenInfo(
+            message = R.string.no_edit_formulas,
+            icon = R.drawable.ic_no_formulas
+        )
 
     }
 }

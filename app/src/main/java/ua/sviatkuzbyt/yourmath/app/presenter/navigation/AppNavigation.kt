@@ -92,6 +92,10 @@ fun AppNavigation(){
             composable<EditorRoute> {
                 EditorScreen()
             }
+
+            composable<FormulaEditRoute> {
+                EmptyScreen()
+            }
         }
     }
 }

@@ -48,4 +48,7 @@
     <string name="delete_formulas">Delete all formulas</string>
     <string name="formulas">Formulas</string>
     <string name="add_formula">Add formula</string>
+    <string name="no_edit_formulas">There are no formulas yet. Click ‘+’ to create new ones, or import them from a file</string>
+    <string name="delete_formula">Delete formula</string>
+    <string name="move_formula">Move formula</string>
 </resources>

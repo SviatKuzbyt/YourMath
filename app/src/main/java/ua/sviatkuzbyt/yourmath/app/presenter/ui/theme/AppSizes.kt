@@ -13,6 +13,7 @@ object AppSizes {
     val dp48 = 48.dp
     val dp52 = 52.dp
     val dp56 = 56.dp
+    val dp72 = 72.dp
 
     val sp16 = 16.sp
     val sp24 = 24.sp

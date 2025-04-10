@@ -1,4 +1,4 @@
-package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.editor
+package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editor
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes

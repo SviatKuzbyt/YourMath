@@ -1,4 +1,4 @@
-package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.main
+package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editor
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -9,20 +9,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import ua.sviatkuzbyt.yourmath.app.R
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button.ButtonIconContainer
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.Container
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button.ButtonIconNarrow
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppTheme
 
 @Composable
-private fun FormulaItemList(
-    text: String,
-    pinButton: @Composable () -> Unit,
+fun EditFormulaItem(
+    name: String,
     onClick: () -> Unit,
+    onDelete: () -> Unit
 ){
     Container(
         Modifier
-            .clickable(
+        .clickable(
             onClick = onClick,
             role = Role.Button,
             interactionSource = null,
@@ -31,57 +31,33 @@ private fun FormulaItemList(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(start = AppSizes.dp20, end = AppSizes.dp4)
-
+            modifier = Modifier
+                .padding(start = AppSizes.dp20, end = AppSizes.dp8)
         ) {
             Text(
-                text = text,
+                text = name,
                 style = AppTheme.types.basic,
                 modifier = Modifier
                     .weight(1f)
+                    .padding(end = AppSizes.dp8)
                     .padding(vertical = AppSizes.dp16)
             )
-            pinButton()
+
+            ButtonIconNarrow(
+                imageRes = R.drawable.btn_delete_narrow,
+                contentDescription = R.string.delete_formula,
+                color = AppTheme.colors.primary,
+                onClick = onDelete,
+                modifier = Modifier.padding(vertical = AppSizes.dp8)
+            )
+
+            ButtonIconNarrow(
+                imageRes = R.drawable.btn_move,
+                contentDescription = R.string.move_formula,
+                color = AppTheme.colors.buttonSecondary,
+                onClick = { println("SKLT onMove") }, //temp
+                modifier = Modifier.padding(vertical = AppSizes.dp8)
+            )
         }
     }
-}
-
-@Composable
-fun FormulaNoPinItemList(
-    text: String,
-    onClick: () -> Unit,
-    pinOnClick: () -> Unit
-){
-    FormulaItemList(
-        text = text,
-        onClick = onClick,
-        pinButton = {
-            ButtonIconContainer(
-                imageRes = R.drawable.btn_no_pin,
-                contentDescriptionRes = R.string.to_pin,
-                onClick = pinOnClick,
-                modifier = Modifier.padding(vertical = AppSizes.dp8)
-            )
-        }
-    )
-}
-
-@Composable
-fun FormulaPinnedItemList(
-    text: String,
-    onClick: () -> Unit,
-    unpinOnClick: () -> Unit,
-){
-    FormulaItemList(
-        text = text,
-        onClick = onClick,
-        pinButton = {
-            ButtonIconContainer(
-                imageRes = R.drawable.btn_pinned,
-                contentDescriptionRes = R.string.to_unpin,
-                onClick = unpinOnClick,
-                modifier = Modifier.padding(vertical = AppSizes.dp8)
-            )
-        }
-    )
 }

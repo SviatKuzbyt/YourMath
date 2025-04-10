@@ -8,4 +8,7 @@ import ua.sviatkuzbyt.yourmath.data.structures.editor.FormulaItemData
 interface EditFormulaDao {
     @Query("SELECT formulaID, name, position FROM Formula")
     fun getFormulas(): List<FormulaItemData>
+
+    @Query("DELETE FROM Formula WHERE formulaID = :formulaID")
+    fun deleteFormula(formulaID: Long)
 }

@@ -12,12 +12,14 @@ import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorState
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.EmptyScreenInfo
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.ErrorData
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.safeBackgroundLaunch
+import ua.sviatkuzbyt.yourmath.domain.usecases.editor.DeleteFormulaUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.editor.GetFormulasToEditUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class EditorViewModel @Inject constructor(
-    private val getFormulasToEditUseCase: GetFormulasToEditUseCase
+    private val getFormulasToEditUseCase: GetFormulasToEditUseCase,
+    private val deleteFormulaUseCase: DeleteFormulaUseCase
 ) : ViewModel() {
 
     private val _screenState = MutableStateFlow(EditorState())
@@ -41,7 +43,7 @@ class EditorViewModel @Inject constructor(
 
     private fun deleteFormula(formulaID: Long) = safeBackgroundLaunch(
         code = {
-            //TODO put usecase here
+            deleteFormulaUseCase.execute(formulaID)
             _screenState.update { state ->
                 val oldList = (state.listContent as EditorListContent.FormulaList).formulas
                 val formulaToDelete = oldList.first { it.id == formulaID }

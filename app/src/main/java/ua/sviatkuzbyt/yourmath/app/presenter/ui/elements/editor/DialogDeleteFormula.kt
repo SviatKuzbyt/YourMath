@@ -16,7 +16,7 @@ fun DialogDeleteFormula(
         stringResource(R.string.delete_formula_text_2)
 
     DialogConfirm(
-        tittle = stringResource(R.string.delete_formula),
+        tittle = stringResource(R.string.delete_item),
         text = text,
         onNo = onClose,
         onYes = onDelete

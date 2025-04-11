@@ -8,4 +8,5 @@ sealed class EditorIntent{
     data class OpenDialog(val dialog: EditorDialogContent): EditorIntent()
     data class DeleteFormula(val formulaID: Long): EditorIntent()
     data object CloseDialog: EditorIntent()
+    data class MoveItem(val from: Int, val to: Int): EditorIntent()
 }

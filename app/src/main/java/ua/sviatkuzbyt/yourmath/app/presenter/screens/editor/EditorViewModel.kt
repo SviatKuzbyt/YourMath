@@ -42,6 +42,18 @@ class EditorViewModel @Inject constructor(
             is EditorIntent.OpenDialog -> updateDialogContent(intent.dialog)
             EditorIntent.CloseDialog -> closeContentDialog()
             is EditorIntent.DeleteFormula -> deleteFormula(intent.formulaID)
+            is EditorIntent.MoveItem -> moveItem(intent.from, intent.to)
+        }
+    }
+
+    private fun moveItem(from: Int, to: Int){
+        val list = (_screenState.value.listContent as EditorListContent.FormulaList).formulas
+        if (to >= 0 && to < list.size){
+            _screenState.update {
+                it.copy(listContent = EditorListContent.FormulaList(
+                    list.toMutableList().apply { add(to, removeAt(from)) }
+                ))
+            }
         }
     }
 

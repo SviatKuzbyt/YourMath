@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -77,7 +78,10 @@ fun EditorContent(
                 onOpenFormula = {
                     onNavigate(NavigateIntent.OpenFormulaEdit(it))
                 },
-                onDeleteFormula = {onIntent(EditorIntent.OpenDialog(it))}
+                onDeleteFormula = {onIntent(EditorIntent.OpenDialog(it))},
+                onMove = {from, to ->
+                    onIntent(EditorIntent.MoveItem(from, to))
+                }
             )
         }
 
@@ -114,7 +118,8 @@ fun EditorContent(
     onExportClick: () -> Unit,
     onClearClick: () -> Unit,
     onOpenFormula: (Long) -> Unit,
-    onDeleteFormula: (EditorDialogContent) -> Unit
+    onDeleteFormula: (EditorDialogContent) -> Unit,
+    onMove: (Int, Int) -> Unit
 ){
     LazyColumn(
         state = listState,
@@ -145,14 +150,14 @@ fun EditorContent(
                 EmptyScreenInListInSize(listContent.info)
             }
             is EditorListContent.FormulaList ->{
-                items(
+                itemsIndexed(
                     items = listContent.formulas,
-                    key = {formula -> formula.id}
-                ){ formula ->
+                    key = {_, formula -> formula.id}
+                ){ index, formula ->
                     AnimateListItem {
                         EditFormulaItem(
                             name = formula.name,
-                            onClick = {onOpenFormula(formula.id)},
+                            onClick = { onOpenFormula(formula.id) },
                             onDelete = {
                                 onDeleteFormula(
                                     EditorDialogContent.DeleteFormula(
@@ -160,7 +165,9 @@ fun EditorContent(
                                         formulaName = formula.name
                                     )
                                 )
-                            }
+                            },
+                            onMoveUp = {onMove(index, index+1)},
+                            onMoveDown = {onMove(index, index-1)},
                         )
                     }
                 }

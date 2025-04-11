@@ -18,7 +18,9 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppTheme
 fun EditFormulaItem(
     name: String,
     onClick: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    onMoveUp: () -> Unit,
+    onMoveDown: () -> Unit
 ){
     Container(
         Modifier
@@ -45,17 +47,25 @@ fun EditFormulaItem(
 
             ButtonIconNarrow(
                 imageRes = R.drawable.btn_delete_narrow,
-                contentDescription = R.string.delete_formula,
+                contentDescription = R.string.delete_item,
                 color = AppTheme.colors.primary,
                 onClick = onDelete,
                 modifier = Modifier.padding(vertical = AppSizes.dp8)
             )
 
             ButtonIconNarrow(
-                imageRes = R.drawable.btn_move,
-                contentDescription = R.string.move_formula,
-                color = AppTheme.colors.buttonSecondary,
-                onClick = { println("SKLT onMove") }, //temp
+                imageRes = R.drawable.btn_up,
+                contentDescription = R.string.move_item_up,
+                color = AppTheme.colors.textSecondary,
+                onClick = onMoveUp,
+                modifier = Modifier.padding(vertical = AppSizes.dp8)
+            )
+
+            ButtonIconNarrow(
+                imageRes = R.drawable.btn_down,
+                contentDescription = R.string.move_item_down,
+                color = AppTheme.colors.textSecondary,
+                onClick = onMoveDown,
                 modifier = Modifier.padding(vertical = AppSizes.dp8)
             )
         }

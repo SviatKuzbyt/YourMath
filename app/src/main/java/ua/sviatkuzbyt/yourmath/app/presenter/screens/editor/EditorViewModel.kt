@@ -17,13 +17,15 @@ import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.safeBackgroundLaunch
 import ua.sviatkuzbyt.yourmath.domain.usecases.editor.DeleteAllFormulasUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.editor.DeleteFormulaUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.editor.GetFormulasToEditUseCase
+import ua.sviatkuzbyt.yourmath.domain.usecases.editor.MoveFormulaUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class EditorViewModel @Inject constructor(
     private val getFormulasToEditUseCase: GetFormulasToEditUseCase,
     private val deleteFormulaUseCase: DeleteFormulaUseCase,
-    private val deleteAllFormulasUseCase: DeleteAllFormulasUseCase
+    private val deleteAllFormulasUseCase: DeleteAllFormulasUseCase,
+    private val moveFormulaUseCase: MoveFormulaUseCase
 ) : ViewModel() {
 
     private val _screenState = MutableStateFlow(EditorState())
@@ -46,16 +48,24 @@ class EditorViewModel @Inject constructor(
         }
     }
 
-    private fun moveItem(from: Int, to: Int){
-        val list = (_screenState.value.listContent as EditorListContent.FormulaList).formulas
-        if (to >= 0 && to < list.size){
-            _screenState.update {
-                it.copy(listContent = EditorListContent.FormulaList(
-                    list.toMutableList().apply { add(to, removeAt(from)) }
-                ))
+    private fun moveItem(fromIndex: Int, toIndex: Int) = safeBackgroundLaunch(
+        code = {
+            val list = (_screenState.value.listContent as EditorListContent.FormulaList).formulas
+            if (toIndex >= 0 && toIndex < list.size){
+                val fromID = list[fromIndex].id
+                val toID = list[toIndex].id
+                moveFormulaUseCase.execute(fromID, fromIndex, toID, toIndex)
+
+                _screenState.update {
+                    it.copy(listContent = EditorListContent.FormulaList(
+                        list.toMutableList().apply { add(toIndex, removeAt(fromIndex)) }
+                    ))
+                }
+                GlobalEvent.sendEvent(GlobalEventType.ChangeFormulaList)
             }
-        }
-    }
+        },
+        errorHandling = ::setError
+    )
 
     private fun deleteAllFormulas() = safeBackgroundLaunch(
         code = {

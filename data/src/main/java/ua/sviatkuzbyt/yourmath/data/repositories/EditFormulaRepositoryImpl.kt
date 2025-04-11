@@ -24,6 +24,10 @@ class EditFormulaRepositoryImpl @Inject constructor(
         editFormulaDao.deleteAll()
     }
 
+    override fun setFormulaPosition(formulaID: Long, position: Int) {
+        editFormulaDao.updateFormulaPosition(formulaID, position)
+    }
+
     private fun mapToFormulaItemDomain(item: FormulaItemData): FormulaItem{
         return FormulaItem(item.formulaID, item.name, item.position)
     }

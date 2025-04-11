@@ -6,4 +6,5 @@ interface EditFormulaRepository {
     fun getFormulas(): List<FormulaItem>
     fun deleteFormula(formulaID: Long)
     fun deleteAllFormulas()
+    fun setFormulaPosition(formulaID: Long, position: Int)
 }

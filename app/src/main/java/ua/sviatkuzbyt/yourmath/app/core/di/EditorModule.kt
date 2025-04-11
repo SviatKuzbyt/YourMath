@@ -8,6 +8,7 @@ import ua.sviatkuzbyt.yourmath.domain.repositories.EditFormulaRepository
 import ua.sviatkuzbyt.yourmath.domain.usecases.editor.DeleteAllFormulasUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.editor.DeleteFormulaUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.editor.GetFormulasToEditUseCase
+import ua.sviatkuzbyt.yourmath.domain.usecases.editor.MoveFormulaUseCase
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -30,5 +31,12 @@ object EditorModule{
         repository: EditFormulaRepository
     ): DeleteAllFormulasUseCase {
         return DeleteAllFormulasUseCase(repository)
+    }
+
+    @Provides
+    fun provideMoveFormulaUseCase(
+        repository: EditFormulaRepository
+    ): MoveFormulaUseCase {
+        return MoveFormulaUseCase(repository)
     }
 }

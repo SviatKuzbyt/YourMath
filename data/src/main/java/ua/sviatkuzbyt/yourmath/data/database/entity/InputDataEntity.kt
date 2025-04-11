@@ -21,5 +21,6 @@ data class InputDataEntity(
     val label: String,
     val codeLabel: String,
     val defaultData: String? = null,
+    val position: Int,
     val formulaID: Long
 )

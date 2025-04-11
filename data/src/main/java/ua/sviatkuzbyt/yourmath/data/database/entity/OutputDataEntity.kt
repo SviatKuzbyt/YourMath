@@ -20,5 +20,6 @@ data class OutputDataEntity(
     @PrimaryKey(autoGenerate = true) val outputDataID: Long,
     val label: String,
     val codeLabel: String,
+    val position: Int,
     val formulaID: Long
 )

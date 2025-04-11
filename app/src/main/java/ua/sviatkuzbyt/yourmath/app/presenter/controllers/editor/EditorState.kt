@@ -2,7 +2,7 @@ package ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor
 
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.EmptyScreenInfo
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.ErrorData
-import ua.sviatkuzbyt.yourmath.domain.structures.main.FormulaItem
+import ua.sviatkuzbyt.yourmath.domain.structures.editor.FormulaNameItem
 
 data class EditorState(
     val listContent: EditorListContent = EditorListContent.Nothing,
@@ -10,7 +10,7 @@ data class EditorState(
 )
 
 sealed class EditorListContent{
-    data class FormulaList(val formulas: List<FormulaItem>): EditorListContent()
+    data class FormulaList(val formulas: List<FormulaNameItem>): EditorListContent()
     data class EmptyScreen(val info: EmptyScreenInfo): EditorListContent()
     data object Nothing: EditorListContent()
 }

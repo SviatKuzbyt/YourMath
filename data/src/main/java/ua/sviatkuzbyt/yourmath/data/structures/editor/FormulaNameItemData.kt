@@ -1,7 +1,6 @@
 package ua.sviatkuzbyt.yourmath.data.structures.editor
 
-data class FormulaItemData(
+data class FormulaNameItemData(
     val formulaID: Long,
     val name: String,
-    val position: Int
 )

@@ -2,12 +2,12 @@ package ua.sviatkuzbyt.yourmath.data.database
 
 import androidx.room.Dao
 import androidx.room.Query
-import ua.sviatkuzbyt.yourmath.data.structures.editor.FormulaItemData
+import ua.sviatkuzbyt.yourmath.data.structures.editor.FormulaNameItemData
 
 @Dao
 interface EditFormulaDao {
-    @Query("SELECT formulaID, name, position FROM Formula ORDER BY position")
-    fun getFormulas(): List<FormulaItemData>
+    @Query("SELECT formulaID, name FROM Formula ORDER BY position")
+    fun getFormulas(): List<FormulaNameItemData>
 
     @Query("DELETE FROM Formula WHERE formulaID = :formulaID")
     fun deleteFormula(formulaID: Long)

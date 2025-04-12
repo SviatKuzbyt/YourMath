@@ -25,6 +25,8 @@ import ua.sviatkuzbyt.yourmath.app.presenter.screens.formula.FormulaScreen
 import ua.sviatkuzbyt.yourmath.app.presenter.screens.formula.FormulaViewModel
 import ua.sviatkuzbyt.yourmath.app.presenter.screens.history.HistoryScreen
 import ua.sviatkuzbyt.yourmath.app.presenter.screens.main.MainScreen
+import ua.sviatkuzbyt.yourmath.app.presenter.screens.transfer.TransferScreen
+import ua.sviatkuzbyt.yourmath.app.presenter.screens.transfer.TransferViewModel
 
 val LocalNavController: ProvidableCompositionLocal<NavController> = staticCompositionLocalOf {
     error("LocalNavController: No installed")
@@ -95,6 +97,11 @@ fun AppNavigation(){
 
             composable<FormulaEditRoute> {
                 EmptyScreen()
+            }
+
+            composable<TransferRoute> {
+                val viewModel: TransferViewModel = hiltViewModel()
+                TransferScreen(viewModel)
             }
         }
     }

@@ -21,12 +21,12 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppTheme
 @Composable
 fun ButtonLarge(
     @StringRes textRes: Int,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit
 ){
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .padding(AppSizes.dp16)
+        modifier = modifier
             .fillMaxWidth()
             .height(AppSizes.dp48)
             .background(

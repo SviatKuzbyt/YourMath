@@ -224,7 +224,8 @@ private fun MathButton(
         } else {
             ButtonLarge(
                 textRes = R.string.math,
-                onClick = onClick
+                onClick = onClick,
+                modifier = Modifier.padding(AppSizes.dp16)
             )
         }
     }

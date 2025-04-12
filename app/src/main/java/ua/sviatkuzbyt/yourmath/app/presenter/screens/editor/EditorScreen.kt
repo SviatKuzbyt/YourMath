@@ -1,5 +1,6 @@
 package ua.sviatkuzbyt.yourmath.app.presenter.screens.editor
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,13 +10,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import ua.sviatkuzbyt.yourmath.app.R
@@ -23,6 +24,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorDialogCont
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorListContent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorState
+import ua.sviatkuzbyt.yourmath.app.presenter.controllers.transfer.TransferType
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.LocalNavController
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.NavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
@@ -58,6 +60,7 @@ fun EditorContent(
     onNavigate: (NavigateIntent) -> Unit
 ){
     val listState = rememberLazyListState()
+    val context = LocalContext.current
 
     Box(modifier = Modifier.fillMaxSize()){
         Column(modifier = Modifier.fillMaxSize()) {
@@ -67,11 +70,19 @@ fun EditorContent(
                 onBack = { onNavigate(NavigateIntent.NavigateBack) }
             )
 
-            EditorContent(
+            EditorContentList(
                 listContent = screenState.listContent,
                 listState = listState,
-                onImportFormulas = { onIntent(EditorIntent.ImportFormulas) },
-                onExportClick = { onIntent(EditorIntent.ExportFormulas) },
+                onImportFormulas = {
+                    onNavigate(NavigateIntent.OpenTransferScreen(TransferType.Import))
+                },
+                onExportClick = {
+                    if (screenState.listContent is EditorListContent.FormulaList){
+                        onNavigate(NavigateIntent.OpenTransferScreen(TransferType.Export))
+                    } else {
+                        Toast.makeText(context, R.string.nothing_to_export, Toast.LENGTH_LONG).show()
+                    }
+                },
                 onClearClick = {
                     onIntent(EditorIntent.OpenDialog(EditorDialogContent.DeleteAll))
                 },
@@ -111,7 +122,7 @@ fun EditorContent(
 }
 
 @Composable
-fun EditorContent(
+fun EditorContentList(
     listContent: EditorListContent,
     listState: LazyListState,
     onImportFormulas: () -> Unit,

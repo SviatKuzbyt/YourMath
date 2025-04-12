@@ -1,6 +1,8 @@
 package ua.sviatkuzbyt.yourmath.data.repositories
 
 import android.util.Log
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import org.json.JSONObject
 import ua.sviatkuzbyt.yourmath.data.other.NoAllDataEnterException
 import ua.sviatkuzbyt.yourmath.domain.repositories.JsonRepository
@@ -9,6 +11,9 @@ import ua.sviatkuzbyt.yourmath.domain.structures.transfer.FileFormulaItem
 import javax.inject.Inject
 
 class JsonRepositoryImpl @Inject constructor() : JsonRepository {
+    private val exportType = object : TypeToken<List<FileFormulaItem>>() {}.type
+    private val gson = Gson()
+
     override fun formulaInputsToJson(inputList: List<FormulaInput>): String {
         val jsonObject = JSONObject()
 
@@ -38,7 +43,7 @@ class JsonRepositoryImpl @Inject constructor() : JsonRepository {
     }
 
     override fun fileFormulaItemsToJson(items: List<FileFormulaItem>): String {
-        //TODO temp, only for check if correctly selected data from DB
-        return items.toString()
+        val jsonString = gson.toJson(items, exportType)
+        return jsonString
     }
 }

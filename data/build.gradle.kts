@@ -65,6 +65,10 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
 
+    //json
+    implementation(libs.gson)
+
+
     //modules
     implementation(project(":domain"))
 }

@@ -1,9 +1,11 @@
 package ua.sviatkuzbyt.yourmath.data.repositories
 
+import android.util.Log
 import org.json.JSONObject
 import ua.sviatkuzbyt.yourmath.data.other.NoAllDataEnterException
 import ua.sviatkuzbyt.yourmath.domain.repositories.JsonRepository
 import ua.sviatkuzbyt.yourmath.domain.structures.formula.FormulaInput
+import ua.sviatkuzbyt.yourmath.domain.structures.transfer.FileFormulaItem
 import javax.inject.Inject
 
 class JsonRepositoryImpl @Inject constructor() : JsonRepository {
@@ -33,5 +35,10 @@ class JsonRepositoryImpl @Inject constructor() : JsonRepository {
         }
 
         return mapResults
+    }
+
+    override fun fileFormulaItemsToJson(items: List<FileFormulaItem>): String {
+        //TODO temp, only for check if correctly selected data from DB
+        return items.toString()
     }
 }

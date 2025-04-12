@@ -3,6 +3,9 @@ package ua.sviatkuzbyt.yourmath.data.database
 import androidx.room.Dao
 import androidx.room.Query
 import ua.sviatkuzbyt.yourmath.data.structures.editor.FormulaNameItemData
+import ua.sviatkuzbyt.yourmath.data.structures.transfer.FileDataInputData
+import ua.sviatkuzbyt.yourmath.data.structures.transfer.FileDataOutputData
+import ua.sviatkuzbyt.yourmath.data.structures.transfer.FormulaToFormatData
 
 @Dao
 interface EditFormulaDao {
@@ -17,4 +20,13 @@ interface EditFormulaDao {
 
     @Query("UPDATE Formula SET position=:position WHERE formulaID=:formulaID")
     fun updateFormulaPosition(formulaID: Long, position: Int)
+
+    @Query("SELECT formulaID, name, description, code, position FROM Formula ORDER BY position")
+    fun getFormulasToExport(): List<FormulaToFormatData>
+
+    @Query("SELECT label, codeLabel, defaultData, position FROM InputData WHERE formulaID = :formulaID ORDER BY position")
+    fun getInputDataToExport(formulaID: Long): List<FileDataInputData>
+
+    @Query("SELECT label, codeLabel, position FROM OutputData WHERE formulaID = :formulaID ORDER BY position")
+    fun getOutputDataToExport(formulaID: Long): List<FileDataOutputData>
 }

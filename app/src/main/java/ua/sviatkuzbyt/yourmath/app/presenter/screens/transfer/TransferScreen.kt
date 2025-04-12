@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import ua.sviatkuzbyt.yourmath.app.R
+import ua.sviatkuzbyt.yourmath.app.presenter.controllers.transfer.TransferIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.transfer.TransferState
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button.ButtonLarge
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.dialog.DialogButton
@@ -29,12 +30,13 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppTheme
 @Composable
 fun TransferScreen(viewModel: TransferViewModel){
     val screenState by viewModel.screenState.collectAsState()
-    TransferContent(screenState)
+    TransferContent(screenState, viewModel::onIntent)
 }
 
 @Composable
 fun TransferContent(
-    screenState: TransferState
+    screenState: TransferState,
+    onIntent: (TransferIntent) -> Unit
 ){
     Column(
         Modifier
@@ -66,7 +68,9 @@ fun TransferContent(
             ButtonLarge(
                 textRes = it.text,
                 modifier = Modifier.padding(bottom = AppSizes.dp8)
-            ) { }
+            ) {
+                onIntent(TransferIntent.CreateFileToExport)
+            }
         }
 
         if(screenState.isCanselButton){

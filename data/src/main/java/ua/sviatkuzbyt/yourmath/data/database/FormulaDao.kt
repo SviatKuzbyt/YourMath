@@ -22,13 +22,13 @@ interface FormulaDao {
     @Query("SELECT name, description FROM Formula WHERE formulaID = :formulaID LIMIT 1")
     fun getFormulaInfo(formulaID: Long): FormulaInfoData
 
-    @Query("SELECT inputDataID, label, codeLabel, defaultData FROM InputData WHERE formulaID = :formulaID")
+    @Query("SELECT inputDataID, label, codeLabel, defaultData FROM InputData WHERE formulaID = :formulaID ORDER BY position")
     fun getFormulaInputData(formulaID: Long): List<FormulaInputData>
 
     @Query("SELECT code FROM Formula WHERE formulaID = :formulaID LIMIT 1")
     fun getFormulaCode(formulaID: Long): String
 
-    @Query("SELECT outputDataID, label, codeLabel FROM OutputData WHERE formulaID = :formulaID")
+    @Query("SELECT outputDataID, label, codeLabel FROM OutputData WHERE formulaID = :formulaID ORDER BY position")
     fun getOutputData(formulaID: Long): List<FormulaResultData>
 
     @Query("SELECT formulaID, name FROM Formula ORDER BY position")

@@ -1,4 +1,4 @@
-package ua.sviatkuzbyt.yourmath.app.presenter.screens.transfer.export
+package ua.sviatkuzbyt.yourmath.app.presenter.screens.transfer.importf
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -8,17 +8,17 @@ import kotlinx.coroutines.flow.update
 import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.transfer.TransferState
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.safeBackgroundLaunch
-import ua.sviatkuzbyt.yourmath.domain.usecases.transfer.ExportUseCase
+import ua.sviatkuzbyt.yourmath.domain.usecases.transfer.ImportUseCase
 import javax.inject.Inject
 
 @HiltViewModel
-class ExportViewModel @Inject constructor (
-    private val exportUseCase: ExportUseCase
+class ImportViewModel @Inject constructor (
+    private val importUseCase: ImportUseCase
 ): ViewModel() {
-    private val _screenState = MutableStateFlow(TransferState.getExport())
+    private val _screenState = MutableStateFlow(TransferState.getImport())
     val screenState: StateFlow<TransferState> = _screenState
 
-    fun exportToFile(fileUri: String) = safeBackgroundLaunch(
+    fun importFromFile(fileUri: String) = safeBackgroundLaunch(
         code = {
             _screenState.update { state ->
                 state.copy(
@@ -28,11 +28,11 @@ class ExportViewModel @Inject constructor (
                 )
             }
 
-            exportUseCase.execute(fileUri)
+            importUseCase.execute(fileUri)
 
             _screenState.update { state ->
                 state.copy(
-                    content = R.string.export_finished,
+                    content = R.string.import_finished,
                     isExitButton = true
                 )
             }

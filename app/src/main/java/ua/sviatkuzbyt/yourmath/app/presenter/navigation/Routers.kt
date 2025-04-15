@@ -22,3 +22,6 @@ data class FormulaEditRoute(val formulaID: Long)
 
 @Serializable
 data object ExportRoute
+
+@Serializable
+data object ImportRoute

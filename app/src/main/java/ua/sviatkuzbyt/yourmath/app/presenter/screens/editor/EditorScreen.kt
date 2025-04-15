@@ -72,7 +72,9 @@ fun EditorContent(
             EditorContentList(
                 listContent = screenState.listContent,
                 listState = listState,
-                onImportFormulas = {},
+                onImportFormulas = {
+                    onNavigate(NavigateIntent.OpenImportScreen)
+                },
                 onExportClick = {
                     if (screenState.listContent is EditorListContent.FormulaList){
                         onNavigate(NavigateIntent.OpenExportScreen)

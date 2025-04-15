@@ -22,13 +22,22 @@ data class TransferState(
             isExitButton = false
         )
 
+        fun getImport() = TransferState(
+            icon = R.drawable.ic_import,
+            tittle = R.string.import_formulas,
+            content = R.string.import_content,
+            isContinueButton = true,
+            isCanselButton = true,
+            isExitButton = false
+        )
+
         fun getError() = TransferState(
             icon = R.drawable.ic_no_results,
             tittle = R.string.unknown_error,
             content = R.string.unknown_error_detail,
             isContinueButton = false,
-            isCanselButton = true,
-            isExitButton = false
+            isCanselButton = false,
+            isExitButton = true
         )
     }
 }

@@ -17,6 +17,8 @@ interface EditFormulaRepository {
     fun getFormulasToExport(): List<FormulaToFormat>
     fun getInputDataToExport(formulaID: Long): List<ExportDataInput>
     fun getOutputDataToExport(formulaID: Long): List<ExportDataOutput>
+    fun updatePositionsAfterDeleting(deletedPosition: Int)
+    fun getPosition(formulaID: Long): Int
 
     fun getTableSize(): Int
     fun addImportedFormulaAndGetID(formula: ImportedFormula): Long

@@ -29,7 +29,9 @@ class EditFormulaRepositoryImpl @Inject constructor(
     }
 
     override fun getMoreFormulas(offset: Int): List<FormulaNameItem> {
-        return editFormulaDao.getFormulas(offset).map {
+        val a = editFormulaDao.getFormulas(offset)
+        println("SKLT ENTITY $a")
+        return a.map {
             mapToFormulaNameItemDomain(it)
         }
     }
@@ -62,6 +64,14 @@ class EditFormulaRepositoryImpl @Inject constructor(
         return editFormulaDao.getOutputDataToExport(formulaID).map {
             mapFileDataOutputDataDomain(it)
         }
+    }
+
+    override fun updatePositionsAfterDeleting(deletedPosition: Int) {
+       editFormulaDao.updatePositionsAfterDeleting(deletedPosition)
+    }
+
+    override fun getPosition(formulaID: Long): Int {
+        return editFormulaDao.getPosition(formulaID)
     }
 
     override fun getTableSize(): Int {

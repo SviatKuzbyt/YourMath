@@ -19,6 +19,9 @@ interface EditFormulaDao {
     @Query("SELECT formulaID, name FROM Formula ORDER BY position LIMIT ${Int.MAX_VALUE} OFFSET :offset")
     fun getFormulas(offset: Int): List<FormulaNameItemData>
 
+    @Query("UPDATE Formula SET position = position - 1 WHERE position > :deletedPosition")
+    fun updatePositionsAfterDeleting(deletedPosition: Int)
+
     @Query("DELETE FROM Formula WHERE formulaID = :formulaID")
     fun deleteFormula(formulaID: Long)
 
@@ -48,4 +51,7 @@ interface EditFormulaDao {
 
     @Insert
     fun addOutputData(data: OutputDataEntity)
+
+    @Query("SELECT position FROM Formula WHERE formulaID = :formulaID LIMIT 1")
+    fun getPosition(formulaID: Long): Int
 }

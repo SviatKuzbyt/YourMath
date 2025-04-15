@@ -1,5 +1,6 @@
 package ua.sviatkuzbyt.yourmath.app.presenter.screens.editor
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,95 +42,19 @@ class EditorViewModel @Inject constructor(
     fun onIntent(intent: EditorIntent){
         when(intent){
             EditorIntent.AddFormula -> println("SKLT $intent")
-            EditorIntent.DeleteAllFormulas -> deleteAllFormulas()
+            is EditorIntent.MoveItem -> moveItem(intent.from, intent.to)
+            EditorIntent.LoadImportedFormulas -> loadImportedFormulas()
             is EditorIntent.OpenDialog -> updateDialogContent(intent.dialog)
             EditorIntent.CloseDialog -> closeContentDialog()
             is EditorIntent.DeleteFormula -> deleteFormula(intent.formulaID)
-            is EditorIntent.MoveItem -> moveItem(intent.from, intent.to)
-            EditorIntent.LoadImportedFormulas -> loadImportedFormulas()
+            EditorIntent.DeleteAllFormulas -> deleteAllFormulas()
         }
     }
-
-    private fun loadImportedFormulas() = safeBackgroundLaunch(
-        code = {
-            val existingFormulas: List<FormulaNameItem> =
-                if (screenState.value.listContent is EditorListContent.FormulaList){
-                    (screenState.value.listContent as EditorListContent.FormulaList).formulas
-                } else{
-                    listOf()
-                }
-
-            val newFormulas = getNewFormulasUseCase.execute(existingFormulas.size)
-
-            _screenState.value = EditorState(
-                listContent = EditorListContent.FormulaList(
-                    existingFormulas + newFormulas
-                )
-            )
-
-            GlobalEvent.sendEvent(GlobalEventType.ChangeFormulaList)
-        },
-        errorHandling = ::setError
-    )
-
-    private fun moveItem(fromIndex: Int, toIndex: Int) = safeBackgroundLaunch(
-        code = {
-            val list = (_screenState.value.listContent as EditorListContent.FormulaList).formulas
-            if (toIndex >= 0 && toIndex < list.size){
-                val fromID = list[fromIndex].id
-                val toID = list[toIndex].id
-                moveFormulaUseCase.execute(fromID, fromIndex, toID, toIndex)
-
-                _screenState.update {
-                    it.copy(listContent = EditorListContent.FormulaList(
-                        list.toMutableList().apply { add(toIndex, removeAt(fromIndex)) }
-                    ))
-                }
-                GlobalEvent.sendEvent(GlobalEventType.ChangeFormulaList)
-            }
-        },
-        errorHandling = ::setError
-    )
-
-    private fun deleteAllFormulas() = safeBackgroundLaunch(
-        code = {
-            deleteAllFormulasUseCase.execute()
-            _screenState.value = EditorState(
-                listContent = EditorListContent.EmptyScreen(EmptyScreenInfo.noEditFormulas()),
-                dialogContent = EditorDialogContent.Nothing
-            )
-
-            GlobalEvent.sendEvent(GlobalEventType.ChangeFormulaList)
-        },
-        errorHandling = ::setError
-    )
-
-    private fun deleteFormula(formulaID: Long) = safeBackgroundLaunch(
-        code = {
-            deleteFormulaUseCase.execute(formulaID)
-            _screenState.update { state ->
-                val oldList = (state.listContent as EditorListContent.FormulaList).formulas
-                val formulaToDelete = oldList.first { it.id == formulaID }
-                val newList = oldList - formulaToDelete
-
-                val listContent = if(newList.isEmpty()){
-                    EditorListContent.EmptyScreen(EmptyScreenInfo.noEditFormulas())
-                } else{
-                    EditorListContent.FormulaList(newList)
-                }
-                state.copy(
-                    listContent = listContent,
-                    dialogContent = EditorDialogContent.Nothing
-                )
-            }
-            GlobalEvent.sendEvent(GlobalEventType.ChangeFormulaList)
-        },
-        errorHandling = ::setError
-    )
 
     private fun loadFormulas() = safeBackgroundLaunch(
         code = {
             val formulaList = getFormulasToEditUseCase.execute()
+
             val listContent = if (formulaList.isEmpty()) {
                 EditorListContent.EmptyScreen(EmptyScreenInfo.noEditFormulas())
             } else {
@@ -141,10 +66,95 @@ class EditorViewModel @Inject constructor(
         errorHandling = ::setError
     )
 
+    private fun moveItem(fromIndex: Int, toIndex: Int) = safeBackgroundLaunch(
+        code = {
+            val list = getCurrentFormulasList()
+            if (toIndex in list.indices){
+                val fromID = list[fromIndex].id
+                val toID = list[toIndex].id
+                moveFormulaUseCase.execute(fromID, fromIndex, toID, toIndex)
+
+                val updatedList = list.toMutableList().apply {
+                    add(toIndex, removeAt(fromIndex))
+                }
+
+                _screenState.update {
+                    it.copy(listContent = EditorListContent.FormulaList(updatedList))
+                }
+                sendListChangedEvent()
+            }
+        },
+        errorHandling = ::setError
+    )
+
+    private fun loadImportedFormulas() = safeBackgroundLaunch(
+        code = {
+            val existingFormulas = getCurrentFormulasList()
+            val newFormulas = getNewFormulasUseCase.execute(existingFormulas.size)
+            val combinedList = existingFormulas + newFormulas
+
+            _screenState.value = EditorState(
+                listContent = EditorListContent.FormulaList(combinedList)
+            )
+
+            sendListChangedEvent()
+        },
+        errorHandling = ::setError
+    )
+
+    private fun sendListChangedEvent(){
+        GlobalEvent.sendEvent(GlobalEventType.ChangeFormulaList)
+    }
+
+    private fun updateDialogContent(content: EditorDialogContent) {
+        _screenState.update { it.copy(dialogContent = content) }
+    }
+
     private fun closeContentDialog(){
         _screenState.update { state ->
             state.copy(dialogContent = EditorDialogContent.Nothing)
         }
+    }
+
+    private fun deleteFormula(formulaID: Long) = safeBackgroundLaunch(
+        code = {
+            deleteFormulaUseCase.execute(formulaID)
+
+            val oldList = getCurrentFormulasList()
+            val formulaToDelete = oldList.first { it.id == formulaID }
+            val newList = oldList - formulaToDelete
+
+            val listContent = if(newList.isEmpty()){
+                EditorListContent.EmptyScreen(EmptyScreenInfo.noEditFormulas())
+            } else{
+                EditorListContent.FormulaList(newList)
+            }
+
+            _screenState.update { state ->
+                state.copy(
+                    listContent = listContent,
+                    dialogContent = EditorDialogContent.Nothing
+                )
+            }
+            sendListChangedEvent()
+        },
+        errorHandling = ::setError
+    )
+
+    private fun deleteAllFormulas() = safeBackgroundLaunch(
+        code = {
+            deleteAllFormulasUseCase.execute()
+            _screenState.value = EditorState(
+                listContent = EditorListContent.EmptyScreen(EmptyScreenInfo.noEditFormulas())
+            )
+
+            sendListChangedEvent()
+        },
+        errorHandling = ::setError
+    )
+
+    private fun getCurrentFormulasList(): List<FormulaNameItem> {
+        return (_screenState.value.listContent as? EditorListContent.FormulaList)?.formulas.orEmpty()
     }
 
     private fun setError(exception: Exception){
@@ -155,9 +165,5 @@ class EditorViewModel @Inject constructor(
                 )
             )
         }
-    }
-
-    private fun updateDialogContent(content: EditorDialogContent) {
-        _screenState.update { it.copy(dialogContent = content) }
     }
 }

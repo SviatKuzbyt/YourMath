@@ -16,6 +16,9 @@ interface EditFormulaDao {
     @Query("SELECT formulaID, name FROM Formula ORDER BY position")
     fun getFormulas(): List<FormulaNameItemData>
 
+    @Query("SELECT formulaID, name FROM Formula ORDER BY position LIMIT ${Int.MAX_VALUE} OFFSET :offset")
+    fun getFormulas(offset: Int): List<FormulaNameItemData>
+
     @Query("DELETE FROM Formula WHERE formulaID = :formulaID")
     fun deleteFormula(formulaID: Long)
 

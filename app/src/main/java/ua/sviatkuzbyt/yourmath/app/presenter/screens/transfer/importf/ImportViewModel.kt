@@ -7,6 +7,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.transfer.TransferState
+import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.GlobalEvent
+import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.GlobalEventType
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.safeBackgroundLaunch
 import ua.sviatkuzbyt.yourmath.domain.usecases.transfer.ImportUseCase
 import javax.inject.Inject
@@ -29,6 +31,8 @@ class ImportViewModel @Inject constructor (
             }
 
             importUseCase.execute(fileUri)
+
+            GlobalEvent.sendEvent(GlobalEventType.ImportedFormulas)
 
             _screenState.update { state ->
                 state.copy(

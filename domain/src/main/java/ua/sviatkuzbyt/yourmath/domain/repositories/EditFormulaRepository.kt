@@ -10,6 +10,7 @@ import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ImportedFormula
 
 interface EditFormulaRepository {
     fun getFormulas(): List<FormulaNameItem>
+    fun getMoreFormulas(offset: Int): List<FormulaNameItem>
     fun deleteFormula(formulaID: Long)
     fun deleteAllFormulas()
     fun setFormulaPosition(formulaID: Long, position: Int)

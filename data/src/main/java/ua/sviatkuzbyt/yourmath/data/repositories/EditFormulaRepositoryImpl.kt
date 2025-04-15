@@ -28,6 +28,12 @@ class EditFormulaRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getMoreFormulas(offset: Int): List<FormulaNameItem> {
+        return editFormulaDao.getFormulas(offset).map {
+            mapToFormulaNameItemDomain(it)
+        }
+    }
+
     override fun deleteFormula(formulaID: Long) {
         editFormulaDao.deleteFormula(formulaID)
     }

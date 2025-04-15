@@ -13,12 +13,14 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.flow.collectLatest
 import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorDialogContent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorIntent
@@ -27,6 +29,8 @@ import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorState
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.LocalNavController
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.NavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
+import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.GlobalEvent
+import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.GlobalEventType
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.AnimateListItem
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.EmptyScreenInListInSize
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ScreenTopBar
@@ -60,6 +64,10 @@ fun EditorContent(
 ){
     val listState = rememberLazyListState()
     val context = LocalContext.current
+
+    ObserveFormulasChange{
+        onIntent(EditorIntent.LoadImportedFormulas)
+    }
 
     Box(modifier = Modifier.fillMaxSize()){
         Column(modifier = Modifier.fillMaxSize()) {
@@ -191,6 +199,20 @@ fun EditorContentList(
             }
 
             EditorListContent.Nothing -> {}
+        }
+    }
+}
+
+@Composable
+private fun ObserveFormulasChange(
+    onLoadImported: () -> Unit
+){
+    LaunchedEffect(Unit) {
+        GlobalEvent.event.collectLatest { event ->
+            if (event == GlobalEventType.ImportedFormulas){
+                onLoadImported()
+                GlobalEvent.clearEvent()
+            }
         }
     }
 }

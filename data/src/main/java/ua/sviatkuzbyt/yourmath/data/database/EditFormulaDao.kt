@@ -1,7 +1,11 @@
 package ua.sviatkuzbyt.yourmath.data.database
 
 import androidx.room.Dao
+import androidx.room.Insert
 import androidx.room.Query
+import ua.sviatkuzbyt.yourmath.data.database.entity.FormulaEntity
+import ua.sviatkuzbyt.yourmath.data.database.entity.InputDataEntity
+import ua.sviatkuzbyt.yourmath.data.database.entity.OutputDataEntity
 import ua.sviatkuzbyt.yourmath.data.structures.editor.FormulaNameItemData
 import ua.sviatkuzbyt.yourmath.data.structures.transfer.FileDataInputData
 import ua.sviatkuzbyt.yourmath.data.structures.transfer.FileDataOutputData
@@ -29,4 +33,16 @@ interface EditFormulaDao {
 
     @Query("SELECT label, codeLabel, position FROM OutputData WHERE formulaID = :formulaID ORDER BY position")
     fun getOutputDataToExport(formulaID: Long): List<FileDataOutputData>
+
+    @Query("SELECT COUNT(*) FROM Formula")
+    fun getSize(): Int
+
+    @Insert
+    fun addFormula(formula: FormulaEntity): Long
+
+    @Insert
+    fun addInputData(data: InputDataEntity)
+
+    @Insert
+    fun addOutputData(data: OutputDataEntity)
 }

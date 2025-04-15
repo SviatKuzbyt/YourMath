@@ -79,14 +79,14 @@ fun EditorContent(
                     if (screenState.listContent is EditorListContent.FormulaList){
                         onNavigate(NavigateIntent.OpenExportScreen)
                     } else {
-                        Toast.makeText(context, R.string.nothing_to_export, Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, R.string.nothing_to_export, Toast.LENGTH_SHORT).show()
                     }
                 },
                 onClearClick = {
                     if (screenState.listContent is EditorListContent.FormulaList){
                         onIntent(EditorIntent.OpenDialog(EditorDialogContent.DeleteAll))
                     } else {
-                        Toast.makeText(context, R.string.no_items_to_delete, Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, R.string.no_items_to_delete, Toast.LENGTH_SHORT).show()
                     }
                 },
                 onOpenFormula = {

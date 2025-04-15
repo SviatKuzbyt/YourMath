@@ -1,17 +1,16 @@
 package ua.sviatkuzbyt.yourmath.data.repositories
 
-import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.json.JSONObject
 import ua.sviatkuzbyt.yourmath.data.other.NoAllDataEnterException
 import ua.sviatkuzbyt.yourmath.domain.repositories.JsonRepository
 import ua.sviatkuzbyt.yourmath.domain.structures.formula.FormulaInput
-import ua.sviatkuzbyt.yourmath.domain.structures.transfer.FileFormulaItem
+import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ExportFormulaItem
 import javax.inject.Inject
 
 class JsonRepositoryImpl @Inject constructor() : JsonRepository {
-    private val exportType = object : TypeToken<List<FileFormulaItem>>() {}.type
+    private val fileFormulasType = object : TypeToken<List<ExportFormulaItem>>() {}.type
     private val gson = Gson()
 
     override fun formulaInputsToJson(inputList: List<FormulaInput>): String {
@@ -42,8 +41,13 @@ class JsonRepositoryImpl @Inject constructor() : JsonRepository {
         return mapResults
     }
 
-    override fun fileFormulaItemsToJson(items: List<FileFormulaItem>): String {
-        val jsonString = gson.toJson(items, exportType)
+    override fun fileFormulaItemsToJson(items: List<ExportFormulaItem>): String {
+        val jsonString = gson.toJson(items, fileFormulasType)
         return jsonString
+    }
+
+    override fun jsonToFileFormulaItems(itemsJson: String): List<ExportFormulaItem> {
+        val itemsList: List<ExportFormulaItem> = gson.fromJson(itemsJson, fileFormulasType)
+        return itemsList
     }
 }

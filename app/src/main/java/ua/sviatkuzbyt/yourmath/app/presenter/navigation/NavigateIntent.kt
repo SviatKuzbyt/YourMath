@@ -1,7 +1,6 @@
 package ua.sviatkuzbyt.yourmath.app.presenter.navigation
 
 import androidx.navigation.NavController
-import ua.sviatkuzbyt.yourmath.app.presenter.controllers.transfer.TransferType
 
 sealed class NavigateIntent {
     data object NavigateBack: NavigateIntent()
@@ -12,8 +11,8 @@ sealed class NavigateIntent {
         val formulaID: Long,
         val historyID: Long
     ): NavigateIntent()
-    data class OpenFormulaEdit(val formulaID: Long): NavigateIntent()
-    data class OpenTransferScreen(val type: TransferType): NavigateIntent()
+    data class OpenFormulaEditScreen(val formulaID: Long): NavigateIntent()
+    data object OpenExportScreen: NavigateIntent()
 }
 
 fun onNavigateIntent(
@@ -36,10 +35,10 @@ fun onNavigateIntent(
         is NavigateIntent.OpenFormulaScreenHistory ->
             navController.navigate(FormulaRoute(intent.formulaID, intent.historyID))
 
-        is NavigateIntent.OpenFormulaEdit ->
+        is NavigateIntent.OpenFormulaEditScreen ->
             navController.navigate(FormulaEditRoute(intent.formulaID))
 
-        is NavigateIntent.OpenTransferScreen ->
-            navController.navigate(TransferRoute(intent.type))
+        NavigateIntent.OpenExportScreen ->
+            navController.navigate(ExportRoute)
     }
 }

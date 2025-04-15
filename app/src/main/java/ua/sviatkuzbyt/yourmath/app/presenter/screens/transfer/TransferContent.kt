@@ -6,14 +6,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -26,12 +23,6 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.dialog.DialogButt
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.TittleText
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppTheme
-
-@Composable
-fun TransferScreen(viewModel: TransferViewModel){
-    val screenState by viewModel.screenState.collectAsState()
-    TransferContent(screenState, viewModel::onIntent)
-}
 
 @Composable
 fun TransferContent(
@@ -64,20 +55,22 @@ fun TransferContent(
                 .verticalScroll(rememberScrollState())
         )
 
-        screenState.buttonPrimary?.let {
-            ButtonLarge(
-                textRes = it.text,
-                modifier = Modifier.padding(bottom = AppSizes.dp8)
-            ) {
-                onIntent(TransferIntent.CreateFileToExport)
+        if (screenState.isContinueButton){
+            ButtonLarge(R.string.start) {
+                onIntent(TransferIntent.Continue)
+            }
+        } else if(screenState.isExitButton){
+            ButtonLarge(R.string.exit) {
+                onIntent(TransferIntent.Exit)
             }
         }
 
-        if(screenState.isCanselButton){
+        if (screenState.isCanselButton){
             DialogButton(
                 textRes = R.string.cancel,
-                modifier = Modifier.fillMaxWidth()
-            ) { }
+                modifier = Modifier.fillMaxWidth().padding(top = AppSizes.dp8),
+                onClick = { onIntent(TransferIntent.Exit) }
+            )
         }
     }
 }

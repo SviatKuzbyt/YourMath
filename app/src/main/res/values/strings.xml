@@ -56,11 +56,13 @@
     <string name="move_item_up">Move item up</string>
     <string name="move_item_down">Move item down</string>
     <string name="start">Continue</string>
-    <string name="close">Close</string>
-    <string name="to_main">Go to main page</string>
+    <string name="exit">Exit</string>
     <string name="export_content">In the new window, select the location and name of the file where you want to export the formulas</string>
     <string name="import_content">In the new window that opens, select the .ymf file from which you want to import formulas. IMPORTANT! Third-party formulas may contain malicious code. Import them only from a trusted source</string>
     <string name="import_uri_content">"Import formulas from file \"%1$s\"? IMPORTANT! Third-party files may contain malicious code. Import only from a trusted source "</string>
     <string name="cancel">Cancel</string>
     <string name="nothing_to_export">Nothing to export</string>
+    <string name="export_finished">Formulas successfully exported to file</string>
+    <string name="wait">Please wait…</string>
+    <string name="no_items_to_delete">No items to delete</string>
 </resources>

@@ -24,7 +24,6 @@ import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorDialogCont
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorListContent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorState
-import ua.sviatkuzbyt.yourmath.app.presenter.controllers.transfer.TransferType
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.LocalNavController
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.NavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
@@ -73,21 +72,23 @@ fun EditorContent(
             EditorContentList(
                 listContent = screenState.listContent,
                 listState = listState,
-                onImportFormulas = {
-                    onNavigate(NavigateIntent.OpenTransferScreen(TransferType.Import))
-                },
+                onImportFormulas = {},
                 onExportClick = {
                     if (screenState.listContent is EditorListContent.FormulaList){
-                        onNavigate(NavigateIntent.OpenTransferScreen(TransferType.Export))
+                        onNavigate(NavigateIntent.OpenExportScreen)
                     } else {
                         Toast.makeText(context, R.string.nothing_to_export, Toast.LENGTH_LONG).show()
                     }
                 },
                 onClearClick = {
-                    onIntent(EditorIntent.OpenDialog(EditorDialogContent.DeleteAll))
+                    if (screenState.listContent is EditorListContent.FormulaList){
+                        onIntent(EditorIntent.OpenDialog(EditorDialogContent.DeleteAll))
+                    } else {
+                        Toast.makeText(context, R.string.no_items_to_delete, Toast.LENGTH_LONG).show()
+                    }
                 },
                 onOpenFormula = {
-                    onNavigate(NavigateIntent.OpenFormulaEdit(it))
+                    onNavigate(NavigateIntent.OpenFormulaEditScreen(it))
                 },
                 onDeleteFormula = {onIntent(EditorIntent.OpenDialog(it))},
                 onMove = {from, to ->

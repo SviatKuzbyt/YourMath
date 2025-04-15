@@ -1,7 +1,6 @@
 package ua.sviatkuzbyt.yourmath.app.presenter.navigation
 
 import kotlinx.serialization.Serializable
-import ua.sviatkuzbyt.yourmath.app.presenter.controllers.transfer.TransferType
 
 @Serializable
 data object MainRoute
@@ -22,4 +21,4 @@ data object EditorRoute
 data class FormulaEditRoute(val formulaID: Long)
 
 @Serializable
-data class TransferRoute(val type: TransferType, val uri: String? = null)
+data object ExportRoute

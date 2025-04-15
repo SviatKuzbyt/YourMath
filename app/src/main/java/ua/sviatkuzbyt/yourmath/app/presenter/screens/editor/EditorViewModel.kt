@@ -1,6 +1,5 @@
 package ua.sviatkuzbyt.yourmath.app.presenter.screens.editor
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

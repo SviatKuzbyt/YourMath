@@ -18,10 +18,10 @@ data object HistoryRoute
 data object EditorRoute
 
 @Serializable
-data class FormulaEditRoute(val formulaID: Long)
-
-@Serializable
 data object ExportRoute
 
 @Serializable
 data object ImportRoute
+
+@Serializable
+data class EditFormulaRoute(val formulaID: Long)

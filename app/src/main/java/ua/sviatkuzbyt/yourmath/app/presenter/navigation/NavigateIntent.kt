@@ -11,9 +11,9 @@ sealed class NavigateIntent {
         val formulaID: Long,
         val historyID: Long
     ): NavigateIntent()
-    data class OpenFormulaEditScreen(val formulaID: Long): NavigateIntent()
     data object OpenExportScreen: NavigateIntent()
     data object OpenImportScreen: NavigateIntent()
+    data class OpenEditFormulaScreen(val formulaID: Long): NavigateIntent()
 }
 
 fun onNavigateIntent(
@@ -36,13 +36,13 @@ fun onNavigateIntent(
         is NavigateIntent.OpenFormulaScreenHistory ->
             navController.navigate(FormulaRoute(intent.formulaID, intent.historyID))
 
-        is NavigateIntent.OpenFormulaEditScreen ->
-            navController.navigate(FormulaEditRoute(intent.formulaID))
-
         NavigateIntent.OpenExportScreen ->
             navController.navigate(ExportRoute)
 
         NavigateIntent.OpenImportScreen ->
             navController.navigate(ImportRoute)
+
+        is NavigateIntent.OpenEditFormulaScreen ->
+            navController.navigate(EditFormulaRoute(intent.formulaID))
     }
 }

@@ -65,4 +65,6 @@
     <string name="wait">Please wait…</string>
     <string name="no_items_to_delete">No items to delete</string>
     <string name="import_finished">Formulas successfully imported from a file and added to existing ones (at the end of the list)</string>
+    <string name="edit_formula">Edit formula</string>
+    <string name="save">Save</string>
 </resources>

@@ -33,6 +33,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.GlobalEvent
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.GlobalEventType
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.showToast
+import ua.sviatkuzbyt.yourmath.app.presenter.screens.editformula.EditFormulaViewModel
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.AnimateListItem
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.EmptyScreenInListInSize
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ScreenTopBar
@@ -105,7 +106,7 @@ fun EditorContent(
                 listContent = screenState.listContent,
                 listState = listState,
                 onImportFormulas = { onNavigate(NavigateIntent.OpenImportScreen) },
-                onOpenFormula = { onNavigate(NavigateIntent.OpenFormulaEditScreen(it)) },
+                onOpenFormula = { onNavigate(NavigateIntent.OpenEditFormulaScreen(it)) },
                 onDeleteFormula = { onIntent(EditorIntent.OpenDialog(it)) },
                 onMove = { from, to -> onIntent(EditorIntent.MoveItem(from, to)) },
                 onExportClick = onExportClick,
@@ -114,7 +115,7 @@ fun EditorContent(
         }
 
         AddButton(R.string.add_formula) {
-            onIntent(EditorIntent.AddFormula)
+            onNavigate(NavigateIntent.OpenEditFormulaScreen(EditFormulaViewModel.NEW_FORMULA))
         }
     }
 

@@ -19,7 +19,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import ua.sviatkuzbyt.yourmath.app.presenter.screens.EmptyScreen
+import ua.sviatkuzbyt.yourmath.app.presenter.screens.editformula.EditFormulaScreen
 import ua.sviatkuzbyt.yourmath.app.presenter.screens.editor.EditorScreen
 import ua.sviatkuzbyt.yourmath.app.presenter.screens.formula.FormulaScreen
 import ua.sviatkuzbyt.yourmath.app.presenter.screens.formula.FormulaViewModel
@@ -95,16 +95,16 @@ fun AppNavigation(){
                 EditorScreen()
             }
 
-            composable<FormulaEditRoute> {
-                EmptyScreen()
-            }
-
             composable<ExportRoute> {
                 ExportScreen()
             }
 
             composable<ImportRoute> {
                 ImportScreen()
+            }
+
+            composable<EditFormulaRoute> {
+                EditFormulaScreen()
             }
         }
     }

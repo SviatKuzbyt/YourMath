@@ -67,11 +67,31 @@ fun EditorContent(
     val listState = rememberLazyListState()
     val context = LocalContext.current
 
+    val isList = screenState.listContent is EditorListContent.FormulaList
+
+    val onExportClick = remember(isList) {
+        {
+            if (isList) {
+                onNavigate(NavigateIntent.OpenExportScreen)
+            } else {
+                showToast(R.string.nothing_to_export, context)
+            }
+        }
+    }
+
+    val onClearClick = remember(isList) {
+        {
+            if (isList) {
+                onIntent(EditorIntent.OpenDialog(EditorDialogContent.DeleteAll))
+            } else {
+                showToast(R.string.no_items_to_delete, context)
+            }
+        }
+    }
+
     ObserveFormulasChange{
         onIntent(EditorIntent.LoadImportedFormulas)
     }
-
-    val isList by remember { derivedStateOf { listState.layoutInfo.totalItemsCount > 4 } }
 
     Box(Modifier.fillMaxSize()){
         Column(Modifier.fillMaxSize()) {
@@ -88,20 +108,8 @@ fun EditorContent(
                 onOpenFormula = { onNavigate(NavigateIntent.OpenFormulaEditScreen(it)) },
                 onDeleteFormula = { onIntent(EditorIntent.OpenDialog(it)) },
                 onMove = { from, to -> onIntent(EditorIntent.MoveItem(from, to)) },
-                onExportClick = {
-                    if (isList){
-                        onNavigate(NavigateIntent.OpenExportScreen)
-                    } else {
-                        showToast(R.string.nothing_to_export, context)
-                    }
-                },
-                onClearClick = {
-                    if (isList){
-                        onIntent(EditorIntent.OpenDialog(EditorDialogContent.DeleteAll))
-                    } else {
-                        showToast(R.string.no_items_to_delete, context)
-                    }
-                }
+                onExportClick = onExportClick,
+                onClearClick = onClearClick
             )
         }
 
@@ -177,8 +185,8 @@ fun EditorContentList(
                         EditFormulaItem(
                             name = formula.name,
                             onClick = { onOpenFormula(formula.id) },
-                            onMoveUp = { onMove(index, index+1) },
-                            onMoveDown = { onMove(index, index-1) },
+                            onMoveDown = { onMove(index, index+1) },
+                            onMoveUp = { onMove(index, index-1) },
                             onDelete = {
                                 onDeleteFormula(
                                     EditorDialogContent.DeleteFormula(

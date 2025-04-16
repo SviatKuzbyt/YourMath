@@ -1,17 +1,13 @@
 package ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor
 
-import androidx.compose.runtime.Stable
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.EmptyScreenInfo
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.ErrorData
 import ua.sviatkuzbyt.yourmath.domain.structures.editor.FormulaNameItem
 
-@Stable
 data class EditorState(
     val listContent: EditorListContent = EditorListContent.Nothing,
     val dialogContent: EditorDialogContent = EditorDialogContent.Nothing
-){
-    fun isList() = listContent is EditorListContent.FormulaList
-}
+)
 
 sealed class EditorListContent{
     data class FormulaList(val formulas: List<FormulaNameItem>): EditorListContent()

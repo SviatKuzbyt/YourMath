@@ -19,8 +19,8 @@ fun EditFormulaItem(
     name: String,
     onClick: () -> Unit,
     onDelete: () -> Unit,
-    onMoveUp: () -> Unit,
-    onMoveDown: () -> Unit
+    onMoveDown: () -> Unit,
+    onMoveUp: () -> Unit
 ){
     Container(
         Modifier
@@ -57,7 +57,7 @@ fun EditFormulaItem(
                 imageRes = R.drawable.btn_up,
                 contentDescription = R.string.move_item_up,
                 color = AppTheme.colors.textSecondary,
-                onClick = onMoveUp,
+                onClick = onMoveDown,
                 modifier = Modifier.padding(vertical = AppSizes.dp8)
             )
 
@@ -65,7 +65,7 @@ fun EditFormulaItem(
                 imageRes = R.drawable.btn_down,
                 contentDescription = R.string.move_item_down,
                 color = AppTheme.colors.textSecondary,
-                onClick = onMoveDown,
+                onClick = onMoveUp,
                 modifier = Modifier.padding(vertical = AppSizes.dp8)
             )
         }

@@ -23,10 +23,11 @@ fun TextFieldWithLabel(
     onTextChange: (String) -> Unit,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
+    singleLine: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier.padding(vertical = AppSizes.dp16)
+        modifier = modifier
     ) {
         Text(
             text = label,
@@ -37,7 +38,7 @@ fun TextFieldWithLabel(
         OutlinedTextField(
             value = text,
             onValueChange = onTextChange,
-            singleLine = true,
+            singleLine = singleLine,
             textStyle = AppTheme.types.basic,
             shape = AppShapes.field,
             keyboardOptions = keyboardOptions,
@@ -50,9 +51,7 @@ fun TextFieldWithLabel(
                 )
             },
 
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(AppSizes.dp52),
+            modifier = Modifier.fillMaxWidth(),
 
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = AppTheme.colors.containerField,

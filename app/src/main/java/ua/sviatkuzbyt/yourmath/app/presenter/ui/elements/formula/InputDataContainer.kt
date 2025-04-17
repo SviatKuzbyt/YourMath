@@ -31,7 +31,7 @@ fun InputDataContainer(
             text = data,
             hint = hint ?: stringResource(R.string.enter_data),
             onTextChange = onDataChange,
-            modifier = Modifier.padding(horizontal =  AppSizes.dp16),
+            modifier = Modifier.padding(AppSizes.dp16),
 
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number,

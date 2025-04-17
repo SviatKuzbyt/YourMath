@@ -71,8 +71,7 @@ fun FieldSearch(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = AppSizes.dp16)
-            .padding(bottom = AppSizes.dp16)
-            .height(AppSizes.dp52),
+            .padding(bottom = AppSizes.dp16),
 
         keyboardOptions = KeyboardOptions(
             imeAction = ImeAction.Search,

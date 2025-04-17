@@ -38,6 +38,8 @@ class EditFormulaViewModel @Inject constructor(
             is EditFormulaIntent.SelectTab -> changeTab(intent.index)
             EditFormulaIntent.AddDataItem -> println("SKLT $intent")
             EditFormulaIntent.SaveChanges -> println("SKLT $intent")
+            is EditFormulaIntent.ChangeDescription -> println("SKLT $intent")
+            is EditFormulaIntent.ChangeName -> println("SKLT $intent")
         }
     }
 

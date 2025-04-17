@@ -71,4 +71,8 @@
     <string name="code">Code</string>
     <string name="add_item">Add item</string>
     <string name="save_changes">Save changes</string>
+    <string name="name">Name</string>
+    <string name="enter_name">Enter name</string>
+    <string name="description">Description</string>
+    <string name="optional">Optional</string>
 </resources>

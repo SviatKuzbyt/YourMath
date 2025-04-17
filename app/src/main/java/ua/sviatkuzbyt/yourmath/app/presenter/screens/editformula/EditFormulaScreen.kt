@@ -28,6 +28,7 @@ import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaState
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaStateContent
+import ua.sviatkuzbyt.yourmath.app.presenter.screens.editformula.tabs.InfoTab
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ScreenTopBar
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button.AddButton
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button.ButtonLarge
@@ -74,11 +75,22 @@ fun EditFormulaContent(
                     )
                 }
 
-                item {
-                    Text(
-                        text = screenState.content.toString(),
-                        modifier = Modifier.height(1000.dp)
-                    )
+                when(screenState.content){
+                    is EditFormulaStateContent.Info -> item {
+                        InfoTab(
+                            info = screenState.content,
+                            onNameChange = { name ->
+                                onIntent(EditFormulaIntent.ChangeName(name))
+                            },
+                            onDescriptionChange = { description ->
+                                onIntent(EditFormulaIntent.ChangeDescription(description))
+                            }
+                        )
+                    }
+                    is EditFormulaStateContent.Inputs -> Unit
+                    is EditFormulaStateContent.Code -> Unit
+                    is EditFormulaStateContent.Results -> Unit
+                    EditFormulaStateContent.Nothing -> Unit
                 }
             }
 
@@ -137,7 +149,7 @@ private fun ScreenTabs(
 ){
     ScrollableTabRow(
         selectedTabIndex = selectedTab,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().padding(bottom = AppSizes.dp16),
         edgePadding = AppSizes.dp12,
         containerColor = AppTheme.colors.background,
         divider = {},

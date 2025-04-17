@@ -193,7 +193,7 @@ private fun ColumnScope.ContentList(
         if(resultList.isNotEmpty()){
             item {
                 AnimateListItem {
-                    SubTittleText(R.string.result)
+                    SubTittleText(R.string.results)
                 }
             }
 

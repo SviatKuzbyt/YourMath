@@ -17,7 +17,7 @@
     <string name="input_data">Input data</string>
     <string name="enter_data">Enter the data</string>
     <string name="math">Math</string>
-    <string name="result">Result</string>
+    <string name="results">Results</string>
     <string name="no_found">No found</string>
     <string name="no_all_data">Not all required data was entered</string>
     <string name="math_error">Calculation error</string>
@@ -67,4 +67,6 @@
     <string name="import_finished">Formulas successfully imported from a file and added to existing ones (at the end of the list)</string>
     <string name="edit_formula">Edit formula</string>
     <string name="save">Save</string>
+    <string name="info">Info</string>
+    <string name="code">Code</string>
 </resources>

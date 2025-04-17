@@ -29,7 +29,7 @@ class CopyFormulaToClipboardManager @Inject constructor(
             text.append("\n${input.label} = ${input.data}")
         }
 
-        text.append("\n\n${context.getString(R.string.result)}:")
+        text.append("\n\n${context.getString(R.string.results)}:")
 
         data.resultData.forEach { input ->
             text.append("\n${input.label} = ${input.data}")

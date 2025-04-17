@@ -40,6 +40,11 @@ class EditFormulaViewModel @Inject constructor(
             EditFormulaIntent.SaveChanges -> println("SKLT $intent")
             is EditFormulaIntent.ChangeDescription -> println("SKLT $intent")
             is EditFormulaIntent.ChangeName -> println("SKLT $intent")
+            is EditFormulaIntent.ChangeInputCodeLabel -> println("SKLT $intent")
+            is EditFormulaIntent.ChangeInputDefaultData -> println("SKLT $intent")
+            is EditFormulaIntent.ChangeInputLabel -> println("SKLT $intent")
+            is EditFormulaIntent.DeleteInputItem -> println("SKLT $intent")
+            is EditFormulaIntent.MoveInputItem -> println("SKLT $intent")
         }
     }
 

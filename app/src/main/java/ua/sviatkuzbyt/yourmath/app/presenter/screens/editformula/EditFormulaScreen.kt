@@ -8,31 +8,34 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ScrollableTabRow
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaState
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaStateContent
-import ua.sviatkuzbyt.yourmath.app.presenter.screens.editformula.tabs.InfoTab
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.InfoItems
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ScreenTopBar
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button.AddButton
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button.ButtonLarge
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.emptySpaceOfButton
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.TittleText
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.InputItem
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.TabItem
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppTheme
@@ -76,8 +79,8 @@ fun EditFormulaContent(
                 }
 
                 when(screenState.content){
-                    is EditFormulaStateContent.Info -> item {
-                        InfoTab(
+                    is EditFormulaStateContent.Info -> item("info") {
+                        InfoItems(
                             info = screenState.content,
                             onNameChange = { name ->
                                 onIntent(EditFormulaIntent.ChangeName(name))
@@ -87,7 +90,32 @@ fun EditFormulaContent(
                             }
                         )
                     }
-                    is EditFormulaStateContent.Inputs -> Unit
+                    is EditFormulaStateContent.Inputs -> {
+                        itemsIndexed(
+                            items = screenState.content.list,
+                            key = {_, input -> "input${input.id}"}
+                        ){ index, input ->
+                            InputItem(
+                                input = input,
+                                onLabelChange = { newText ->
+                                    onIntent(EditFormulaIntent.ChangeInputLabel(input.id, newText))
+                                },
+                                onCodeLabelChange = { newText ->
+                                    onIntent(EditFormulaIntent.ChangeInputCodeLabel(input.id, newText))
+                                },
+                                onDefaultDataChange = { newText ->
+                                    onIntent(EditFormulaIntent.ChangeInputDefaultData(input.id, newText))
+                                },
+                                onDelete = {
+                                    onIntent(EditFormulaIntent.DeleteInputItem(input.id))
+                                },
+                                onMoveDown = { onIntent(EditFormulaIntent.MoveInputItem(index, index+1)) },
+                                onMoveUp = { onIntent(EditFormulaIntent.MoveInputItem(index, index-1)) }
+                            )
+                        }
+
+                        emptySpaceOfButton()
+                    }
                     is EditFormulaStateContent.Code -> Unit
                     is EditFormulaStateContent.Results -> Unit
                     EditFormulaStateContent.Nothing -> Unit
@@ -149,7 +177,7 @@ private fun ScreenTabs(
 ){
     ScrollableTabRow(
         selectedTabIndex = selectedTab,
-        modifier = Modifier.fillMaxWidth().padding(bottom = AppSizes.dp16),
+        modifier = Modifier.fillMaxWidth(),
         edgePadding = AppSizes.dp12,
         containerColor = AppTheme.colors.background,
         divider = {},

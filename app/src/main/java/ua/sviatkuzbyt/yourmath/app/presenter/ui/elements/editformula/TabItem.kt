@@ -38,6 +38,7 @@ fun TabItem(
         textAlign = TextAlign.Center,
         modifier = Modifier
             .padding(horizontal = AppSizes.dp4)
+            .padding(bottom = AppSizes.dp16)
             .clickable(
                 onClick = onClick,
                 role = Role.Tab,

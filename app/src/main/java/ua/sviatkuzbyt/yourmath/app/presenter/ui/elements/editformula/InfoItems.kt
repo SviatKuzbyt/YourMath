@@ -1,4 +1,4 @@
-package ua.sviatkuzbyt.yourmath.app.presenter.screens.editformula.tabs
+package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -13,7 +13,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.TextFieldWit
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
 
 @Composable
-fun LazyItemScope.InfoTab(
+fun LazyItemScope.InfoItems(
     info: EditFormulaStateContent.Info,
     onNameChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit

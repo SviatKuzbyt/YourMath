@@ -39,6 +39,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.EmptyScreenInList
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ScreenTopBar
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button.AddButton
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.dialog.DialogError
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.emptySpaceOfButton
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editor.ActionsItems
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.SubTittleText
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.TittleText
@@ -200,9 +201,9 @@ fun EditorContentList(
                         )
                     }
                 }
-                item {
-                    Spacer(Modifier.height(AppSizes.dp72))
-                }
+
+                emptySpaceOfButton()
+
             }
 
             EditorListContent.Nothing -> Unit

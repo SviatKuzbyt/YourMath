@@ -75,4 +75,8 @@
     <string name="enter_name">Enter name</string>
     <string name="description">Description</string>
     <string name="optional">Optional</string>
+    <string name="item">Item</string>
+    <string name="display_label">Name to display</string>
+    <string name="code_label">Name in code</string>
+    <string name="default_data">Default data</string>
 </resources>

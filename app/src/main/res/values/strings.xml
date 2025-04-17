@@ -79,4 +79,6 @@
     <string name="display_label">Name to display</string>
     <string name="code_label">Name in code</string>
     <string name="default_data">Default data</string>
+    <string name="enter_code">Enter the python calculation code here</string>
+    <string name="python">Python</string>
 </resources>

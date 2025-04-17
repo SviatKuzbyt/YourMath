@@ -18,8 +18,13 @@ import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import ua.sviatkuzbyt.yourmath.app.R
@@ -33,6 +38,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button.AddButton
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button.ButtonLarge
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.emptySpaceOfButton
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.TittleText
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.CodeItem
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.InputItem
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.ResultItem
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.TabItem
@@ -115,7 +121,11 @@ fun EditFormulaContent(
 
                         emptySpaceOfButton()
                     }
-                    is EditFormulaStateContent.Code -> Unit
+                    is EditFormulaStateContent.Code -> {
+                        item {
+                            CodeItem(screenState.content.text, {})
+                        }
+                    }
                     is EditFormulaStateContent.Results -> {
                         itemsIndexed(
                             items = screenState.content.list,
@@ -194,7 +204,7 @@ private fun BoxScope.AddDataButton(
 private fun ScreenTabs(
     tabs: List<Int>,
     selectedTab: Int,
-    onSelectTab: (Int) -> Unit
+    onSelectTab: (Int) -> Unit,
 ){
     ScrollableTabRow(
         selectedTabIndex = selectedTab,

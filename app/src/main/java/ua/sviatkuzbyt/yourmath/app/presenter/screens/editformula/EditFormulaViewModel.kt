@@ -1,6 +1,5 @@
 package ua.sviatkuzbyt.yourmath.app.presenter.screens.editformula
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -40,11 +39,11 @@ class EditFormulaViewModel @Inject constructor(
             EditFormulaIntent.SaveChanges -> println("SKLT $intent")
             is EditFormulaIntent.ChangeDescription -> println("SKLT $intent")
             is EditFormulaIntent.ChangeName -> println("SKLT $intent")
-            is EditFormulaIntent.ChangeInputCodeLabel -> println("SKLT $intent")
-            is EditFormulaIntent.ChangeInputDefaultData -> println("SKLT $intent")
-            is EditFormulaIntent.ChangeInputLabel -> println("SKLT $intent")
-            is EditFormulaIntent.DeleteInputItem -> println("SKLT $intent")
-            is EditFormulaIntent.MoveInputItem -> println("SKLT $intent")
+            is EditFormulaIntent.ChangeItemCodeLabel -> println("SKLT $intent")
+            is EditFormulaIntent.ChangeItemDefaultData -> println("SKLT $intent")
+            is EditFormulaIntent.ChangeItemLabel -> println("SKLT $intent")
+            is EditFormulaIntent.DeleteItem -> println("SKLT $intent")
+            is EditFormulaIntent.MoveItem -> println("SKLT $intent")
         }
     }
 

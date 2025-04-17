@@ -6,9 +6,14 @@ sealed class EditFormulaIntent{
     data object SaveChanges: EditFormulaIntent()
     data class ChangeName(val name: String): EditFormulaIntent()
     data class ChangeDescription(val description: String): EditFormulaIntent()
-    data class MoveInputItem(val from: Int, val to: Int): EditFormulaIntent()
-    data class ChangeInputLabel(val id: Long, val newText: String): EditFormulaIntent()
-    data class ChangeInputCodeLabel(val id: Long, val newText: String): EditFormulaIntent()
-    data class ChangeInputDefaultData(val id: Long, val newText: String): EditFormulaIntent()
-    data class DeleteInputItem(val id: Long): EditFormulaIntent()
+    data class MoveItem(val from: Int, val to: Int, val list: EditList): EditFormulaIntent()
+    data class ChangeItemLabel(val id: Long, val newText: String, val list: EditList): EditFormulaIntent()
+    data class ChangeItemCodeLabel(val id: Long, val newText: String, val list: EditList): EditFormulaIntent()
+    data class ChangeItemDefaultData(val id: Long, val newText: String, val list: EditList): EditFormulaIntent()
+    data class DeleteItem(val id: Long, val list: EditList): EditFormulaIntent()
 }
+
+enum class EditList{
+    Inputs, Results
+}
+

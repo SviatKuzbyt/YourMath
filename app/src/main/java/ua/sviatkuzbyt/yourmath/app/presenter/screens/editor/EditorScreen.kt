@@ -46,6 +46,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editor.DialogDeleteAll
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editor.DialogDeleteFormula
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editor.EditFormulaItem
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
+import ua.sviatkuzbyt.yourmath.domain.usecases.editformula.GetEditFormulaDataUseCase
 
 @Composable
 fun EditorScreen(viewModel: EditorViewModel = hiltViewModel()){
@@ -115,7 +116,7 @@ fun EditorContent(
         }
 
         AddButton(R.string.add_formula) {
-            onNavigate(NavigateIntent.OpenEditFormulaScreen(EditFormulaViewModel.NEW_FORMULA))
+            onNavigate(NavigateIntent.OpenEditFormulaScreen(GetEditFormulaDataUseCase.NEW_FORMULA))
         }
     }
 

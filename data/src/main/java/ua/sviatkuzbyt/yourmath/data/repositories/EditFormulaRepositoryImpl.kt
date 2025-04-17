@@ -4,11 +4,17 @@ import ua.sviatkuzbyt.yourmath.data.database.EditFormulaDao
 import ua.sviatkuzbyt.yourmath.data.database.entity.FormulaEntity
 import ua.sviatkuzbyt.yourmath.data.database.entity.InputDataEntity
 import ua.sviatkuzbyt.yourmath.data.database.entity.OutputDataEntity
+import ua.sviatkuzbyt.yourmath.data.structures.editformula.EditFormulaInfoData
+import ua.sviatkuzbyt.yourmath.data.structures.editformula.EditInputData
+import ua.sviatkuzbyt.yourmath.data.structures.editformula.EditResultData
 import ua.sviatkuzbyt.yourmath.data.structures.editor.FormulaNameItemData
 import ua.sviatkuzbyt.yourmath.data.structures.transfer.FileDataInputData
 import ua.sviatkuzbyt.yourmath.data.structures.transfer.FileDataOutputData
 import ua.sviatkuzbyt.yourmath.data.structures.transfer.FormulaToFormatData
 import ua.sviatkuzbyt.yourmath.domain.repositories.EditFormulaRepository
+import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditFormulaInfo
+import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditInput
+import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditResult
 import ua.sviatkuzbyt.yourmath.domain.structures.editor.FormulaNameItem
 import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ExportDataInput
 import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ExportDataOutput
@@ -29,9 +35,7 @@ class EditFormulaRepositoryImpl @Inject constructor(
     }
 
     override fun getMoreFormulas(offset: Int): List<FormulaNameItem> {
-        val a = editFormulaDao.getFormulas(offset)
-        println("SKLT ENTITY $a")
-        return a.map {
+        return editFormulaDao.getFormulas(offset).map {
             mapToFormulaNameItemDomain(it)
         }
     }
@@ -114,6 +118,34 @@ class EditFormulaRepositoryImpl @Inject constructor(
         )
 
         editFormulaDao.addOutputData(outputDataEntity)
+    }
+
+    override fun getEditFormulaInfo(formulaID: Long): EditFormulaInfo {
+        return mapEditFormulaInfoToDomain(editFormulaDao.getEditFormulaInfo(formulaID))
+    }
+
+    override fun getEditInputs(formulaID: Long): List<EditInput> {
+        return editFormulaDao.getEditInputs(formulaID).map {
+            mapEditInputToDomain(it)
+        }
+    }
+
+    override fun getEditResults(formulaID: Long): List<EditResult> {
+        return editFormulaDao.getEditResults(formulaID).map {
+            mapEditResultToDomain(it)
+        }
+    }
+
+    private fun mapEditResultToDomain(item: EditResultData): EditResult{
+        return EditResult(item.outputDataID, item.label, item.codeLabel)
+    }
+
+    private fun mapEditInputToDomain(item: EditInputData): EditInput{
+        return EditInput(item.inputDataID, item.label, item.codeLabel, item.defaultData)
+    }
+
+    private fun mapEditFormulaInfoToDomain(info: EditFormulaInfoData): EditFormulaInfo {
+        return EditFormulaInfo(info.formulaID, info.name, info.description, info.code)
     }
 
     private fun mapToFormulaNameItemDomain(item: FormulaNameItemData): FormulaNameItem{

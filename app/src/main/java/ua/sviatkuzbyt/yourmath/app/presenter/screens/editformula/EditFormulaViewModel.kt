@@ -1,5 +1,7 @@
 package ua.sviatkuzbyt.yourmath.app.presenter.screens.editformula
 
+import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -8,13 +10,23 @@ import kotlinx.coroutines.flow.update
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaState
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaStateContent
+import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.safeBackgroundLaunch
+import ua.sviatkuzbyt.yourmath.domain.usecases.editformula.GetEditFormulaDataUseCase
 import javax.inject.Inject
 
 @HiltViewModel
-class EditFormulaViewModel @Inject constructor(): ViewModel() {
+class EditFormulaViewModel @Inject constructor(
+    sentData: SavedStateHandle,
+    private val getEditFormulaDataUseCase: GetEditFormulaDataUseCase
+): ViewModel() {
 
+    private val formulaID: Long = sentData["formulaID"] ?: GetEditFormulaDataUseCase.NEW_FORMULA
     private val _screenState = MutableStateFlow(EditFormulaState())
     val screenState: StateFlow<EditFormulaState> = _screenState
+
+    init {
+        loadData()
+    }
 
     fun onIntent(intent: EditFormulaIntent){
         when(intent){
@@ -23,6 +35,14 @@ class EditFormulaViewModel @Inject constructor(): ViewModel() {
             EditFormulaIntent.SaveChanges -> println("SKLT $intent")
         }
     }
+
+    private fun loadData() = safeBackgroundLaunch(
+        code = {
+            val data = getEditFormulaDataUseCase.execute(formulaID)
+            Log.v("SKLT / getEditFormulaDataUseCase", data.toString())
+        },
+        errorHandling = {}
+    )
 
     private fun changeTab(index: Int){
         val content = when(index){
@@ -39,9 +59,5 @@ class EditFormulaViewModel @Inject constructor(): ViewModel() {
                 content = content
             )
         }
-    }
-
-    companion object{
-        const val NEW_FORMULA = 0L
     }
 }

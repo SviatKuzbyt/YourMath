@@ -6,10 +6,16 @@ import androidx.room.Query
 import ua.sviatkuzbyt.yourmath.data.database.entity.FormulaEntity
 import ua.sviatkuzbyt.yourmath.data.database.entity.InputDataEntity
 import ua.sviatkuzbyt.yourmath.data.database.entity.OutputDataEntity
+import ua.sviatkuzbyt.yourmath.data.structures.editformula.EditFormulaInfoData
+import ua.sviatkuzbyt.yourmath.data.structures.editformula.EditInputData
+import ua.sviatkuzbyt.yourmath.data.structures.editformula.EditResultData
 import ua.sviatkuzbyt.yourmath.data.structures.editor.FormulaNameItemData
 import ua.sviatkuzbyt.yourmath.data.structures.transfer.FileDataInputData
 import ua.sviatkuzbyt.yourmath.data.structures.transfer.FileDataOutputData
 import ua.sviatkuzbyt.yourmath.data.structures.transfer.FormulaToFormatData
+import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditFormulaInfo
+import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditInput
+import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditResult
 
 @Dao
 interface EditFormulaDao {
@@ -54,4 +60,13 @@ interface EditFormulaDao {
 
     @Query("SELECT position FROM Formula WHERE formulaID = :formulaID LIMIT 1")
     fun getPosition(formulaID: Long): Int
+
+    @Query("SELECT formulaID, name, description, code FROM Formula WHERE formulaID = :formulaID LIMIT 1")
+    fun getEditFormulaInfo(formulaID: Long): EditFormulaInfoData
+
+    @Query("SELECT inputDataID, label, codeLabel, defaultData FROM InputData WHERE formulaID = :formulaID")
+    fun getEditInputs(formulaID: Long): List<EditInputData>
+
+    @Query("SELECT outputDataID, label, codeLabel FROM OutputData WHERE formulaID = :formulaID")
+    fun getEditResults(formulaID: Long): List<EditResultData>
 }

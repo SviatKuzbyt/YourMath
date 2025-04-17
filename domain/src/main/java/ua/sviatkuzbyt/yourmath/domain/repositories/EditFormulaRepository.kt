@@ -1,5 +1,9 @@
 package ua.sviatkuzbyt.yourmath.domain.repositories
 
+import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditFormula
+import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditFormulaInfo
+import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditInput
+import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditResult
 import ua.sviatkuzbyt.yourmath.domain.structures.editor.FormulaNameItem
 import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ExportDataInput
 import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ExportDataOutput
@@ -24,4 +28,8 @@ interface EditFormulaRepository {
     fun addImportedFormulaAndGetID(formula: ImportedFormula): Long
     fun addImportedInputData(data: ImportedDataInput)
     fun addImportedOutputData(data: ImportedDataOutput)
+
+    fun getEditFormulaInfo(formulaID: Long): EditFormulaInfo
+    fun getEditInputs(formulaID: Long): List<EditInput>
+    fun getEditResults(formulaID: Long): List<EditResult>
 }

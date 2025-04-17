@@ -29,6 +29,10 @@ data class EmptyScreenInfo(
             message = R.string.no_edit_formulas,
             icon = R.drawable.ic_no_formulas
         )
+        fun noEditRecords() = EmptyScreenInfo(
+            message = R.string.no_edit_records,
+            icon = R.drawable.ic_file
+        )
 
     }
 }

@@ -81,4 +81,5 @@
     <string name="default_data">Default data</string>
     <string name="enter_code">Enter the python calculation code here</string>
     <string name="python">Python</string>
+    <string name="no_edit_records">There are no entries yet. Click \"+\" to add new ones</string>
 </resources>

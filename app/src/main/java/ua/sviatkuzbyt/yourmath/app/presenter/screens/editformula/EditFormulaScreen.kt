@@ -32,6 +32,8 @@ import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormula
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaState
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaStateContent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditList
+import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.EmptyScreenInfo
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.EmptyScreenInListFullSize
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.InfoItems
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ScreenTopBar
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button.AddButton
@@ -96,30 +98,39 @@ fun EditFormulaContent(
                         )
                     }
                     is EditFormulaStateContent.Inputs -> {
-                        itemsIndexed(
-                            items = screenState.content.list,
-                            key = {_, input -> "input${input.id}"}
-                        ){ index, input ->
-                            InputItem(
-                                input = input,
-                                onLabelChange = { newText ->
-                                    onIntent(EditFormulaIntent.ChangeItemLabel(input.id, newText, EditList.Inputs))
-                                },
-                                onCodeLabelChange = { newText ->
-                                    onIntent(EditFormulaIntent.ChangeItemCodeLabel(input.id, newText, EditList.Inputs))
-                                },
-                                onDefaultDataChange = { newText ->
-                                    onIntent(EditFormulaIntent.ChangeItemDefaultData(input.id, newText, EditList.Inputs))
-                                },
-                                onDelete = {
-                                    onIntent(EditFormulaIntent.DeleteItem(input.id, EditList.Inputs))
-                                },
-                                onMoveDown = { onIntent(EditFormulaIntent.MoveItem(index, index+1, EditList.Inputs)) },
-                                onMoveUp = { onIntent(EditFormulaIntent.MoveItem(index, index-1, EditList.Inputs)) }
-                            )
+                        if (screenState.content.list.isEmpty()){
+                            item(key = "empty") {
+                                EmptyScreenInListFullSize(
+                                    EmptyScreenInfo.noEditRecords()
+                                )
+                            }
+                        } else{
+                            itemsIndexed(
+                                items = screenState.content.list,
+                                key = {_, input -> "input${input.id}"}
+                            ){ index, input ->
+                                InputItem(
+                                    input = input,
+                                    onLabelChange = { newText ->
+                                        onIntent(EditFormulaIntent.ChangeItemLabel(input.id, newText, EditList.Inputs))
+                                    },
+                                    onCodeLabelChange = { newText ->
+                                        onIntent(EditFormulaIntent.ChangeItemCodeLabel(input.id, newText, EditList.Inputs))
+                                    },
+                                    onDefaultDataChange = { newText ->
+                                        onIntent(EditFormulaIntent.ChangeItemDefaultData(input.id, newText, EditList.Inputs))
+                                    },
+                                    onDelete = {
+                                        onIntent(EditFormulaIntent.DeleteItem(input.id, EditList.Inputs))
+                                    },
+                                    onMoveDown = { onIntent(EditFormulaIntent.MoveItem(index, index+1, EditList.Inputs)) },
+                                    onMoveUp = { onIntent(EditFormulaIntent.MoveItem(index, index-1, EditList.Inputs)) }
+                                )
+                            }
+
+                            emptySpaceOfButton()
                         }
 
-                        emptySpaceOfButton()
                     }
                     is EditFormulaStateContent.Code -> {
                         item {
@@ -127,27 +138,34 @@ fun EditFormulaContent(
                         }
                     }
                     is EditFormulaStateContent.Results -> {
-                        itemsIndexed(
-                            items = screenState.content.list,
-                            key = {_, result -> "result${result.id}"}
-                        ){ index, result ->
-                            ResultItem (
-                                result = result,
-                                onLabelChange = { newText ->
-                                    onIntent(EditFormulaIntent.ChangeItemLabel(result.id, newText, EditList.Results))
-                                },
-                                onCodeLabelChange = { newText ->
-                                    onIntent(EditFormulaIntent.ChangeItemCodeLabel(result.id, newText, EditList.Results))
-                                },
-                                onDelete = {
-                                    onIntent(EditFormulaIntent.DeleteItem(result.id, EditList.Results))
-                                },
-                                onMoveDown = { onIntent(EditFormulaIntent.MoveItem(index, index+1, EditList.Results)) },
-                                onMoveUp = { onIntent(EditFormulaIntent.MoveItem(index, index-1, EditList.Results)) }
-                            )
+                        if (screenState.content.list.isEmpty()){
+                            item(key = "empty") {
+                                EmptyScreenInListFullSize(
+                                    EmptyScreenInfo.noEditRecords()
+                                )
+                            }
+                        } else{
+                            itemsIndexed(
+                                items = screenState.content.list,
+                                key = {_, result -> "result${result.id}"}
+                            ){ index, result ->
+                                ResultItem (
+                                    result = result,
+                                    onLabelChange = { newText ->
+                                        onIntent(EditFormulaIntent.ChangeItemLabel(result.id, newText, EditList.Results))
+                                    },
+                                    onCodeLabelChange = { newText ->
+                                        onIntent(EditFormulaIntent.ChangeItemCodeLabel(result.id, newText, EditList.Results))
+                                    },
+                                    onDelete = {
+                                        onIntent(EditFormulaIntent.DeleteItem(result.id, EditList.Results))
+                                    },
+                                    onMoveDown = { onIntent(EditFormulaIntent.MoveItem(index, index+1, EditList.Results)) },
+                                    onMoveUp = { onIntent(EditFormulaIntent.MoveItem(index, index-1, EditList.Results)) }
+                                )
+                            }
+                            emptySpaceOfButton()
                         }
-
-                        emptySpaceOfButton()
                     }
                     EditFormulaStateContent.Nothing -> Unit
                 }

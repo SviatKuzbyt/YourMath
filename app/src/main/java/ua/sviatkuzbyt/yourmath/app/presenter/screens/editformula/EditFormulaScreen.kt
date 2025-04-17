@@ -21,17 +21,22 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.launch
 import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaState
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaStateContent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditList
+import ua.sviatkuzbyt.yourmath.app.presenter.navigation.LocalNavController
+import ua.sviatkuzbyt.yourmath.app.presenter.navigation.NavigateIntent
+import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.EmptyScreenInfo
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.EmptyScreenInListFullSize
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.InfoItems
@@ -50,9 +55,11 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppTheme
 @Composable
 fun EditFormulaScreen(viewModel: EditFormulaViewModel = hiltViewModel()){
     val screenState by viewModel.screenState.collectAsState()
+    val navController = LocalNavController.current
     EditFormulaContent(
         screenState = screenState,
-        onIntent = viewModel::onIntent
+        onIntent = viewModel::onIntent,
+        onNavigate = { onNavigateIntent(navController, it) }
     )
 }
 
@@ -60,14 +67,16 @@ fun EditFormulaScreen(viewModel: EditFormulaViewModel = hiltViewModel()){
 @Composable
 fun EditFormulaContent(
     screenState: EditFormulaState,
-    onIntent: (EditFormulaIntent) -> Unit
+    onIntent: (EditFormulaIntent) -> Unit,
+    onNavigate: (NavigateIntent) -> Unit
 ){
     val listState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
     Column(Modifier.fillMaxSize()) {
         ScreenTopBar(
             tittle = stringResource(R.string.edit_formula),
             listState = listState,
-            onBack = {}
+            onBack = { onNavigate(NavigateIntent.NavigateBack) }
         )
 
         Box(Modifier.weight(1f)){
@@ -81,7 +90,13 @@ fun EditFormulaContent(
                     ScreenTabs(
                         tabs = screenState.tabs,
                         selectedTab = screenState.selectedTab,
-                        onSelectTab = { index -> onIntent(EditFormulaIntent.SelectTab(index)) }
+                        onSelectTab = { index ->
+                            scope.launch {
+                                listState.animateScrollToItem(0)
+                            }.invokeOnCompletion {
+                                onIntent(EditFormulaIntent.SelectTab(index))
+                            }
+                        }
                     )
                 }
 

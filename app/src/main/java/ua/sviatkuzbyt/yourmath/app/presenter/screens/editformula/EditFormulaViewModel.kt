@@ -19,6 +19,8 @@ class EditFormulaViewModel @Inject constructor(): ViewModel() {
     fun onIntent(intent: EditFormulaIntent){
         when(intent){
             is EditFormulaIntent.SelectTab -> changeTab(intent.index)
+            EditFormulaIntent.AddDataItem -> println("SKLT $intent")
+            EditFormulaIntent.SaveChanges -> println("SKLT $intent")
         }
     }
 

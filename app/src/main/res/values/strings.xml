@@ -69,4 +69,6 @@
     <string name="save">Save</string>
     <string name="info">Info</string>
     <string name="code">Code</string>
+    <string name="add_item">Add item</string>
+    <string name="save_changes">Save changes</string>
 </resources>

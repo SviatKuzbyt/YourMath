@@ -24,6 +24,11 @@ class EditFormulaViewModel @Inject constructor(
     private val _screenState = MutableStateFlow(EditFormulaState())
     val screenState: StateFlow<EditFormulaState> = _screenState
 
+    private val _info = MutableStateFlow(EditFormulaStateContent.Info("", null))
+    private val _inputs = MutableStateFlow(EditFormulaStateContent.Inputs(listOf()))
+    private val _results = MutableStateFlow(EditFormulaStateContent.Results(listOf()))
+    private val _code = MutableStateFlow(EditFormulaStateContent.Code(""))
+
     init {
         loadData()
     }
@@ -39,17 +44,27 @@ class EditFormulaViewModel @Inject constructor(
     private fun loadData() = safeBackgroundLaunch(
         code = {
             val data = getEditFormulaDataUseCase.execute(formulaID)
-            Log.v("SKLT / getEditFormulaDataUseCase", data.toString())
+            _info.value = EditFormulaStateContent.Info(
+                name = data.info.name,
+                description = data.info.description
+            )
+            _inputs.value = EditFormulaStateContent.Inputs(data.inputList)
+            _results.value = EditFormulaStateContent.Results(data.resultList)
+            _code.value = EditFormulaStateContent.Code(data.info.code)
+
+            _screenState.value = EditFormulaState(
+                content = _info.value
+            )
         },
         errorHandling = {}
     )
 
     private fun changeTab(index: Int){
         val content = when(index){
-            0 -> EditFormulaStateContent.InfoList
-            1 -> EditFormulaStateContent.InputList
-            2 -> EditFormulaStateContent.ResultList
-            3 -> EditFormulaStateContent.CodeField
+            0 -> _info.value
+            1 -> _inputs.value
+            2 -> _results.value
+            3 -> _code.value
             else -> EditFormulaStateContent.Nothing
         }
 

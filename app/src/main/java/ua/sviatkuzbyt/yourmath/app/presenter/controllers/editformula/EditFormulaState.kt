@@ -2,6 +2,8 @@ package ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula
 
 import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.ErrorData
+import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditInput
+import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditResult
 
 data class EditFormulaState(
     val tabs: List<Int> = listOf(
@@ -17,10 +19,13 @@ data class EditFormulaState(
 )
 
 sealed class EditFormulaStateContent {
-    data object InfoList: EditFormulaStateContent()
-    data object InputList: EditFormulaStateContent()
-    data object ResultList: EditFormulaStateContent()
-    data object CodeField: EditFormulaStateContent()
+    data class Info(
+        val name: String,
+        val description: String?
+    ): EditFormulaStateContent()
+    data class Inputs(val list: List<EditInput>): EditFormulaStateContent()
+    data class Results(val list: List<EditResult>): EditFormulaStateContent()
+    data class Code(val text: String): EditFormulaStateContent()
     data object Nothing: EditFormulaStateContent()
 }
 

@@ -84,8 +84,8 @@ fun EditFormulaContent(
 
             AddDataButton(
                 isShow =
-                    screenState.content is EditFormulaStateContent.InputList ||
-                    screenState.content is EditFormulaStateContent.ResultList,
+                    screenState.content is EditFormulaStateContent.Inputs ||
+                    screenState.content is EditFormulaStateContent.Results,
                 onClick = { onIntent(EditFormulaIntent.AddDataItem) }
             )
         }

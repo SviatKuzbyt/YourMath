@@ -54,10 +54,14 @@ class EditFormulaViewModel @Inject constructor(
             is EditFormulaIntent.ChangeInputDefaultData ->
                 changeInputDefaultData(intent.index, intent.newText)
             is EditFormulaIntent.ChangeCodeText ->
-                println("SKLT $intent")
+                changeCodeText(intent.newText)
             EditFormulaIntent.SaveChanges ->
                 println("SKLT $intent")
         }
+    }
+
+    private fun changeCodeText(newText: String){
+        updateCode { it.copy(text = newText) }
     }
 
     private fun changeItemLabel(index: Int, newText: String, list: EditList){

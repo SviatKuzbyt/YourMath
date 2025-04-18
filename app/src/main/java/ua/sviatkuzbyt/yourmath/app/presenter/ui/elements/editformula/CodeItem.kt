@@ -23,7 +23,7 @@ fun LazyItemScope.CodeItem(
                 label = stringResource(R.string.python),
                 text = text,
                 singleLine = false,
-                hint = stringResource(R.string.enter_name),
+                hint = stringResource(R.string.enter_code),
                 onTextChange = onTextChange,
                 modifier = Modifier.padding(AppSizes.dp16),
             )

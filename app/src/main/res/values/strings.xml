@@ -82,4 +82,5 @@
     <string name="enter_code">Enter calculation code here</string>
     <string name="python">Python</string>
     <string name="no_edit_records">There are no entries yet. Click \"+\" to add new ones</string>
+    <string name="change_auto_save">Changes are saved automatically</string>
 </resources>

@@ -21,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
@@ -33,10 +34,12 @@ import ua.sviatkuzbyt.yourmath.app.presenter.navigation.LocalNavController
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.NavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.EmptyScreenInfo
+import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.showToast
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.EmptyScreenInListFullSize
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.InfoItems
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ScreenTopBar
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button.AddButton
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button.ButtonIconTopBar
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button.ButtonLarge
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.emptySpaceOfButton
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.TittleText
@@ -67,14 +70,23 @@ fun EditFormulaContent(
 ){
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
-    Column(Modifier.fillMaxSize()) {
-        ScreenTopBar(
-            tittle = stringResource(R.string.edit_formula),
-            listState = listState,
-            onBack = { onNavigate(NavigateIntent.NavigateBack) }
-        )
+    val context = LocalContext.current
 
-        Box(Modifier.weight(1f)){
+    Box(Modifier.fillMaxSize()){
+        Column(Modifier.fillMaxSize()) {
+            ScreenTopBar(
+                tittle = stringResource(R.string.edit_formula),
+                listState = listState,
+                onBack = { onNavigate(NavigateIntent.NavigateBack) },
+                toolButtons = {
+                    ButtonIconTopBar(
+                        imageRes = R.drawable.ic_auto_save,
+                        contentDescriptionRes = R.string.change_auto_save,
+                        onClick = { showToast(R.string.change_auto_save, context) }
+                    )
+                }
+            )
+
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 state = listState
@@ -183,19 +195,12 @@ fun EditFormulaContent(
                     EditFormulaStateContent.Nothing -> Unit
                 }
             }
-
-            AddDataButton(
-                isShow =
-                    screenState.content is EditFormulaStateContent.Inputs ||
-                    screenState.content is EditFormulaStateContent.Results,
-                onClick = { onIntent(EditFormulaIntent.AddDataItem) }
-            )
         }
-
-        ButtonLarge(
-            textRes = R.string.save_changes,
-            modifier = Modifier.padding(AppSizes.dp16),
-            onClick = { onIntent(EditFormulaIntent.SaveChanges) }
+        AddDataButton(
+            isShow =
+            screenState.content is EditFormulaStateContent.Inputs ||
+                    screenState.content is EditFormulaStateContent.Results,
+            onClick = { onIntent(EditFormulaIntent.AddDataItem) }
         )
     }
 }

@@ -37,13 +37,58 @@ class EditFormulaViewModel @Inject constructor(
             is EditFormulaIntent.SelectTab -> changeTab(intent.index)
             EditFormulaIntent.AddDataItem -> println("SKLT $intent")
             EditFormulaIntent.SaveChanges -> println("SKLT $intent")
-            is EditFormulaIntent.ChangeDescription -> println("SKLT $intent")
-            is EditFormulaIntent.ChangeName -> println("SKLT $intent")
+            is EditFormulaIntent.ChangeDescription -> changeDescription(intent.description)
+            is EditFormulaIntent.ChangeName -> changeName(intent.name)
             is EditFormulaIntent.ChangeItemCodeLabel -> println("SKLT $intent")
-            is EditFormulaIntent.ChangeItemDefaultData -> println("SKLT $intent")
+            is EditFormulaIntent.ChangeInputDefaultData -> println("SKLT $intent")
             is EditFormulaIntent.ChangeItemLabel -> println("SKLT $intent")
             is EditFormulaIntent.DeleteItem -> println("SKLT $intent")
             is EditFormulaIntent.MoveItem -> println("SKLT $intent")
+            is EditFormulaIntent.ChangeCodeText -> println("SKLT $intent")
+        }
+    }
+
+    private fun changeName(newText: String){
+        updateInfo { it.copy(name = newText) }
+    }
+
+    private fun changeDescription(newText: String){
+        updateInfo { it.copy(description = newText) }
+    }
+
+    private inline fun updateInfo(
+        update: (EditFormulaStateContent.Info) -> EditFormulaStateContent.Info
+    ){
+        _info.value = update(_info.value)
+        _screenState.update { state ->
+            state.copy(content = _info.value)
+        }
+    }
+
+    private inline fun updateInputs(
+        update: (EditFormulaStateContent.Inputs) -> EditFormulaStateContent.Inputs
+    ){
+        _inputs.value = update(_inputs.value)
+        _screenState.update { state ->
+            state.copy(content = _inputs.value)
+        }
+    }
+
+    private inline fun updateResults(
+        update: (EditFormulaStateContent.Results) -> EditFormulaStateContent.Results
+    ){
+        _results.value = update(_results.value)
+        _screenState.update { state ->
+            state.copy(content = _results.value)
+        }
+    }
+
+    private inline fun updateCode(
+        update: (EditFormulaStateContent.Code) -> EditFormulaStateContent.Code
+    ){
+        _code.value = update(_code.value)
+        _screenState.update { state ->
+            state.copy(content = _code.value)
         }
     }
 

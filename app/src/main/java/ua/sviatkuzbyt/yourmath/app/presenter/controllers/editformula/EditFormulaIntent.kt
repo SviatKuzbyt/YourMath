@@ -9,7 +9,8 @@ sealed class EditFormulaIntent{
     data class MoveItem(val from: Int, val to: Int, val list: EditList): EditFormulaIntent()
     data class ChangeItemLabel(val id: Long, val newText: String, val list: EditList): EditFormulaIntent()
     data class ChangeItemCodeLabel(val id: Long, val newText: String, val list: EditList): EditFormulaIntent()
-    data class ChangeItemDefaultData(val id: Long, val newText: String, val list: EditList): EditFormulaIntent()
+    data class ChangeInputDefaultData(val id: Long, val newText: String): EditFormulaIntent()
+    data class ChangeCodeText(val newText: String): EditFormulaIntent()
     data class DeleteItem(val id: Long, val list: EditList): EditFormulaIntent()
 }
 

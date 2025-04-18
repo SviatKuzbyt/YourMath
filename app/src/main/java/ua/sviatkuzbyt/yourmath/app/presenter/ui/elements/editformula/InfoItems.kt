@@ -3,9 +3,11 @@ package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyItemScope
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaStateContent
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.Container
@@ -24,6 +26,9 @@ fun LazyItemScope.InfoItems(
                 label = stringResource(R.string.name),
                 text = info.name,
                 hint = stringResource(R.string.enter_name),
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.Sentences
+                ),
                 onTextChange = onNameChange,
                 modifier = Modifier.padding(AppSizes.dp16)
             )
@@ -35,6 +40,9 @@ fun LazyItemScope.InfoItems(
                 text = info.description.orEmpty(),
                 hint = stringResource(R.string.optional),
                 onTextChange = onDescriptionChange,
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.Sentences
+                ),
                 singleLine = false,
                 modifier = Modifier.padding(AppSizes.dp16)
             )

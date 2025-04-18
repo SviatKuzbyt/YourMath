@@ -18,14 +18,9 @@ import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
@@ -133,7 +128,7 @@ fun EditFormulaContent(
                                         onIntent(EditFormulaIntent.ChangeItemCodeLabel(input.id, newText, EditList.Inputs))
                                     },
                                     onDefaultDataChange = { newText ->
-                                        onIntent(EditFormulaIntent.ChangeItemDefaultData(input.id, newText, EditList.Inputs))
+                                        onIntent(EditFormulaIntent.ChangeInputDefaultData(input.id, newText))
                                     },
                                     onDelete = {
                                         onIntent(EditFormulaIntent.DeleteItem(input.id, EditList.Inputs))
@@ -149,7 +144,10 @@ fun EditFormulaContent(
                     }
                     is EditFormulaStateContent.Code -> {
                         item {
-                            CodeItem(screenState.content.text, {})
+                            CodeItem(
+                                text = screenState.content.text,
+                                onTextChange = { onIntent(EditFormulaIntent.ChangeCodeText(it)) }
+                            )
                         }
                     }
                     is EditFormulaStateContent.Results -> {

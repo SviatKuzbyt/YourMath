@@ -7,11 +7,11 @@ sealed class EditFormulaIntent{
     data class ChangeName(val name: String): EditFormulaIntent()
     data class ChangeDescription(val description: String): EditFormulaIntent()
     data class MoveItem(val from: Int, val to: Int, val list: EditList): EditFormulaIntent()
-    data class ChangeItemLabel(val id: Long, val newText: String, val list: EditList): EditFormulaIntent()
-    data class ChangeItemCodeLabel(val id: Long, val newText: String, val list: EditList): EditFormulaIntent()
-    data class ChangeInputDefaultData(val id: Long, val newText: String): EditFormulaIntent()
+    data class ChangeItemLabel(val index: Int, val newText: String, val list: EditList): EditFormulaIntent()
+    data class ChangeItemCodeLabel(val index: Int, val newText: String, val list: EditList): EditFormulaIntent()
+    data class ChangeInputDefaultData(val index: Int, val newText: String): EditFormulaIntent()
     data class ChangeCodeText(val newText: String): EditFormulaIntent()
-    data class DeleteItem(val id: Long, val list: EditList): EditFormulaIntent()
+    data class DeleteItem(val index: Int, val list: EditList): EditFormulaIntent()
 }
 
 enum class EditList{

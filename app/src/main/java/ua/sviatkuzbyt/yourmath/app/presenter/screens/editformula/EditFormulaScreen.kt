@@ -122,16 +122,16 @@ fun EditFormulaContent(
                                 InputItem(
                                     input = input,
                                     onLabelChange = { newText ->
-                                        onIntent(EditFormulaIntent.ChangeItemLabel(input.id, newText, EditList.Inputs))
+                                        onIntent(EditFormulaIntent.ChangeItemLabel(index, newText, EditList.Inputs))
                                     },
                                     onCodeLabelChange = { newText ->
-                                        onIntent(EditFormulaIntent.ChangeItemCodeLabel(input.id, newText, EditList.Inputs))
+                                        onIntent(EditFormulaIntent.ChangeItemCodeLabel(index, newText, EditList.Inputs))
                                     },
                                     onDefaultDataChange = { newText ->
-                                        onIntent(EditFormulaIntent.ChangeInputDefaultData(input.id, newText))
+                                        onIntent(EditFormulaIntent.ChangeInputDefaultData(index, newText))
                                     },
                                     onDelete = {
-                                        onIntent(EditFormulaIntent.DeleteItem(input.id, EditList.Inputs))
+                                        onIntent(EditFormulaIntent.DeleteItem(index, EditList.Inputs))
                                     },
                                     onMoveDown = { onIntent(EditFormulaIntent.MoveItem(index, index+1, EditList.Inputs)) },
                                     onMoveUp = { onIntent(EditFormulaIntent.MoveItem(index, index-1, EditList.Inputs)) }
@@ -165,13 +165,13 @@ fun EditFormulaContent(
                                 ResultItem (
                                     result = result,
                                     onLabelChange = { newText ->
-                                        onIntent(EditFormulaIntent.ChangeItemLabel(result.id, newText, EditList.Results))
+                                        onIntent(EditFormulaIntent.ChangeItemLabel(index, newText, EditList.Results))
                                     },
                                     onCodeLabelChange = { newText ->
-                                        onIntent(EditFormulaIntent.ChangeItemCodeLabel(result.id, newText, EditList.Results))
+                                        onIntent(EditFormulaIntent.ChangeItemCodeLabel(index, newText, EditList.Results))
                                     },
                                     onDelete = {
-                                        onIntent(EditFormulaIntent.DeleteItem(result.id, EditList.Results))
+                                        onIntent(EditFormulaIntent.DeleteItem(index, EditList.Results))
                                     },
                                     onMoveDown = { onIntent(EditFormulaIntent.MoveItem(index, index+1, EditList.Results)) },
                                     onMoveUp = { onIntent(EditFormulaIntent.MoveItem(index, index-1, EditList.Results)) }

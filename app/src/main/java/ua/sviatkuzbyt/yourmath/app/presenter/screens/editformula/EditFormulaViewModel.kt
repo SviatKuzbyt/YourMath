@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.update
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaState
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaStateContent
+import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditList
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.safeBackgroundLaunch
 import ua.sviatkuzbyt.yourmath.domain.usecases.editformula.GetEditFormulaDataUseCase
 import javax.inject.Inject
@@ -34,17 +35,71 @@ class EditFormulaViewModel @Inject constructor(
 
     fun onIntent(intent: EditFormulaIntent){
         when(intent){
-            is EditFormulaIntent.SelectTab -> changeTab(intent.index)
-            EditFormulaIntent.AddDataItem -> println("SKLT $intent")
-            EditFormulaIntent.SaveChanges -> println("SKLT $intent")
-            is EditFormulaIntent.ChangeDescription -> changeDescription(intent.description)
-            is EditFormulaIntent.ChangeName -> changeName(intent.name)
-            is EditFormulaIntent.ChangeItemCodeLabel -> println("SKLT $intent")
-            is EditFormulaIntent.ChangeInputDefaultData -> println("SKLT $intent")
-            is EditFormulaIntent.ChangeItemLabel -> println("SKLT $intent")
-            is EditFormulaIntent.DeleteItem -> println("SKLT $intent")
-            is EditFormulaIntent.MoveItem -> println("SKLT $intent")
-            is EditFormulaIntent.ChangeCodeText -> println("SKLT $intent")
+            is EditFormulaIntent.SelectTab ->
+                changeTab(intent.index)
+            is EditFormulaIntent.ChangeName ->
+                changeName(intent.name)
+            is EditFormulaIntent.ChangeDescription ->
+                changeDescription(intent.description)
+            EditFormulaIntent.AddDataItem ->
+                println("SKLT $intent")
+            is EditFormulaIntent.ChangeItemLabel ->
+                changeItemLabel(intent.index, intent.newText, intent.list)
+            is EditFormulaIntent.ChangeItemCodeLabel ->
+                changeItemCodeLabel(intent.index, intent.newText, intent.list)
+            is EditFormulaIntent.DeleteItem ->
+                println("SKLT $intent")
+            is EditFormulaIntent.MoveItem ->
+                println("SKLT $intent")
+            is EditFormulaIntent.ChangeInputDefaultData ->
+                changeInputDefaultData(intent.index, intent.newText)
+            is EditFormulaIntent.ChangeCodeText ->
+                println("SKLT $intent")
+            EditFormulaIntent.SaveChanges ->
+                println("SKLT $intent")
+        }
+    }
+
+    private fun changeItemLabel(index: Int, newText: String, list: EditList){
+        when(list){
+            EditList.Inputs -> updateInputs { state ->
+                state.copy(list = state.list.mapIndexed {i, input ->
+                    if (i == index) input.copy(label = newText)
+                    else input
+                })
+            }
+            EditList.Results -> updateResults { state ->
+                state.copy(list = state.list.mapIndexed {i, result ->
+                    if (i == index) result.copy(label = newText)
+                    else result
+                })
+            }
+        }
+    }
+
+    private fun changeItemCodeLabel(index: Int, newText: String, list: EditList){
+        when(list){
+            EditList.Inputs -> updateInputs { state ->
+                state.copy(list = state.list.mapIndexed { i, input ->
+                    if (i == index) input.copy(codeLabel = newText)
+                    else input
+                })
+            }
+            EditList.Results -> updateResults { state ->
+                state.copy(list = state.list.mapIndexed { i, result ->
+                    if (i == index)  result.copy(codeLabel = newText)
+                    else result
+                })
+            }
+        }
+    }
+
+    private fun changeInputDefaultData(index: Int, newText: String){
+        updateInputs { state ->
+            state.copy(list = state.list.mapIndexed { i, input ->
+                if (i == index)  input.copy(defaultData = newText)
+                else input
+            })
         }
     }
 

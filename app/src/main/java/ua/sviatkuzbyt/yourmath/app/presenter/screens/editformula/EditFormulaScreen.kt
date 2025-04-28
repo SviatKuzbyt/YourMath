@@ -116,7 +116,13 @@ fun EditFormulaContent(
                             },
                             onDescriptionChange = { description ->
                                 onIntent(EditFormulaIntent.ChangeDescription(description))
-                            }
+                            },
+                            onNameSave = {
+                                onIntent(EditFormulaIntent.SaveName)
+                            },
+                            onDescriptionSave = {
+                                onIntent(EditFormulaIntent.SaveDescription)
+                            },
                         )
                     }
                     is EditFormulaStateContent.Inputs -> {

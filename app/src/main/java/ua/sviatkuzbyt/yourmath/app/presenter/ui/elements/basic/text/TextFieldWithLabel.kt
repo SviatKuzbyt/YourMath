@@ -24,14 +24,14 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppTheme
 
 @Composable
 fun TextFieldWithLabel(
+    modifier: Modifier = Modifier,
     label: String,
     text: String,
     hint: String,
     onTextChange: (String) -> Unit,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
-    singleLine: Boolean = true,
-    modifier: Modifier = Modifier
+    singleLine: Boolean = true
 ) {
     Column(
         modifier = modifier

@@ -55,7 +55,18 @@ class EditFormulaViewModel @Inject constructor(
                 changeInputDefaultData(intent.index, intent.newText)
             is EditFormulaIntent.ChangeCodeText ->
                 changeCodeText(intent.newText)
-            EditFormulaIntent.SaveChanges ->
+
+            is EditFormulaIntent.SaveCodeText ->
+                println("SKLT $intent")
+            is EditFormulaIntent.SaveDescription ->
+                println("SKLT $intent")
+            is EditFormulaIntent.SaveInputDefaultData ->
+                println("SKLT $intent")
+            is EditFormulaIntent.SaveItemCodeLabel ->
+                println("SKLT $intent")
+            is EditFormulaIntent.SaveItemLabel ->
+                println("SKLT $intent")
+            is EditFormulaIntent.SaveName ->
                 println("SKLT $intent")
         }
     }

@@ -140,19 +140,66 @@ fun EditFormulaContent(
                                 InputItem(
                                     input = input,
                                     onLabelChange = { newText ->
-                                        onIntent(EditFormulaIntent.ChangeItemLabel(index, newText, EditList.Inputs))
+                                        onIntent(
+                                            EditFormulaIntent.ChangeItemLabel(
+                                                index,
+                                                newText,
+                                                EditList.Inputs
+                                            )
+                                        )
                                     },
                                     onCodeLabelChange = { newText ->
-                                        onIntent(EditFormulaIntent.ChangeItemCodeLabel(index, newText, EditList.Inputs))
+                                        onIntent(
+                                            EditFormulaIntent.ChangeItemCodeLabel(
+                                                index,
+                                                newText,
+                                                EditList.Inputs
+                                            )
+                                        )
                                     },
                                     onDefaultDataChange = { newText ->
-                                        onIntent(EditFormulaIntent.ChangeInputDefaultData(index, newText))
+                                        onIntent(
+                                            EditFormulaIntent.ChangeInputDefaultData(
+                                                index,
+                                                newText
+                                            )
+                                        )
                                     },
                                     onDelete = {
-                                        onIntent(EditFormulaIntent.DeleteItem(index, EditList.Inputs))
+                                        onIntent(
+                                            EditFormulaIntent.DeleteItem(
+                                                index,
+                                                EditList.Inputs
+                                            )
+                                        )
                                     },
-                                    onMoveDown = { onIntent(EditFormulaIntent.MoveItem(index, index+1, EditList.Inputs)) },
-                                    onMoveUp = { onIntent(EditFormulaIntent.MoveItem(index, index-1, EditList.Inputs)) }
+                                    onMoveDown = {
+                                        onIntent(
+                                            EditFormulaIntent.MoveItem(
+                                                index,
+                                                index + 1,
+                                                EditList.Inputs
+                                            )
+                                        )
+                                    },
+                                    onMoveUp = {
+                                        onIntent(
+                                            EditFormulaIntent.MoveItem(
+                                                index,
+                                                index - 1,
+                                                EditList.Inputs
+                                            )
+                                        )
+                                    },
+                                    onLabelSave = {
+                                        onIntent(EditFormulaIntent.SaveItemLabel(index, EditList.Inputs))
+                                    },
+                                    onCodeLabelSave = {
+                                        onIntent(EditFormulaIntent.SaveItemCodeLabel(index, EditList.Inputs))
+                                    },
+                                    onDefaultDataSave = {
+                                        onIntent(EditFormulaIntent.SaveInputDefaultData(index))
+                                    }
                                 )
                             }
 
@@ -164,7 +211,10 @@ fun EditFormulaContent(
                         item {
                             CodeItem(
                                 text = screenState.content.text,
-                                onTextChange = { onIntent(EditFormulaIntent.ChangeCodeText(it)) }
+                                onTextChange = { onIntent(EditFormulaIntent.ChangeCodeText(it)) },
+                                onSaveText = {
+                                    onIntent(EditFormulaIntent.SaveCodeText)
+                                }
                             )
                         }
                     }
@@ -180,19 +230,58 @@ fun EditFormulaContent(
                                 items = screenState.content.list,
                                 key = {_, result -> "result${result.id}"}
                             ){ index, result ->
-                                ResultItem (
+                                ResultItem(
                                     result = result,
                                     onLabelChange = { newText ->
-                                        onIntent(EditFormulaIntent.ChangeItemLabel(index, newText, EditList.Results))
+                                        onIntent(
+                                            EditFormulaIntent.ChangeItemLabel(
+                                                index,
+                                                newText,
+                                                EditList.Results
+                                            )
+                                        )
                                     },
                                     onCodeLabelChange = { newText ->
-                                        onIntent(EditFormulaIntent.ChangeItemCodeLabel(index, newText, EditList.Results))
+                                        onIntent(
+                                            EditFormulaIntent.ChangeItemCodeLabel(
+                                                index,
+                                                newText,
+                                                EditList.Results
+                                            )
+                                        )
                                     },
                                     onDelete = {
-                                        onIntent(EditFormulaIntent.DeleteItem(index, EditList.Results))
+                                        onIntent(
+                                            EditFormulaIntent.DeleteItem(
+                                                index,
+                                                EditList.Results
+                                            )
+                                        )
                                     },
-                                    onMoveDown = { onIntent(EditFormulaIntent.MoveItem(index, index+1, EditList.Results)) },
-                                    onMoveUp = { onIntent(EditFormulaIntent.MoveItem(index, index-1, EditList.Results)) }
+                                    onMoveDown = {
+                                        onIntent(
+                                            EditFormulaIntent.MoveItem(
+                                                index,
+                                                index + 1,
+                                                EditList.Results
+                                            )
+                                        )
+                                    },
+                                    onMoveUp = {
+                                        onIntent(
+                                            EditFormulaIntent.MoveItem(
+                                                index,
+                                                index - 1,
+                                                EditList.Results
+                                            )
+                                        )
+                                    },
+                                    onLabelSave = {
+                                        onIntent(EditFormulaIntent.SaveItemLabel(index, EditList.Results))
+                                    },
+                                    onCodeLabelSave = {
+                                        onIntent(EditFormulaIntent.SaveItemCodeLabel(index, EditList.Results))
+                                    }
                                 )
                             }
                             emptySpaceOfButton()

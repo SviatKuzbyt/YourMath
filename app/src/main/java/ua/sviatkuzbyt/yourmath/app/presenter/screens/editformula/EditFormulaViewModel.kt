@@ -6,18 +6,22 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaDialog
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaState
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaStateContent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditList
+import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.ErrorData
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.safeBackgroundLaunch
 import ua.sviatkuzbyt.yourmath.domain.usecases.editformula.GetEditFormulaDataUseCase
+import ua.sviatkuzbyt.yourmath.domain.usecases.editformula.UpdateTextsUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class EditFormulaViewModel @Inject constructor(
     sentData: SavedStateHandle,
-    private val getEditFormulaDataUseCase: GetEditFormulaDataUseCase
+    private val getEditFormulaDataUseCase: GetEditFormulaDataUseCase,
+    private val updateTextsUseCase: UpdateTextsUseCase
 ): ViewModel() {
 
     private val formulaID: Long = sentData["formulaID"] ?: GetEditFormulaDataUseCase.NEW_FORMULA
@@ -57,19 +61,79 @@ class EditFormulaViewModel @Inject constructor(
                 changeCodeText(intent.newText)
 
             is EditFormulaIntent.SaveCodeText ->
-                println("SKLT $intent")
+                updateFormulaCode()
             is EditFormulaIntent.SaveDescription ->
-                println("SKLT $intent")
+                updateFormulaDescription()
             is EditFormulaIntent.SaveInputDefaultData ->
-                println("SKLT $intent")
+                updateInputDefaultData(intent.index)
             is EditFormulaIntent.SaveItemCodeLabel ->
-                println("SKLT $intent")
+                updateItemCodeLabel(intent.index, intent.list)
             is EditFormulaIntent.SaveItemLabel ->
-                println("SKLT $intent")
+                updateItemTextLabel(intent.index, intent.list)
             is EditFormulaIntent.SaveName ->
-                println("SKLT $intent")
+                updateFormulaLabel()
         }
     }
+
+    private fun updateFormulaLabel() = safeBackgroundLaunch(
+        code = {
+            updateTextsUseCase.updateFormulaLabel(_info.value.name, formulaID)
+        },
+        errorHandling = ::setError
+    )
+
+    private fun updateFormulaDescription() = safeBackgroundLaunch(
+        code = {
+            updateTextsUseCase.updateFormulaDescription(_info.value.description.orEmpty(), formulaID)
+        },
+        errorHandling = ::setError
+    )
+
+    private fun updateItemTextLabel(index: Int, list: EditList) = safeBackgroundLaunch(
+        code = {
+            println("SKLT updateItemTextLabel $list")
+            when(list){
+                EditList.Inputs -> updateTextsUseCase.updateInputTextLabel(
+                    _inputs.value.list[index].label, _inputs.value.list[index].id
+                )
+                EditList.Results -> updateTextsUseCase.updateResultTextLabel(
+                    _results.value.list[index].label, _results.value.list[index].id
+                )
+            }
+        },
+        errorHandling = ::setError
+    )
+
+    private fun updateItemCodeLabel(index: Int, list: EditList) = safeBackgroundLaunch(
+        code = {
+            when(list){
+                EditList.Inputs -> updateTextsUseCase.updateInputCodeLabel(
+                    _inputs.value.list[index].codeLabel, _inputs.value.list[index].id
+                )
+                EditList.Results -> updateTextsUseCase.updateResultCodeLabel(
+                    _results.value.list[index].codeLabel, _results.value.list[index].id
+                )
+            }
+        },
+        errorHandling = ::setError
+    )
+
+    private fun updateInputDefaultData(index: Int) = safeBackgroundLaunch(
+        code = {
+            updateTextsUseCase.updateInputDefaultData(
+                _inputs.value.list[index].defaultData.orEmpty(), _inputs.value.list[index].id
+            )
+        },
+        errorHandling = ::setError
+    )
+
+    private fun updateFormulaCode() = safeBackgroundLaunch(
+        code = {
+            updateTextsUseCase.updateCodeFormula(_code.value.text, formulaID)
+        },
+        errorHandling = ::setError
+    )
+
 
     private fun changeCodeText(newText: String){
         updateCode { it.copy(text = newText) }
@@ -177,7 +241,7 @@ class EditFormulaViewModel @Inject constructor(
                 content = _info.value
             )
         },
-        errorHandling = {}
+        errorHandling = ::setError
     )
 
     private fun changeTab(index: Int){
@@ -193,6 +257,16 @@ class EditFormulaViewModel @Inject constructor(
             state.copy(
                 selectedTab = index,
                 content = content
+            )
+        }
+    }
+
+    private fun setError(exception: Exception){
+        _screenState.update { state ->
+            state.copy(
+                dialog = EditFormulaDialog.ErrorDialog(
+                    ErrorData(detailStr = exception.message)
+                )
             )
         }
     }

@@ -136,6 +136,38 @@ class EditFormulaRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun updateFormulaLabel(text: String, formulaID: Long) {
+        editFormulaDao.updateFormulaLabel(text, formulaID)
+    }
+
+    override fun updateFormulaDescription(text: String, formulaID: Long) {
+        editFormulaDao.updateFormulaDescription(text, formulaID)
+    }
+
+    override fun updateInputTextLabel(text: String, inputID: Long) {
+        editFormulaDao.updateInputTextLabel(text, inputID)
+    }
+
+    override fun updateInputCodeLabel(text: String, inputID: Long) {
+        editFormulaDao.updateInputCodeLabel(text, inputID)
+    }
+
+    override fun updateInputDefaultData(text: String, inputID: Long) {
+        editFormulaDao.updateInputDefaultData(text, inputID)
+    }
+
+    override fun updateResultTextLabel(text: String, outputID: Long) {
+        editFormulaDao.updateResultTextLabel(text, outputID)
+    }
+
+    override fun updateResultCodeLabel(text: String, outputID: Long) {
+        editFormulaDao.updateResultCodeLabel(text, outputID)
+    }
+
+    override fun updateCodeFormula(text: String, formulaID: Long) {
+        editFormulaDao.updateCodeFormula(text, formulaID)
+    }
+
     private fun mapEditResultToDomain(item: EditResultData): EditResult{
         return EditResult(item.outputDataID, item.label, item.codeLabel)
     }

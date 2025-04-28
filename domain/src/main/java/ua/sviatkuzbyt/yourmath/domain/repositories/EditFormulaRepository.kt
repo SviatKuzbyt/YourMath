@@ -32,4 +32,13 @@ interface EditFormulaRepository {
     fun getEditFormulaInfo(formulaID: Long): EditFormulaInfo
     fun getEditInputs(formulaID: Long): List<EditInput>
     fun getEditResults(formulaID: Long): List<EditResult>
+
+    fun updateFormulaLabel(text: String, formulaID: Long)
+    fun updateFormulaDescription(text: String, formulaID: Long)
+    fun updateInputTextLabel(text: String, inputID: Long)
+    fun updateInputCodeLabel(text: String, inputID: Long)
+    fun updateInputDefaultData(text: String, inputID: Long)
+    fun updateResultTextLabel(text: String, outputID: Long)
+    fun updateResultCodeLabel(text: String, outputID: Long)
+    fun updateCodeFormula(text: String, formulaID: Long)
 }

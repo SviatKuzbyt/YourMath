@@ -69,4 +69,28 @@ interface EditFormulaDao {
 
     @Query("SELECT outputDataID, label, codeLabel FROM OutputData WHERE formulaID = :formulaID")
     fun getEditResults(formulaID: Long): List<EditResultData>
+
+    @Query("UPDATE Formula SET name=:text WHERE formulaID=:formulaID")
+    fun updateFormulaLabel(text: String, formulaID: Long)
+
+    @Query("UPDATE Formula SET description=:text WHERE formulaID=:formulaID")
+    fun updateFormulaDescription(text: String, formulaID: Long)
+
+    @Query("UPDATE InputData SET label=:text WHERE inputDataID=:inputID")
+    fun updateInputTextLabel(text: String, inputID: Long)
+
+    @Query("UPDATE InputData SET codeLabel=:text WHERE inputDataID=:inputID")
+    fun updateInputCodeLabel(text: String, inputID: Long)
+
+    @Query("UPDATE InputData SET defaultData=:text WHERE inputDataID=:inputID")
+    fun updateInputDefaultData(text: String, inputID: Long)
+
+    @Query("UPDATE OutputData SET label=:text WHERE outputDataID=:outputID")
+    fun updateResultTextLabel(text: String, outputID: Long)
+
+    @Query("UPDATE OutputData SET codeLabel=:text WHERE outputDataID=:outputID")
+    fun updateResultCodeLabel(text: String, outputID: Long)
+
+    @Query("UPDATE Formula SET code=:text WHERE formulaID=:formulaID")
+    fun updateCodeFormula(text: String, formulaID: Long)
 }

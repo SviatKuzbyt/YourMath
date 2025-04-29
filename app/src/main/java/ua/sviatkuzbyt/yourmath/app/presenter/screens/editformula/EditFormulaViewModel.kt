@@ -51,7 +51,7 @@ class EditFormulaViewModel @Inject constructor(
             is EditFormulaIntent.ChangeDescription ->
                 changeDescription(intent.description)
             EditFormulaIntent.AddDataItem ->
-                println("SKLT $intent")
+                addItem()
             is EditFormulaIntent.ChangeItemLabel ->
                 changeItemLabel(intent.index, intent.newText, intent.list)
             is EditFormulaIntent.ChangeItemCodeLabel ->
@@ -84,7 +84,20 @@ class EditFormulaViewModel @Inject constructor(
         }
     }
 
-    private fun moveItem(fromIndex: Int, toIndex: Int, list: EditList) =safeBackgroundLaunch(
+    private fun addItem() = safeBackgroundLaunch(
+        code = {
+            if (screenState.value.content is EditFormulaStateContent.Inputs){
+                val input = updateInputDataUseCase.add(formulaID)
+                updateInputs { it.copy(list = it.list + input) }
+            } else if(screenState.value.content is EditFormulaStateContent.Results){
+                val result = updateResultDataUseCase.add(formulaID)
+                updateResults { it.copy(list = it.list + result) }
+            }
+        },
+        errorHandling = ::setError
+    )
+
+    private fun moveItem(fromIndex: Int, toIndex: Int, list: EditList) = safeBackgroundLaunch(
         code = {
             when(list){
                 EditList.Inputs -> {

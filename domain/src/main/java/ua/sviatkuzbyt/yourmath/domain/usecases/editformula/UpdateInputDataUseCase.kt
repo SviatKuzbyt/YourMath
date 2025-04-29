@@ -1,6 +1,8 @@
 package ua.sviatkuzbyt.yourmath.domain.usecases.editformula
 
 import ua.sviatkuzbyt.yourmath.domain.repositories.EditFormulaRepository
+import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditInput
+import ua.sviatkuzbyt.yourmath.domain.structures.transfer.DataInputToAdd
 
 class UpdateInputDataUseCase(private val repository: EditFormulaRepository) {
     fun updateTextLabel(text: String, inputID: Long){
@@ -23,5 +25,18 @@ class UpdateInputDataUseCase(private val repository: EditFormulaRepository) {
     fun moveItem(fromID: Long, fromIndex: Int, toID: Long, toIndex: Int){
         repository.setInputDataPosition(fromID, toIndex)
         repository.setInputDataPosition(toID, fromIndex)
+    }
+
+    fun add(formulaID: Long): EditInput{
+        val position = repository.getInputTableSize(formulaID)
+        val item = DataInputToAdd(
+            label = "",
+            codeLabel = "",
+            defaultData = null,
+            formulaID = formulaID,
+            position = position
+        )
+        val id = repository.addInputData(item)
+        return EditInput(id, item.label, item.codeLabel, item.defaultData)
     }
 }

@@ -6,8 +6,8 @@ import ua.sviatkuzbyt.yourmath.domain.repositories.JsonRepository
 import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ExportDataInput
 import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ExportDataOutput
 import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ExportFormulaItem
-import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ImportedDataInput
-import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ImportedDataOutput
+import ua.sviatkuzbyt.yourmath.domain.structures.transfer.DataInputToAdd
+import ua.sviatkuzbyt.yourmath.domain.structures.transfer.DataOutputToAdd
 import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ImportedFormula
 
 class ImportUseCase(
@@ -43,8 +43,8 @@ class ImportUseCase(
     }
 
     private fun addInputData(data: ExportDataInput, formulaID: Long){
-        editFormulaRepository.addImportedInputData(
-            ImportedDataInput(
+        editFormulaRepository.addInputData(
+            DataInputToAdd(
                 label = data.label,
                 codeLabel = data.codeLabel,
                 defaultData = data.defaultData,
@@ -55,8 +55,8 @@ class ImportUseCase(
     }
 
     private fun addOutputData(data: ExportDataOutput, formulaID: Long){
-        editFormulaRepository.addImportedOutputData(
-            ImportedDataOutput(
+        editFormulaRepository.addOutputData(
+            DataOutputToAdd(
                 label = data.label,
                 codeLabel = data.codeLabel,
                 formulaID = formulaID,

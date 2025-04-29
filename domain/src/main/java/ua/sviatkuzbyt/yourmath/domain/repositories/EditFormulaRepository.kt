@@ -1,6 +1,5 @@
 package ua.sviatkuzbyt.yourmath.domain.repositories
 
-import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditFormula
 import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditFormulaInfo
 import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditInput
 import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditResult
@@ -8,8 +7,8 @@ import ua.sviatkuzbyt.yourmath.domain.structures.editor.FormulaNameItem
 import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ExportDataInput
 import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ExportDataOutput
 import ua.sviatkuzbyt.yourmath.domain.structures.transfer.FormulaToFormat
-import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ImportedDataInput
-import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ImportedDataOutput
+import ua.sviatkuzbyt.yourmath.domain.structures.transfer.DataInputToAdd
+import ua.sviatkuzbyt.yourmath.domain.structures.transfer.DataOutputToAdd
 import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ImportedFormula
 
 interface EditFormulaRepository {
@@ -26,8 +25,8 @@ interface EditFormulaRepository {
 
     fun getTableSize(): Int
     fun addImportedFormulaAndGetID(formula: ImportedFormula): Long
-    fun addImportedInputData(data: ImportedDataInput)
-    fun addImportedOutputData(data: ImportedDataOutput)
+    fun addInputData(data: DataInputToAdd): Long
+    fun addOutputData(data: DataOutputToAdd): Long
 
     fun getEditFormulaInfo(formulaID: Long): EditFormulaInfo
     fun getEditInputs(formulaID: Long): List<EditInput>
@@ -47,4 +46,6 @@ interface EditFormulaRepository {
     fun updateResultDataPositionsAfterDeleting(position: Int, formulaID: Long)
     fun setInputDataPosition(id: Long, index: Int)
     fun setResultDataPosition(id: Long, index: Int)
+    fun getInputTableSize(formulaID: Long): Int
+    fun getResultTableSize(formulaID: Long): Int
 }

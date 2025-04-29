@@ -19,8 +19,8 @@ import ua.sviatkuzbyt.yourmath.domain.structures.editor.FormulaNameItem
 import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ExportDataInput
 import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ExportDataOutput
 import ua.sviatkuzbyt.yourmath.domain.structures.transfer.FormulaToFormat
-import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ImportedDataInput
-import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ImportedDataOutput
+import ua.sviatkuzbyt.yourmath.domain.structures.transfer.DataInputToAdd
+import ua.sviatkuzbyt.yourmath.domain.structures.transfer.DataOutputToAdd
 import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ImportedFormula
 import javax.inject.Inject
 
@@ -95,7 +95,7 @@ class EditFormulaRepositoryImpl @Inject constructor(
         return editFormulaDao.addFormula(formulaEntity)
     }
 
-    override fun addImportedInputData(data: ImportedDataInput) {
+    override fun addInputData(data: DataInputToAdd): Long {
         val inputDataEntity = InputDataEntity(
             inputDataID = 0,
             label = data.label,
@@ -105,10 +105,10 @@ class EditFormulaRepositoryImpl @Inject constructor(
             formulaID = data.formulaID
         )
 
-        editFormulaDao.addInputData(inputDataEntity)
+        return editFormulaDao.addInputData(inputDataEntity)
     }
 
-    override fun addImportedOutputData(data: ImportedDataOutput) {
+    override fun addOutputData(data: DataOutputToAdd): Long {
         val outputDataEntity = OutputDataEntity(
             outputDataID = 0,
             label = data.label,
@@ -117,7 +117,7 @@ class EditFormulaRepositoryImpl @Inject constructor(
             formulaID = data.formulaID
         )
 
-        editFormulaDao.addOutputData(outputDataEntity)
+        return editFormulaDao.addOutputData(outputDataEntity)
     }
 
     override fun getEditFormulaInfo(formulaID: Long): EditFormulaInfo {
@@ -190,6 +190,14 @@ class EditFormulaRepositoryImpl @Inject constructor(
 
     override fun setResultDataPosition(id: Long, index: Int) {
         editFormulaDao.setResultDataPosition(id, index)
+    }
+
+    override fun getInputTableSize(formulaID: Long): Int {
+        return editFormulaDao.getInputTableSize(formulaID)
+    }
+
+    override fun getResultTableSize(formulaID: Long): Int {
+        return editFormulaDao.getResultTableSize(formulaID)
     }
 
     private fun mapEditResultToDomain(item: EditResultData): EditResult{

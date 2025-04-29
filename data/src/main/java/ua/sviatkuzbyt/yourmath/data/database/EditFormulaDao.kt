@@ -53,10 +53,10 @@ interface EditFormulaDao {
     fun addFormula(formula: FormulaEntity): Long
 
     @Insert
-    fun addInputData(data: InputDataEntity)
+    fun addInputData(data: InputDataEntity): Long
 
     @Insert
-    fun addOutputData(data: OutputDataEntity)
+    fun addOutputData(data: OutputDataEntity): Long
 
     @Query("SELECT position FROM Formula WHERE formulaID = :formulaID LIMIT 1")
     fun getPosition(formulaID: Long): Int
@@ -111,4 +111,10 @@ interface EditFormulaDao {
 
     @Query("UPDATE OutputData SET position=:index WHERE outputDataID=:id")
     fun setResultDataPosition(id: Long, index: Int)
+
+    @Query("SELECT COUNT(*) FROM InputData WHERE formulaID=:formulaID")
+    fun getInputTableSize(formulaID: Long): Int
+
+    @Query("SELECT COUNT(*) FROM OutputData WHERE formulaID=:formulaID")
+    fun getResultTableSize(formulaID: Long): Int
 }

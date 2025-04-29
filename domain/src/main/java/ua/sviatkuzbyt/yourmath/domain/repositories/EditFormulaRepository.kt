@@ -45,4 +45,6 @@ interface EditFormulaRepository {
     fun updateInputDataPositionsAfterDeleting(position: Int, formulaID: Long)
     fun deleteResultData(resultID: Long)
     fun updateResultDataPositionsAfterDeleting(position: Int, formulaID: Long)
+    fun setInputDataPosition(id: Long, index: Int)
+    fun setResultDataPosition(id: Long, index: Int)
 }

@@ -64,10 +64,10 @@ interface EditFormulaDao {
     @Query("SELECT formulaID, name, description, code FROM Formula WHERE formulaID = :formulaID LIMIT 1")
     fun getEditFormulaInfo(formulaID: Long): EditFormulaInfoData
 
-    @Query("SELECT inputDataID, label, codeLabel, defaultData FROM InputData WHERE formulaID = :formulaID")
+    @Query("SELECT inputDataID, label, codeLabel, defaultData FROM InputData WHERE formulaID = :formulaID ORDER BY position")
     fun getEditInputs(formulaID: Long): List<EditInputData>
 
-    @Query("SELECT outputDataID, label, codeLabel FROM OutputData WHERE formulaID = :formulaID")
+    @Query("SELECT outputDataID, label, codeLabel FROM OutputData WHERE formulaID = :formulaID ORDER BY position")
     fun getEditResults(formulaID: Long): List<EditResultData>
 
     @Query("UPDATE Formula SET name=:text WHERE formulaID=:formulaID")
@@ -105,4 +105,10 @@ interface EditFormulaDao {
 
     @Query("UPDATE OutputData SET position = position - 1 WHERE formulaID = :formulaID AND position > :position")
     fun updateResultDataPositionsAfterDeleting(position: Int, formulaID: Long)
+
+    @Query("UPDATE InputData SET position=:index WHERE inputDataID=:id")
+    fun setInputDataPosition(id: Long, index: Int)
+
+    @Query("UPDATE OutputData SET position=:index WHERE outputDataID=:id")
+    fun setResultDataPosition(id: Long, index: Int)
 }

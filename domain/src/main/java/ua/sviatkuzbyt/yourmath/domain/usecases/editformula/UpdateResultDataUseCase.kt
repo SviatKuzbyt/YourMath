@@ -15,4 +15,9 @@ class UpdateResultDataUseCase(private val repository: EditFormulaRepository) {
         repository.deleteResultData(resultID)
         repository.updateResultDataPositionsAfterDeleting(position, formulaID)
     }
+
+    fun moveItem(fromID: Long, fromIndex: Int, toID: Long, toIndex: Int){
+        repository.setResultDataPosition(fromID, toIndex)
+        repository.setResultDataPosition(toID, fromIndex)
+    }
 }

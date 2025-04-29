@@ -11,6 +11,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormula
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaState
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaStateContent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditList
+import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorListContent
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.ErrorData
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.safeBackgroundLaunch
 import ua.sviatkuzbyt.yourmath.domain.usecases.editformula.GetEditFormulaDataUseCase
@@ -58,7 +59,7 @@ class EditFormulaViewModel @Inject constructor(
             is EditFormulaIntent.DeleteItem ->
                 deleteItem(intent.index, intent.list)
             is EditFormulaIntent.MoveItem ->
-                println("SKLT $intent")
+                moveItem(intent.from, intent.to, intent.list)
             is EditFormulaIntent.ChangeInputDefaultData ->
                 changeInputDefaultData(intent.index, intent.newText)
             is EditFormulaIntent.ChangeCodeText ->
@@ -82,6 +83,42 @@ class EditFormulaViewModel @Inject constructor(
             EditFormulaIntent.CloseDialog -> closeDialog()
         }
     }
+
+    private fun moveItem(fromIndex: Int, toIndex: Int, list: EditList) =safeBackgroundLaunch(
+        code = {
+            when(list){
+                EditList.Inputs -> {
+                    val inputsList = _inputs.value.list
+                    if (toIndex in inputsList.indices){
+                        val fromID = inputsList[fromIndex].id
+                        val toID = inputsList[toIndex].id
+                        updateInputDataUseCase.moveItem(fromID, fromIndex, toID, toIndex)
+
+                        updateInputs {
+                            it.copy(list = it.list.toMutableList().apply {
+                                add(toIndex, removeAt(fromIndex))
+                            })
+                        }
+                    }
+                }
+                EditList.Results -> {
+                    val inputsList = _results.value.list
+                    if (toIndex in inputsList.indices){
+                        val fromID = inputsList[fromIndex].id
+                        val toID = inputsList[toIndex].id
+                        updateResultDataUseCase.moveItem(fromID, fromIndex, toID, toIndex)
+
+                        updateResults {
+                            it.copy(list = it.list.toMutableList().apply {
+                                add(toIndex, removeAt(fromIndex))
+                            })
+                        }
+                    }
+                }
+            }
+        },
+        errorHandling = ::setError
+    )
 
     private fun openDialog(dialog: EditFormulaDialog){
         _screenState.update { state ->

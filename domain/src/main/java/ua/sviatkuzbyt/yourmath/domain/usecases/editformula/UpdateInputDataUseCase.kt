@@ -19,4 +19,9 @@ class UpdateInputDataUseCase(private val repository: EditFormulaRepository) {
         repository.deleteInputData(inputID)
         repository.updateInputDataPositionsAfterDeleting(position, formulaID)
     }
+
+    fun moveItem(fromID: Long, fromIndex: Int, toID: Long, toIndex: Int){
+        repository.setInputDataPosition(fromID, toIndex)
+        repository.setInputDataPosition(toID, fromIndex)
+    }
 }

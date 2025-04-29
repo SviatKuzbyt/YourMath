@@ -83,4 +83,5 @@
     <string name="python">Python</string>
     <string name="no_edit_records">There are no entries yet. Click \"+\" to add new ones</string>
     <string name="change_auto_save">Changes are saved automatically</string>
+    <string name="delete_item_content">Do you really want to delete an item? You won\'t be able to restore it.</string>
 </resources>

@@ -31,10 +31,13 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import kotlinx.coroutines.launch
 import ua.sviatkuzbyt.yourmath.app.R
+import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaDialog
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaState
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaStateContent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditList
+import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorDialogContent
+import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.LocalNavController
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.NavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
@@ -45,12 +48,16 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.InfoItems
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ScreenTopBar
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button.AddButton
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button.ButtonIconTopBar
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.dialog.DialogError
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.emptySpaceOfButton
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.TittleText
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.CodeItem
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.DialogDeleteItem
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.InputItem
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.ResultItem
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.TabItem
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editor.DialogDeleteAll
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editor.DialogDeleteFormula
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppTheme
 
@@ -198,9 +205,8 @@ fun EditFormulaContent(
                                     },
                                     onDelete = {
                                         onIntent(
-                                            EditFormulaIntent.DeleteItem(
-                                                index,
-                                                EditList.Inputs
+                                            EditFormulaIntent.OpenDialog(
+                                                EditFormulaDialog.DeleteFormula(index, EditList.Inputs)
                                             )
                                         )
                                     },
@@ -283,9 +289,8 @@ fun EditFormulaContent(
                                     },
                                     onDelete = {
                                         onIntent(
-                                            EditFormulaIntent.DeleteItem(
-                                                index,
-                                                EditList.Results
+                                            EditFormulaIntent.OpenDialog(
+                                                EditFormulaDialog.DeleteFormula(index, EditList.Results)
                                             )
                                         )
                                     },
@@ -328,6 +333,21 @@ fun EditFormulaContent(
                     screenState.content is EditFormulaStateContent.Results,
             onClick = { onIntent(EditFormulaIntent.AddDataItem) }
         )
+    }
+
+    when(screenState.dialog){
+        is EditFormulaDialog.DeleteFormula -> DialogDeleteItem(
+            onClose = { onIntent(EditFormulaIntent.CloseDialog) },
+            onDelete = {
+                onIntent(EditFormulaIntent.DeleteItem(screenState.dialog.index, screenState.dialog.list))
+            }
+        )
+        is EditFormulaDialog.ErrorDialog -> DialogError(
+            data = screenState.dialog.data,
+            onCloseClick = { onIntent(EditFormulaIntent.CloseDialog) },
+        )
+        EditFormulaDialog.NoAllData -> {}
+        EditFormulaDialog.Nothing -> {}
     }
 }
 

@@ -93,4 +93,16 @@ interface EditFormulaDao {
 
     @Query("UPDATE Formula SET code=:text WHERE formulaID=:formulaID")
     fun updateCodeFormula(text: String, formulaID: Long)
+
+    @Query("DELETE FROM InputData WHERE inputDataID = :inputID")
+    fun deleteInputData(inputID: Long)
+
+    @Query("DELETE FROM OutputData WHERE outputDataID = :resultID")
+    fun deleteResultData(resultID: Long)
+
+    @Query("UPDATE InputData SET position = position - 1 WHERE formulaID = :formulaID AND position > :position")
+    fun updateInputDataPositionsAfterDeleting(position: Int, formulaID: Long)
+
+    @Query("UPDATE OutputData SET position = position - 1 WHERE formulaID = :formulaID AND position > :position")
+    fun updateResultDataPositionsAfterDeleting(position: Int, formulaID: Long)
 }

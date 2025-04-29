@@ -168,6 +168,22 @@ class EditFormulaRepositoryImpl @Inject constructor(
         editFormulaDao.updateCodeFormula(text, formulaID)
     }
 
+    override fun deleteInputData(inputID: Long) {
+        editFormulaDao.deleteInputData(inputID)
+    }
+
+    override fun updateInputDataPositionsAfterDeleting(position: Int, formulaID: Long) {
+        editFormulaDao.updateInputDataPositionsAfterDeleting(position, formulaID)
+    }
+
+    override fun deleteResultData(resultID: Long) {
+        editFormulaDao.deleteResultData(resultID)
+    }
+
+    override fun updateResultDataPositionsAfterDeleting(position: Int, formulaID: Long) {
+        editFormulaDao.updateResultDataPositionsAfterDeleting(position, formulaID)
+    }
+
     private fun mapEditResultToDomain(item: EditResultData): EditResult{
         return EditResult(item.outputDataID, item.label, item.codeLabel)
     }

@@ -14,4 +14,9 @@ class UpdateInputDataUseCase(private val repository: EditFormulaRepository) {
     fun updateDefaultData(text: String, inputID: Long){
         repository.updateInputDefaultData(text, inputID)
     }
+
+    fun deleteItem(formulaID: Long, inputID: Long, position: Int){
+        repository.deleteInputData(inputID)
+        repository.updateInputDataPositionsAfterDeleting(position, formulaID)
+    }
 }

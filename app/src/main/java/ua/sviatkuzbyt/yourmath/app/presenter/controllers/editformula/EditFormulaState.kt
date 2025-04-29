@@ -32,7 +32,7 @@ sealed class EditFormulaStateContent {
 
 sealed class EditFormulaDialog {
     data class ErrorDialog(val data: ErrorData): EditFormulaDialog()
-    data object DoNotSave: EditFormulaDialog()
-    data object DoNotAllData: EditFormulaDialog()
+    data class DeleteFormula(val index: Int, val list: EditList): EditFormulaDialog()
+    data object NoAllData: EditFormulaDialog()
     data object Nothing: EditFormulaDialog()
 }

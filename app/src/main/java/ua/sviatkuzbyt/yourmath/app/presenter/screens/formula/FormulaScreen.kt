@@ -150,10 +150,10 @@ private fun ColumnScope.ContentList(
             )
         }
 
-        description?.let { text ->
+        if (!description.isNullOrBlank()){
             item {
                 Text(
-                    text = text,
+                    text = description,
                     style = AppTheme.types.secondary,
                     modifier = Modifier
                         .fillMaxWidth()

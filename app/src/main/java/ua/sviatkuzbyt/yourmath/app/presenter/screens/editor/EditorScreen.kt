@@ -72,25 +72,19 @@ fun EditorContent(
 
     val isList = screenState.listContent is EditorListContent.FormulaList
 
-    val onExportClick = remember(isList) {
-        {
-            if (isList) {
+    val onExportClick = remember(isList) { {
+            if (isList)
                 onNavigate(NavigateIntent.OpenExportScreen)
-            } else {
+            else
                 showToast(R.string.nothing_to_export, context)
-            }
-        }
-    }
+    } }
 
-    val onClearClick = remember(isList) {
-        {
-            if (isList) {
+    val onClearClick = remember(isList) { {
+            if (isList)
                 onIntent(EditorIntent.OpenDialog(EditorDialogContent.DeleteAll))
-            } else {
+            else
                 showToast(R.string.no_items_to_delete, context)
-            }
-        }
-    }
+    } }
 
     ObserveFormulasChange{
         onIntent(EditorIntent.LoadImportedFormulas)

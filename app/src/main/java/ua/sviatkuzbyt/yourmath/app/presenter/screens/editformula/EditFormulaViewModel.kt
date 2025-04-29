@@ -56,7 +56,7 @@ class EditFormulaViewModel @Inject constructor(
             is EditFormulaIntent.ChangeItemCodeLabel ->
                 changeItemCodeLabel(intent.index, intent.newText, intent.list)
             is EditFormulaIntent.DeleteItem ->
-                println("SKLT $intent")
+                deleteItem(intent.index, intent.list)
             is EditFormulaIntent.MoveItem ->
                 println("SKLT $intent")
             is EditFormulaIntent.ChangeInputDefaultData ->
@@ -78,8 +78,42 @@ class EditFormulaViewModel @Inject constructor(
                 updateFormulaLabel()
 
             EditFormulaIntent.Exit -> checkCompleteEdit()
+            is EditFormulaIntent.OpenDialog -> openDialog(intent.dialog)
+            EditFormulaIntent.CloseDialog -> closeDialog()
         }
     }
+
+    private fun openDialog(dialog: EditFormulaDialog){
+        _screenState.update { state ->
+            state.copy(dialog = dialog)
+        }
+    }
+
+    private fun closeDialog(){
+        _screenState.update { state ->
+            state.copy(dialog = EditFormulaDialog.Nothing)
+        }
+    }
+
+    private fun deleteItem(index: Int, list: EditList) = safeBackgroundLaunch(
+        code = {
+            closeDialog()
+
+            when(list){
+                EditList.Inputs -> {
+                    val inputData = _inputs.value.list[index]
+                    updateInputs { it.copy(list = it.list - inputData) }
+                    updateInputDataUseCase.deleteItem(formulaID, inputData.id, index)
+                }
+                EditList.Results -> {
+                    val resultData = _results.value.list[index]
+                    updateResults { it.copy(list = it.list - resultData) }
+                    updateResultDataUseCase.deleteItem(formulaID, resultData.id, index)
+                }
+            }
+        },
+        errorHandling = ::setError
+    )
 
     private fun checkCompleteEdit(){
         _screenState.update { it.copy(isNavigateBack = true) }

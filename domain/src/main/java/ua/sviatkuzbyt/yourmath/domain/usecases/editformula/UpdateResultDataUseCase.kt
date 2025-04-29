@@ -10,4 +10,9 @@ class UpdateResultDataUseCase(private val repository: EditFormulaRepository) {
     fun updateCodeLabel(text: String, outputID: Long){
         repository.updateResultCodeLabel(text, outputID)
     }
+
+    fun deleteItem(formulaID: Long, resultID: Long, position: Int){
+        repository.deleteResultData(resultID)
+        repository.updateResultDataPositionsAfterDeleting(position, formulaID)
+    }
 }

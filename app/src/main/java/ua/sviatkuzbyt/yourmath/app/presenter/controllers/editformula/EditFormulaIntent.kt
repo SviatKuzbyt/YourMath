@@ -11,6 +11,7 @@ sealed class EditFormulaIntent{
     data class ChangeInputDefaultData(val index: Int, val newText: String): EditFormulaIntent()
     data class ChangeCodeText(val newText: String): EditFormulaIntent()
     data class DeleteItem(val index: Int, val list: EditList): EditFormulaIntent()
+    data class OpenDialog(val dialog: EditFormulaDialog): EditFormulaIntent()
     data object SaveName: EditFormulaIntent()
     data object SaveDescription: EditFormulaIntent()
     data class SaveItemLabel(val index: Int, val list: EditList): EditFormulaIntent()
@@ -18,6 +19,7 @@ sealed class EditFormulaIntent{
     data class SaveInputDefaultData(val index: Int): EditFormulaIntent()
     data object SaveCodeText: EditFormulaIntent()
     data object Exit: EditFormulaIntent()
+    data object CloseDialog: EditFormulaIntent()
 }
 
 enum class EditList{

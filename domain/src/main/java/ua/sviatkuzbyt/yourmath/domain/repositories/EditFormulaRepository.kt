@@ -41,4 +41,8 @@ interface EditFormulaRepository {
     fun updateResultTextLabel(text: String, outputID: Long)
     fun updateResultCodeLabel(text: String, outputID: Long)
     fun updateCodeFormula(text: String, formulaID: Long)
+    fun deleteInputData(inputID: Long)
+    fun updateInputDataPositionsAfterDeleting(position: Int, formulaID: Long)
+    fun deleteResultData(resultID: Long)
+    fun updateResultDataPositionsAfterDeleting(position: Int, formulaID: Long)
 }

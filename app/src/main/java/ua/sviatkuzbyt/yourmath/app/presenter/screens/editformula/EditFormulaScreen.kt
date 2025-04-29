@@ -205,8 +205,8 @@ fun EditFormulaContent(
 
                             emptySpaceOfButton()
                         }
-
                     }
+
                     is EditFormulaStateContent.Code -> {
                         item {
                             CodeItem(

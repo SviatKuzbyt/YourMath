@@ -76,7 +76,13 @@ class EditFormulaViewModel @Inject constructor(
                 updateItemTextLabel(intent.index, intent.list)
             is EditFormulaIntent.SaveName ->
                 updateFormulaLabel()
+
+            EditFormulaIntent.Exit -> checkCompleteEdit()
         }
+    }
+
+    private fun checkCompleteEdit(){
+        _screenState.update { it.copy(isNavigateBack = true) }
     }
 
     private fun updateFormulaLabel() = safeBackgroundLaunch(
@@ -95,7 +101,6 @@ class EditFormulaViewModel @Inject constructor(
 
     private fun updateItemTextLabel(index: Int, list: EditList) = safeBackgroundLaunch(
         code = {
-            println("SKLT updateItemTextLabel $list")
             when(list){
                 EditList.Inputs -> updateInputDataUseCase.updateTextLabel(
                     _inputs.value.list[index].label, _inputs.value.list[index].id

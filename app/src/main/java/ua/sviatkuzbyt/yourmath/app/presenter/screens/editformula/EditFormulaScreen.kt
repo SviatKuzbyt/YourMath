@@ -1,5 +1,6 @@
 package ua.sviatkuzbyt.yourmath.app.presenter.screens.editformula
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -10,20 +11,24 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import kotlinx.coroutines.launch
 import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaIntent
@@ -40,7 +45,6 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.InfoItems
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ScreenTopBar
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button.AddButton
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button.ButtonIconTopBar
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button.ButtonLarge
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.emptySpaceOfButton
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.TittleText
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.CodeItem
@@ -71,13 +75,40 @@ fun EditFormulaContent(
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    if (screenState.isNavigateBack){
+        onNavigate(NavigateIntent.NavigateBack)
+    }
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_STOP) {
+                focusManager.clearFocus(true)
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+    BackHandler {
+        focusManager.clearFocus(true)
+        onIntent(EditFormulaIntent.Exit)
+    }
 
     Box(Modifier.fillMaxSize()){
         Column(Modifier.fillMaxSize()) {
             ScreenTopBar(
                 tittle = stringResource(R.string.edit_formula),
                 listState = listState,
-                onBack = { onNavigate(NavigateIntent.NavigateBack) },
+                onBack = {
+                    focusManager.clearFocus(true)
+                    onIntent(EditFormulaIntent.Exit)
+                },
                 toolButtons = {
                     ButtonIconTopBar(
                         imageRes = R.drawable.ic_auto_save,

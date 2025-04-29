@@ -17,6 +17,7 @@ sealed class EditFormulaIntent{
     data class SaveItemCodeLabel(val index: Int, val list: EditList): EditFormulaIntent()
     data class SaveInputDefaultData(val index: Int): EditFormulaIntent()
     data object SaveCodeText: EditFormulaIntent()
+    data object Exit: EditFormulaIntent()
 }
 
 enum class EditList{

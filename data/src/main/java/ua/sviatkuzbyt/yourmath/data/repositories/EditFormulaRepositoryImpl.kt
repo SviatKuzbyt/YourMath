@@ -21,7 +21,7 @@ import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ExportDataOutput
 import ua.sviatkuzbyt.yourmath.domain.structures.transfer.FormulaToFormat
 import ua.sviatkuzbyt.yourmath.domain.structures.transfer.DataInputToAdd
 import ua.sviatkuzbyt.yourmath.domain.structures.transfer.DataOutputToAdd
-import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ImportedFormula
+import ua.sviatkuzbyt.yourmath.domain.structures.transfer.FormulaToAdd
 import javax.inject.Inject
 
 class EditFormulaRepositoryImpl @Inject constructor(
@@ -82,7 +82,7 @@ class EditFormulaRepositoryImpl @Inject constructor(
         return editFormulaDao.getSize()
     }
 
-    override fun addImportedFormulaAndGetID(formula: ImportedFormula): Long {
+    override fun addFormula(formula: FormulaToAdd): Long {
         val formulaEntity = FormulaEntity(
             formulaID = 0,
             name = formula.name,

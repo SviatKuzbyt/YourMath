@@ -40,13 +40,13 @@ class EditorViewModel @Inject constructor(
 
     fun onIntent(intent: EditorIntent){
         when(intent){
-            EditorIntent.AddFormula -> println("SKLT $intent")
             is EditorIntent.MoveItem -> moveItem(intent.from, intent.to)
             EditorIntent.LoadImportedFormulas -> loadImportedFormulas()
             is EditorIntent.OpenDialog -> updateDialogContent(intent.dialog)
             EditorIntent.CloseDialog -> closeContentDialog()
             is EditorIntent.DeleteFormula -> deleteFormula(intent.formulaID)
             EditorIntent.DeleteAllFormulas -> deleteAllFormulas()
+            EditorIntent.ReloadFormulas -> loadFormulas()
         }
     }
 

@@ -9,7 +9,7 @@ import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ExportDataOutput
 import ua.sviatkuzbyt.yourmath.domain.structures.transfer.FormulaToFormat
 import ua.sviatkuzbyt.yourmath.domain.structures.transfer.DataInputToAdd
 import ua.sviatkuzbyt.yourmath.domain.structures.transfer.DataOutputToAdd
-import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ImportedFormula
+import ua.sviatkuzbyt.yourmath.domain.structures.transfer.FormulaToAdd
 
 interface EditFormulaRepository {
     fun getFormulas(): List<FormulaNameItem>
@@ -24,7 +24,7 @@ interface EditFormulaRepository {
     fun getPosition(formulaID: Long): Int
 
     fun getTableSize(): Int
-    fun addImportedFormulaAndGetID(formula: ImportedFormula): Long
+    fun addFormula(formula: FormulaToAdd): Long
     fun addInputData(data: DataInputToAdd): Long
     fun addOutputData(data: DataOutputToAdd): Long
 

@@ -13,7 +13,10 @@ import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormula
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditList
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorListContent
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.ErrorData
+import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.GlobalEvent
+import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.GlobalEventType
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.safeBackgroundLaunch
+import ua.sviatkuzbyt.yourmath.domain.usecases.editformula.CreateFormulaUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.editformula.GetEditFormulaDataUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.editformula.UpdateFormulaDataUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.editformula.UpdateInputDataUseCase
@@ -26,10 +29,11 @@ class EditFormulaViewModel @Inject constructor(
     private val getEditFormulaDataUseCase: GetEditFormulaDataUseCase,
     private val updateFormulaDataUseCase: UpdateFormulaDataUseCase,
     private val updateInputDataUseCase: UpdateInputDataUseCase,
-    private val updateResultDataUseCase: UpdateResultDataUseCase
+    private val updateResultDataUseCase: UpdateResultDataUseCase,
+    private val createFormulaUseCase: CreateFormulaUseCase
 ): ViewModel() {
 
-    private val formulaID: Long = sentData["formulaID"] ?: GetEditFormulaDataUseCase.NEW_FORMULA
+    private var formulaID: Long = sentData["formulaID"] ?: CreateFormulaUseCase.NEW_FORMULA
     private val _screenState = MutableStateFlow(EditFormulaState())
     val screenState: StateFlow<EditFormulaState> = _screenState
 
@@ -275,6 +279,7 @@ class EditFormulaViewModel @Inject constructor(
     }
 
     private fun changeName(newText: String){
+        GlobalEvent.sendEvent(GlobalEventType.ChangeEditorFormulaList)
         updateInfo { it.copy(name = newText) }
     }
 
@@ -320,7 +325,14 @@ class EditFormulaViewModel @Inject constructor(
 
     private fun loadData() = safeBackgroundLaunch(
         code = {
-            val data = getEditFormulaDataUseCase.execute(formulaID)
+            val data = if (formulaID == CreateFormulaUseCase.NEW_FORMULA){
+                createFormulaUseCase.execute().also {
+                    GlobalEvent.sendEvent(GlobalEventType.ChangeEditorFormulaList)
+                    formulaID = it.info.id
+                }
+            } else {
+                getEditFormulaDataUseCase.execute(formulaID)
+            }
             _info.value = EditFormulaStateContent.Info(
                 name = data.info.name,
                 description = data.info.description

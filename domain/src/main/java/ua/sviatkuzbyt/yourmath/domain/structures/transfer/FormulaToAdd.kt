@@ -1,6 +1,6 @@
 package ua.sviatkuzbyt.yourmath.domain.structures.transfer
 
-data class ImportedFormula(
+data class FormulaToAdd(
     val name: String,
     val description: String?,
     val code: String,

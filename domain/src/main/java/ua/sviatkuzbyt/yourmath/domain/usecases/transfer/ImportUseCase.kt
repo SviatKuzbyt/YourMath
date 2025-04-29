@@ -8,7 +8,7 @@ import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ExportDataOutput
 import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ExportFormulaItem
 import ua.sviatkuzbyt.yourmath.domain.structures.transfer.DataInputToAdd
 import ua.sviatkuzbyt.yourmath.domain.structures.transfer.DataOutputToAdd
-import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ImportedFormula
+import ua.sviatkuzbyt.yourmath.domain.structures.transfer.FormulaToAdd
 
 class ImportUseCase(
     private val editFormulaRepository: EditFormulaRepository,
@@ -32,8 +32,8 @@ class ImportUseCase(
     }
 
     private fun addFormulaAndGetID(formula: ExportFormulaItem, tableSize: Int): Long{
-        return editFormulaRepository.addImportedFormulaAndGetID(
-            ImportedFormula(
+        return editFormulaRepository.addFormula(
+            FormulaToAdd(
                 name = formula.name,
                 description = formula.description,
                 code = formula.code,

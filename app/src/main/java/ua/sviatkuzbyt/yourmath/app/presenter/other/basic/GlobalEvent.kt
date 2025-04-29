@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 enum class GlobalEventType{
-    Nothing, AddHistoryRecord, ChangeFormulaList, ImportedFormulas
+    Nothing, AddHistoryRecord, ChangeFormulaList, ChangeEditorFormulaList, ImportedFormulas
 }
 
 object GlobalEvent {

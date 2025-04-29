@@ -5,6 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import ua.sviatkuzbyt.yourmath.domain.repositories.EditFormulaRepository
+import ua.sviatkuzbyt.yourmath.domain.usecases.editformula.CreateFormulaUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.editformula.GetEditFormulaDataUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.editformula.UpdateFormulaDataUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.editformula.UpdateInputDataUseCase
@@ -39,5 +40,12 @@ object EditFormulaModule{
         repository: EditFormulaRepository
     ): UpdateResultDataUseCase {
         return UpdateResultDataUseCase(repository)
+    }
+
+    @Provides
+    fun provideCreateFormulaUseCase(
+        repository: EditFormulaRepository
+    ): CreateFormulaUseCase {
+        return CreateFormulaUseCase(repository)
     }
 }

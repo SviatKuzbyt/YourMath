@@ -14,14 +14,18 @@ import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditList
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.ErrorData
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.safeBackgroundLaunch
 import ua.sviatkuzbyt.yourmath.domain.usecases.editformula.GetEditFormulaDataUseCase
-import ua.sviatkuzbyt.yourmath.domain.usecases.editformula.UpdateTextsUseCase
+import ua.sviatkuzbyt.yourmath.domain.usecases.editformula.UpdateFormulaDataUseCase
+import ua.sviatkuzbyt.yourmath.domain.usecases.editformula.UpdateInputDataUseCase
+import ua.sviatkuzbyt.yourmath.domain.usecases.editformula.UpdateResultDataUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class EditFormulaViewModel @Inject constructor(
     sentData: SavedStateHandle,
     private val getEditFormulaDataUseCase: GetEditFormulaDataUseCase,
-    private val updateTextsUseCase: UpdateTextsUseCase
+    private val updateFormulaDataUseCase: UpdateFormulaDataUseCase,
+    private val updateInputDataUseCase: UpdateInputDataUseCase,
+    private val updateResultDataUseCase: UpdateResultDataUseCase
 ): ViewModel() {
 
     private val formulaID: Long = sentData["formulaID"] ?: GetEditFormulaDataUseCase.NEW_FORMULA
@@ -77,14 +81,14 @@ class EditFormulaViewModel @Inject constructor(
 
     private fun updateFormulaLabel() = safeBackgroundLaunch(
         code = {
-            updateTextsUseCase.updateFormulaLabel(_info.value.name, formulaID)
+            updateFormulaDataUseCase.updateLabel(_info.value.name, formulaID)
         },
         errorHandling = ::setError
     )
 
     private fun updateFormulaDescription() = safeBackgroundLaunch(
         code = {
-            updateTextsUseCase.updateFormulaDescription(_info.value.description.orEmpty(), formulaID)
+            updateFormulaDataUseCase.updateDescription(_info.value.description.orEmpty(), formulaID)
         },
         errorHandling = ::setError
     )
@@ -93,10 +97,10 @@ class EditFormulaViewModel @Inject constructor(
         code = {
             println("SKLT updateItemTextLabel $list")
             when(list){
-                EditList.Inputs -> updateTextsUseCase.updateInputTextLabel(
+                EditList.Inputs -> updateInputDataUseCase.updateTextLabel(
                     _inputs.value.list[index].label, _inputs.value.list[index].id
                 )
-                EditList.Results -> updateTextsUseCase.updateResultTextLabel(
+                EditList.Results -> updateResultDataUseCase.updateTextLabel(
                     _results.value.list[index].label, _results.value.list[index].id
                 )
             }
@@ -107,10 +111,10 @@ class EditFormulaViewModel @Inject constructor(
     private fun updateItemCodeLabel(index: Int, list: EditList) = safeBackgroundLaunch(
         code = {
             when(list){
-                EditList.Inputs -> updateTextsUseCase.updateInputCodeLabel(
+                EditList.Inputs -> updateInputDataUseCase.updateCodeLabel(
                     _inputs.value.list[index].codeLabel, _inputs.value.list[index].id
                 )
-                EditList.Results -> updateTextsUseCase.updateResultCodeLabel(
+                EditList.Results -> updateResultDataUseCase.updateCodeLabel(
                     _results.value.list[index].codeLabel, _results.value.list[index].id
                 )
             }
@@ -120,7 +124,7 @@ class EditFormulaViewModel @Inject constructor(
 
     private fun updateInputDefaultData(index: Int) = safeBackgroundLaunch(
         code = {
-            updateTextsUseCase.updateInputDefaultData(
+            updateInputDataUseCase.updateDefaultData(
                 _inputs.value.list[index].defaultData.orEmpty(), _inputs.value.list[index].id
             )
         },
@@ -129,11 +133,10 @@ class EditFormulaViewModel @Inject constructor(
 
     private fun updateFormulaCode() = safeBackgroundLaunch(
         code = {
-            updateTextsUseCase.updateCodeFormula(_code.value.text, formulaID)
+            updateFormulaDataUseCase.updateCode(_code.value.text, formulaID)
         },
         errorHandling = ::setError
     )
-
 
     private fun changeCodeText(newText: String){
         updateCode { it.copy(text = newText) }

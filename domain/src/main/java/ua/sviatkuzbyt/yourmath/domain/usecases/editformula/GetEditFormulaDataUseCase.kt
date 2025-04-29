@@ -4,9 +4,7 @@ import ua.sviatkuzbyt.yourmath.domain.repositories.EditFormulaRepository
 import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditFormula
 import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditFormulaInfo
 
-class GetEditFormulaDataUseCase(
-    private val repository: EditFormulaRepository
-) {
+class GetEditFormulaDataUseCase(private val repository: EditFormulaRepository) {
     fun execute(formulaID: Long): EditFormula {
         return if (formulaID == NEW_FORMULA){
             getEmptyData()

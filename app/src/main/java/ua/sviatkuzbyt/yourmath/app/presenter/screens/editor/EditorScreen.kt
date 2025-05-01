@@ -47,6 +47,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editor.DialogDeleteAll
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editor.DialogDeleteFormula
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editor.EditFormulaItem
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
+import ua.sviatkuzbyt.yourmath.domain.structures.editor.FormulaNameItem
 import ua.sviatkuzbyt.yourmath.domain.usecases.editformula.CreateFormulaUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.editformula.GetEditFormulaDataUseCase
 
@@ -186,7 +187,7 @@ fun EditorContentList(
                 ){ index, formula ->
                     AnimateListItem {
                         EditFormulaItem(
-                            name = formula.name,
+                            name = getFormulaName(formula, stringResource(R.string.note)),
                             onClick = { onOpenFormula(formula.id) },
                             onMoveDown = { onMove(index, index+1) },
                             onMoveUp = { onMove(index, index-1) },
@@ -209,6 +210,12 @@ fun EditorContentList(
             EditorListContent.Nothing -> Unit
         }
     }
+}
+
+private fun getFormulaName(formula: FormulaNameItem, noteLabel: String): String{
+    val name = formula.name
+    val note = if (formula.isNote) " ($noteLabel)" else ""
+    return "$name$note"
 }
 
 @Composable

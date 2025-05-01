@@ -12,6 +12,7 @@ class CreateFormulaUseCase(private val repository: EditFormulaRepository) {
             name = "",
             description = null,
             code = "",
+            isNote = true,
             position = position
         )
         val id = repository.addFormula(formula)
@@ -21,6 +22,7 @@ class CreateFormulaUseCase(private val repository: EditFormulaRepository) {
                 id = id,
                 name = formula.name,
                 description = formula.description,
+                isNote = formula.isNote,
                 code = formula.code
             ),
             inputList = listOf(),

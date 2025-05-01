@@ -33,6 +33,7 @@ interface HistoryDao{
             INNER JOIN Formula f ON hf.formulaID = f.formulaID 
             INNER JOIN HistoryInputData hid ON hf.historyFormulaID = hid.historyFormulaID 
             INNER JOIN HistoryOutputData hod ON hf.historyFormulaID = hod.historyFormulaID 
+        WHERE f.isNote=0
         GROUP BY hf.historyFormulaID
         ORDER BY hf.historyFormulaID DESC LIMIT :limit OFFSET :offset
     """)
@@ -50,7 +51,7 @@ interface HistoryDao{
             INNER JOIN Formula f ON hf.formulaID = f.formulaID 
             INNER JOIN HistoryInputData hid ON hf.historyFormulaID = hid.historyFormulaID 
             INNER JOIN HistoryOutputData hod ON hf.historyFormulaID = hod.historyFormulaID
-        WHERE hf.formulaID = :formulaID
+        WHERE f.isNote=0 AND hf.formulaID = :formulaID
         GROUP BY hf.historyFormulaID
         ORDER BY hf.historyFormulaID DESC LIMIT :limit OFFSET :offset
     """)

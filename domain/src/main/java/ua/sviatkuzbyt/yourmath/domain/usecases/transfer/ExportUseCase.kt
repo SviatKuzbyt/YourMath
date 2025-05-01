@@ -20,6 +20,7 @@ class ExportUseCase(
                 inputData = editFormulaRepository.getInputDataToExport(formula.formulaID),
                 outputData = editFormulaRepository.getOutputDataToExport(formula.formulaID),
                 code = formula.code,
+                isNote = formula.isNote,
                 position = formula.position
             )
         }

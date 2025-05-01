@@ -10,13 +10,13 @@ import ua.sviatkuzbyt.yourmath.data.structures.main.FormulaItemWithPinnedData
 
 @Dao
 interface FormulaDao {
-    @Query("SELECT formulaID, name, isPin, position FROM Formula ORDER BY position")
+    @Query("SELECT formulaID, name, isPin, position FROM Formula WHERE isNote=0 ORDER BY position")
     fun getFormulas(): List<FormulaItemWithPinnedData>
 
     @Query("UPDATE Formula SET isPin=:isPin WHERE formulaID=:id")
     fun changePinFormula(id: Long, isPin: Boolean)
 
-    @Query("SELECT formulaID, name, isPin, position FROM Formula WHERE name LIKE :searchText ORDER BY position")
+    @Query("SELECT formulaID, name, isPin, position FROM Formula WHERE isNote=0 AND name LIKE :searchText ORDER BY position")
     fun searchFormulas(searchText: String): List<FormulaItemWithPinnedData>
 
     @Query("SELECT name, description FROM Formula WHERE formulaID = :formulaID LIMIT 1")
@@ -31,6 +31,6 @@ interface FormulaDao {
     @Query("SELECT outputDataID, label, codeLabel FROM OutputData WHERE formulaID = :formulaID ORDER BY position")
     fun getOutputData(formulaID: Long): List<FormulaResultData>
 
-    @Query("SELECT formulaID, name FROM Formula ORDER BY position")
+    @Query("SELECT formulaID, name FROM Formula WHERE isNote=0 ORDER BY position")
     fun getFormulaFilterItemList(): List<FormulaFilterItemData>
 }

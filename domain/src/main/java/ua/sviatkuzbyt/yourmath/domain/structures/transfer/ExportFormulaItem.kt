@@ -6,5 +6,6 @@ data class ExportFormulaItem(
     val inputData: List<ExportDataInput>,
     val outputData: List<ExportDataOutput>,
     val code: String,
+    val isNote: Boolean,
     val position: Int
 )

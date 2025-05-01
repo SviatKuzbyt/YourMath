@@ -10,5 +10,6 @@ data class FormulaEntity(
     val description: String?,
     val code: String,
     val isPin: Boolean,
+    val isNote: Boolean,
     val position: Int
 )

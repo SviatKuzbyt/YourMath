@@ -13,16 +13,13 @@ import ua.sviatkuzbyt.yourmath.data.structures.editor.FormulaNameItemData
 import ua.sviatkuzbyt.yourmath.data.structures.transfer.FileDataInputData
 import ua.sviatkuzbyt.yourmath.data.structures.transfer.FileDataOutputData
 import ua.sviatkuzbyt.yourmath.data.structures.transfer.FormulaToFormatData
-import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditFormulaInfo
-import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditInput
-import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditResult
 
 @Dao
 interface EditFormulaDao {
-    @Query("SELECT formulaID, name FROM Formula ORDER BY position")
+    @Query("SELECT formulaID, name, isNote FROM Formula ORDER BY position")
     fun getFormulas(): List<FormulaNameItemData>
 
-    @Query("SELECT formulaID, name FROM Formula ORDER BY position LIMIT ${Int.MAX_VALUE} OFFSET :offset")
+    @Query("SELECT formulaID, name, isNote FROM Formula ORDER BY position LIMIT ${Int.MAX_VALUE} OFFSET :offset")
     fun getFormulas(offset: Int): List<FormulaNameItemData>
 
     @Query("UPDATE Formula SET position = position - 1 WHERE position > :deletedPosition")
@@ -37,7 +34,7 @@ interface EditFormulaDao {
     @Query("UPDATE Formula SET position=:position WHERE formulaID=:formulaID")
     fun updateFormulaPosition(formulaID: Long, position: Int)
 
-    @Query("SELECT formulaID, name, description, code, position FROM Formula ORDER BY position")
+    @Query("SELECT formulaID, name, description, code, isNote, position FROM Formula ORDER BY position")
     fun getFormulasToExport(): List<FormulaToFormatData>
 
     @Query("SELECT label, codeLabel, defaultData, position FROM InputData WHERE formulaID = :formulaID ORDER BY position")
@@ -61,7 +58,7 @@ interface EditFormulaDao {
     @Query("SELECT position FROM Formula WHERE formulaID = :formulaID LIMIT 1")
     fun getPosition(formulaID: Long): Int
 
-    @Query("SELECT formulaID, name, description, code FROM Formula WHERE formulaID = :formulaID LIMIT 1")
+    @Query("SELECT formulaID, name, description, isNote, code FROM Formula WHERE formulaID = :formulaID LIMIT 1")
     fun getEditFormulaInfo(formulaID: Long): EditFormulaInfoData
 
     @Query("SELECT inputDataID, label, codeLabel, defaultData FROM InputData WHERE formulaID = :formulaID ORDER BY position")

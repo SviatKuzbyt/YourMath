@@ -89,7 +89,8 @@ class EditFormulaRepositoryImpl @Inject constructor(
             description = formula.description,
             code = formula.code,
             isPin = false,
-            position = formula.position
+            position = formula.position,
+            isNote = formula.isNote
         )
 
         return editFormulaDao.addFormula(formulaEntity)
@@ -209,11 +210,11 @@ class EditFormulaRepositoryImpl @Inject constructor(
     }
 
     private fun mapEditFormulaInfoToDomain(info: EditFormulaInfoData): EditFormulaInfo {
-        return EditFormulaInfo(info.formulaID, info.name, info.description, info.code)
+        return EditFormulaInfo(info.formulaID, info.name, info.description, info.isNote, info.code)
     }
 
     private fun mapToFormulaNameItemDomain(item: FormulaNameItemData): FormulaNameItem{
-        return FormulaNameItem(item.formulaID, item.name)
+        return FormulaNameItem(item.formulaID, item.name, item.isNote)
     }
 
     private fun mapFormulaToFormatToDomain(data: FormulaToFormatData): FormulaToFormat{
@@ -222,6 +223,7 @@ class EditFormulaRepositoryImpl @Inject constructor(
             name = data.name,
             description = data.description,
             code = data.code,
+            isNote = data.isNote,
             position = data.position
         )
     }

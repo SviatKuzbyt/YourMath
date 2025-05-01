@@ -36,8 +36,6 @@ import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormula
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaState
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaStateContent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditList
-import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorDialogContent
-import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.LocalNavController
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.NavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
@@ -56,8 +54,6 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.DialogDelet
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.InputItem
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.ResultItem
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.TabItem
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editor.DialogDeleteAll
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editor.DialogDeleteFormula
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppTheme
 

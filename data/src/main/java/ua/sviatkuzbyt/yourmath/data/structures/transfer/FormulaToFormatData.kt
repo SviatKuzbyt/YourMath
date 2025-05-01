@@ -5,5 +5,6 @@ data class FormulaToFormatData(
     val name: String,
     val description: String?,
     val code: String,
+    val isNote: Boolean,
     val position: Int
 )

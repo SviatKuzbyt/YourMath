@@ -37,6 +37,7 @@ class ImportUseCase(
                 name = formula.name,
                 description = formula.description,
                 code = formula.code,
+                isNote = formula.isNote,
                 position = formula.position + tableSize
             )
         )

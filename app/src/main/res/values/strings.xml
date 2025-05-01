@@ -86,4 +86,5 @@
     <string name="delete_item_content">Do you really want to delete an item? You won\'t be able to restore it.</string>
     <string name="note">note</string>
     <string name="mark_as_note">Mark as a note (hide the formula on the main screen and history screen)</string>
+    <string name="export_notes">Export notes too</string>
 </resources>

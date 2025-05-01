@@ -27,6 +27,7 @@ fun ImportScreen(viewModel: ImportViewModel = hiltViewModel()){
         when(intent){
             TransferIntent.Exit -> navController.navigateUp()
             TransferIntent.Continue -> launcher.launch(arrayOf("application/json"))
+            is TransferIntent.SetExportNotes -> Unit
         }
     }
 }

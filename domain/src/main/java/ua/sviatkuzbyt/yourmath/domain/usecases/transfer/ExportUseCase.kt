@@ -10,10 +10,14 @@ class ExportUseCase(
     private val jsonRepository: JsonRepository,
     private val fileRepository: FileRepository
 ) {
-    fun execute(fileUri: String){
-        val formulas = editFormulaRepository.getFormulasToExport()
+    fun execute(fileUri: String, isExportNotes: Boolean){
+        val formulas = if (isExportNotes){
+            editFormulaRepository.getFormulasWithNotesToExport()
+        } else {
+            editFormulaRepository.getFormulasToExport()
+        }
 
-        val itemsToExport = formulas.map { formula ->
+        val itemsToExport = formulas.mapIndexed { index, formula ->
             ExportFormulaItem(
                 name = formula.name,
                 description = formula.description,
@@ -21,7 +25,7 @@ class ExportUseCase(
                 outputData = editFormulaRepository.getOutputDataToExport(formula.formulaID),
                 code = formula.code,
                 isNote = formula.isNote,
-                position = formula.position
+                position = index
             )
         }
 

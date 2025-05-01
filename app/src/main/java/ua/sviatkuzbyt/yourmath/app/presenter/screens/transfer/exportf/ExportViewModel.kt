@@ -20,15 +20,18 @@ class ExportViewModel @Inject constructor (
 
     fun exportToFile(fileUri: String) = safeBackgroundLaunch(
         code = {
+            val isExportNotes = _screenState.value.isExportNotes ?: false
+
             _screenState.update { state ->
                 state.copy(
                     content = R.string.wait,
+                    isExportNotes = null,
                     isContinueButton = false,
                     isCanselButton = false
                 )
             }
 
-            exportUseCase.execute(fileUri)
+            exportUseCase.execute(fileUri, isExportNotes)
 
             _screenState.update { state ->
                 state.copy(
@@ -39,4 +42,10 @@ class ExportViewModel @Inject constructor (
         },
         errorHandling = { _screenState.value = TransferState.getError() }
     )
+
+    fun setIsExportNotes(isExport: Boolean){
+        _screenState.update { state ->
+            state.copy(isExportNotes = isExport)
+        }
+    }
 }

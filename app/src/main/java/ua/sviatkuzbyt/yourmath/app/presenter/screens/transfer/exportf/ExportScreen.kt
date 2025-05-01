@@ -27,6 +27,7 @@ fun ExportScreen(viewModel: ExportViewModel = hiltViewModel()){
         when(intent){
             TransferIntent.Exit -> navController.navigateUp()
             TransferIntent.Continue -> launcher.launch("YourmathFormulas")
+            is TransferIntent.SetExportNotes -> viewModel.setIsExportNotes(intent.isExport)
         }
     }
 }

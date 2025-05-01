@@ -205,6 +205,12 @@ class EditFormulaRepositoryImpl @Inject constructor(
         editFormulaDao.setIsNote(note, formulaID)
     }
 
+    override fun getFormulasWithNotesToExport(): List<FormulaToFormat> {
+        return editFormulaDao.getFormulasWithNotesToExport().map {
+            mapFormulaToFormatToDomain(it)
+        }
+    }
+
     private fun mapEditResultToDomain(item: EditResultData): EditResult{
         return EditResult(item.outputDataID, item.label, item.codeLabel)
     }
@@ -227,8 +233,7 @@ class EditFormulaRepositoryImpl @Inject constructor(
             name = data.name,
             description = data.description,
             code = data.code,
-            isNote = data.isNote,
-            position = data.position
+            isNote = data.isNote
         )
     }
 

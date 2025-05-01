@@ -1,5 +1,6 @@
 package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,8 +21,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaStateContent
+import ua.sviatkuzbyt.yourmath.app.presenter.controllers.transfer.TransferIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.other.editformula.saveField
 import ua.sviatkuzbyt.yourmath.app.presenter.other.editformula.setFieldChanged
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.CheckboxBlue
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.Container
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.TextFieldWithLabel
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
@@ -96,18 +99,19 @@ fun LazyItemScope.InfoItems(
         Container{
             Row(
                 modifier = Modifier
+                    .clickable(
+                        onClick = { onChangeIsNote(!info.isNote) },
+                        indication = null,
+                        interactionSource = null
+                    )
                     .padding(vertical = AppSizes.dp16)
                     .padding(start = AppSizes.dp8, end = AppSizes.dp16),
                 verticalAlignment = Alignment.CenterVertically
             )  {
-                Checkbox(
+
+                CheckboxBlue(
                     checked = info.isNote,
-                    onCheckedChange = onChangeIsNote,
-                    colors = CheckboxDefaults.colors(
-                        checkmarkColor = AppTheme.colors.white,
-                        uncheckedColor = AppTheme.colors.textPrimary,
-                        checkedColor = AppTheme.colors.primary
-                    )
+                    onCheckedChange = onChangeIsNote
                 )
 
                 Spacer(Modifier.size(AppSizes.dp8))

@@ -49,4 +49,5 @@ interface EditFormulaRepository {
     fun getInputTableSize(formulaID: Long): Int
     fun getResultTableSize(formulaID: Long): Int
     fun setIsNote(note: Boolean, formulaID: Long)
+    fun getFormulasWithNotesToExport(): List<FormulaToFormat>
 }

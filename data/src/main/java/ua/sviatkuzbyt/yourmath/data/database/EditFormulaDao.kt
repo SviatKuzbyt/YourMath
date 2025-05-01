@@ -34,7 +34,7 @@ interface EditFormulaDao {
     @Query("UPDATE Formula SET position=:position WHERE formulaID=:formulaID")
     fun updateFormulaPosition(formulaID: Long, position: Int)
 
-    @Query("SELECT formulaID, name, description, code, isNote, position FROM Formula ORDER BY position")
+    @Query("SELECT formulaID, name, description, code, isNote FROM Formula WHERE isNote=0 ORDER BY position")
     fun getFormulasToExport(): List<FormulaToFormatData>
 
     @Query("SELECT label, codeLabel, defaultData, position FROM InputData WHERE formulaID = :formulaID ORDER BY position")
@@ -117,4 +117,7 @@ interface EditFormulaDao {
 
     @Query("UPDATE Formula SET isNote=:note WHERE formulaID=:formulaID")
     fun setIsNote(note: Boolean, formulaID: Long)
+
+    @Query("SELECT formulaID, name, description, code, isNote FROM Formula ORDER BY position")
+    fun getFormulasWithNotesToExport(): List<FormulaToFormatData>
 }

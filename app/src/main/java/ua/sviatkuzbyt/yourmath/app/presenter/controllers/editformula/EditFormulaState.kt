@@ -22,7 +22,8 @@ data class EditFormulaState(
 sealed class EditFormulaStateContent {
     data class Info(
         val name: String,
-        val description: String?
+        val description: String?,
+        val isNote: Boolean
     ): EditFormulaStateContent()
     data class Inputs(val list: List<EditInput>): EditFormulaStateContent()
     data class Results(val list: List<EditResult>): EditFormulaStateContent()

@@ -14,4 +14,8 @@ class UpdateFormulaDataUseCase(private val repository: EditFormulaRepository) {
     fun updateCode(text: String, formulaID: Long){
         repository.updateCodeFormula(text, formulaID)
     }
+
+    fun changeIsNote(note: Boolean, formulaID: Long) {
+        repository.setIsNote(note, formulaID)
+    }
 }

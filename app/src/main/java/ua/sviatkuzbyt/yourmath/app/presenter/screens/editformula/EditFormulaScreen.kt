@@ -157,6 +157,9 @@ fun EditFormulaContent(
                             onDescriptionSave = {
                                 onIntent(EditFormulaIntent.SaveDescription)
                             },
+                            onChangeIsNote = { isNote ->
+                                onIntent(EditFormulaIntent.ChangeIsNote(isNote))
+                            },
                         )
                     }
                     is EditFormulaStateContent.Inputs -> {

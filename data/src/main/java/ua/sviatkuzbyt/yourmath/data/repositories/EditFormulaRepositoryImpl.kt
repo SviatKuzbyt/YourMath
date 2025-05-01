@@ -201,6 +201,10 @@ class EditFormulaRepositoryImpl @Inject constructor(
         return editFormulaDao.getResultTableSize(formulaID)
     }
 
+    override fun setIsNote(note: Boolean, formulaID: Long) {
+        editFormulaDao.setIsNote(note, formulaID)
+    }
+
     private fun mapEditResultToDomain(item: EditResultData): EditResult{
         return EditResult(item.outputDataID, item.label, item.codeLabel)
     }

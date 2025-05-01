@@ -114,4 +114,7 @@ interface EditFormulaDao {
 
     @Query("SELECT COUNT(*) FROM OutputData WHERE formulaID=:formulaID")
     fun getResultTableSize(formulaID: Long): Int
+
+    @Query("UPDATE Formula SET isNote=:note WHERE formulaID=:formulaID")
+    fun setIsNote(note: Boolean, formulaID: Long)
 }

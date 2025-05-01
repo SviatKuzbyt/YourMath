@@ -48,4 +48,5 @@ interface EditFormulaRepository {
     fun setResultDataPosition(id: Long, index: Int)
     fun getInputTableSize(formulaID: Long): Int
     fun getResultTableSize(formulaID: Long): Int
+    fun setIsNote(note: Boolean, formulaID: Long)
 }

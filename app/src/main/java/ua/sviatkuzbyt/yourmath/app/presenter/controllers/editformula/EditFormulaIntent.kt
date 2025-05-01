@@ -20,6 +20,7 @@ sealed class EditFormulaIntent{
     data object SaveCodeText: EditFormulaIntent()
     data object Exit: EditFormulaIntent()
     data object CloseDialog: EditFormulaIntent()
+    data class ChangeIsNote(val isNote: Boolean): EditFormulaIntent()
 }
 
 enum class EditList{

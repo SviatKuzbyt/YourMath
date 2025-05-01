@@ -37,7 +37,7 @@ class EditFormulaViewModel @Inject constructor(
     private val _screenState = MutableStateFlow(EditFormulaState())
     val screenState: StateFlow<EditFormulaState> = _screenState
 
-    private val _info = MutableStateFlow(EditFormulaStateContent.Info("", null))
+    private val _info = MutableStateFlow(EditFormulaStateContent.Info("", null, true))
     private val _inputs = MutableStateFlow(EditFormulaStateContent.Inputs(listOf()))
     private val _results = MutableStateFlow(EditFormulaStateContent.Results(listOf()))
     private val _code = MutableStateFlow(EditFormulaStateContent.Code(""))
@@ -85,8 +85,18 @@ class EditFormulaViewModel @Inject constructor(
             EditFormulaIntent.Exit -> checkCompleteEdit()
             is EditFormulaIntent.OpenDialog -> openDialog(intent.dialog)
             EditFormulaIntent.CloseDialog -> closeDialog()
+            is EditFormulaIntent.ChangeIsNote -> changeIsNote(intent.isNote)
         }
     }
+
+    private fun changeIsNote(isNote: Boolean) = safeBackgroundLaunch(
+        code = {
+            updateInfo { it.copy(isNote = isNote) }
+            updateFormulaDataUseCase.changeIsNote(isNote, formulaID)
+            GlobalEvent.sendEvent(GlobalEventType.ChangeEditorFormulaList)
+        },
+        errorHandling = ::setError
+    )
 
     private fun addItem() = safeBackgroundLaunch(
         code = {
@@ -335,7 +345,8 @@ class EditFormulaViewModel @Inject constructor(
             }
             _info.value = EditFormulaStateContent.Info(
                 name = data.info.name,
-                description = data.info.description
+                description = data.info.description,
+                isNote = data.info.isNote
             )
             _inputs.value = EditFormulaStateContent.Inputs(data.inputList)
             _results.value = EditFormulaStateContent.Results(data.resultList)

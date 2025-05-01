@@ -4,5 +4,5 @@ data class FormulaResultWithValueData(
     val outputDataID: Long,
     val label: String,
     val codeLabel: String,
-    val value: String
+    val value: String?
 )

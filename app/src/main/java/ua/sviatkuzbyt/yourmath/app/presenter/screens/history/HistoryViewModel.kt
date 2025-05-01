@@ -62,7 +62,7 @@ class HistoryViewModel @Inject constructor(
                 limit = formatHistoryItems.loadLimit
             )
 
-            val listContent = if(newRecords.isEmpty()){
+            val listContent = if(newRecords.isEmpty() && itemList.isEmpty()){
                 val info = if(filterFormulaID == ALL_ITEMS)
                     EmptyScreenInfo.noItemsInHistory()
                 else

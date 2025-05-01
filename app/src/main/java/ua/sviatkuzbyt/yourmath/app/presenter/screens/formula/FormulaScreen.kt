@@ -177,7 +177,7 @@ private fun ColumnScope.ContentList(
             itemContent = { position, inputData ->
                 InputDataContainer(
                     label = inputData.label,
-                    data = inputData.data,
+                    data = inputData.data ?: stringResource(R.string.no_found),
                     hint = inputData.defaultData,
                     isDoneButton = inputList.lastIndex == position,
                     focusManager = focusManager,

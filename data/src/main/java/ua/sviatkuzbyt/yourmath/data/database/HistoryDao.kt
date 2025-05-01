@@ -58,18 +58,43 @@ interface HistoryDao{
     fun getHistoryItemsByFormulaID(formulaID: Long, offset: Int, limit: Int): List<HistoryListItemData>
 
     @Query("""
-        SELECT id.inputDataID, id.label, id.codeLabel, id.defaultData, hid.value FROM HistoryInputData hid
-        INNER JOIN InputData id ON hid.inputDataID = id.inputDataID 
-        WHERE hid.historyFormulaID = :historyID
+SELECT 
+    i.inputDataID,
+    i.label,
+    i.codeLabel,
+    i.defaultData,
+    i.position,
+    h.value AS value
+FROM 
+    InputData i
+LEFT JOIN 
+    HistoryInputData h 
+    ON i.inputDataID = h.inputDataID AND h.historyFormulaID = :historyID
+WHERE 
+    i.formulaID = :formulaID
+ORDER BY 
+    i.position;
     """)
-    fun getInputData(historyID: Long): List<FormulaInputWithValueData>
+    fun getInputData(formulaID: Long, historyID: Long): List<FormulaInputWithValueData>
 
     @Query("""
-        SELECT od.outputDataID, od.label, od.codeLabel, hod.value FROM HistoryOutputData hod 
-        INNER JOIN OutputData od ON hod.outputDataID = od.outputDataID
-        WHERE hod.historyFormulaID = :historyID
+SELECT 
+    o.outputDataID,
+    o.label,
+    o.codeLabel,
+    o.position,
+    h.value AS value
+FROM 
+    OutputData o
+LEFT JOIN 
+    HistoryOutputData h 
+    ON o.outputDataID = h.outputDataID AND h.historyFormulaID = :historyID
+WHERE 
+    o.formulaID = :formulaID
+ORDER BY 
+    o.position;
     """)
-    fun getOutputData(historyID: Long): List<FormulaResultWithValueData>
+    fun getOutputData(formulaID: Long, historyID: Long): List<FormulaResultWithValueData>
 
     @Query("DELETE FROM HistoryFormula")
     fun deleteAll()

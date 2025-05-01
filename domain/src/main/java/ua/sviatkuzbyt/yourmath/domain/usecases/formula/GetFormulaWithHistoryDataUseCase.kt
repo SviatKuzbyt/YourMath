@@ -14,8 +14,8 @@ class GetFormulaWithHistoryDataUseCase(
     ): FormulaContent {
         return FormulaContent(
             info = formulaRepository.getFormulaInfo(formulaID),
-            inputData = historyRepository.getFormulaInput(historyID),
-            resultData = historyRepository.getFormulaResult(historyID)
+            inputData = historyRepository.getFormulaInput(historyID, formulaID),
+            resultData = historyRepository.getFormulaResult(historyID, formulaID)
         )
     }
 }

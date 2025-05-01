@@ -9,8 +9,8 @@ interface HistoryRepository {
     fun addHistoryInputData(data: String, inputID: Long, historyID: Long)
     fun addHistoryOutputData(data: String, outputID: Long, historyID: Long)
     fun getHistoryItems(offset: Int, limit: Int): List<HistoryNoFormatItem>
-    fun getFormulaInput(historyID: Long): List<FormulaInput>
-    fun getFormulaResult(historyID: Long): List<FormulaResult>
+    fun getFormulaInput(historyID: Long, formulaID: Long): List<FormulaInput>
+    fun getFormulaResult(historyID: Long, formulaID: Long): List<FormulaResult>
     fun cleanHistory()
     fun getHistoryByFormulaIDItems(formulaID: Long, offset: Int, limit: Int): List<HistoryNoFormatItem>
 }

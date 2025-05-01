@@ -5,5 +5,5 @@ data class FormulaInputWithValueData(
     val label: String,
     val codeLabel: String,
     val defaultData: String?,
-    val value: String
+    val value: String?
 )

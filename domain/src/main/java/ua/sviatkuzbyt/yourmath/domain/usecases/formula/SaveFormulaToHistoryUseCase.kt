@@ -15,7 +15,9 @@ class SaveFormulaToHistoryUseCase(
 
         formulaContent.inputData.forEach { input ->
             historyRepository.addHistoryInputData(
-                data = input.data.ifBlank { input.defaultData ?: "0" },
+                data =
+                    if (input.data.isNullOrBlank()) input.defaultData ?: "0"
+                    else input.data,
                 inputID = input.id,
                 historyID = historyID
             )

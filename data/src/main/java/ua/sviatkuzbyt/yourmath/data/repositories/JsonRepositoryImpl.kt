@@ -18,7 +18,7 @@ class JsonRepositoryImpl @Inject constructor() : JsonRepository {
 
         inputList.forEach { item ->
             val value = when {
-                item.data.isNotEmpty() -> item.data
+                !item.data.isNullOrBlank() -> item.data
                 item.defaultData != null -> item.defaultData
                 else -> throw NoAllDataEnterException()
             }

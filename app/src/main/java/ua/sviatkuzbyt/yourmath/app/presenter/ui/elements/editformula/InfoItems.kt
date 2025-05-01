@@ -75,6 +75,8 @@ fun LazyItemScope.InfoItems(
                 label = stringResource(R.string.description),
                 text = info.description.orEmpty(),
                 hint = stringResource(R.string.optional),
+                singleLine = false,
+                maxLines = 16,
                 onTextChange = { text ->
                     onDescriptionChange(text)
                     setFieldChanged(isDescriptionChanged)
@@ -82,7 +84,6 @@ fun LazyItemScope.InfoItems(
                 keyboardOptions = KeyboardOptions(
                     capitalization = KeyboardCapitalization.Sentences
                 ),
-                singleLine = false,
                 modifier = Modifier
                     .padding(AppSizes.dp16)
                     .onFocusChanged { state ->

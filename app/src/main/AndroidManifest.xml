@@ -16,8 +16,7 @@
         <activity
             android:name=".core.main.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.YourMath"
-            android:windowSoftInputMode="adjustNothing">
+            android:theme="@style/Theme.YourMath">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

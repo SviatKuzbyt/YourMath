@@ -31,7 +31,8 @@ fun TextFieldWithLabel(
     onTextChange: (String) -> Unit,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
-    singleLine: Boolean = true
+    singleLine: Boolean = true,
+    maxLines: Int = 1
 ) {
     Column(
         modifier = modifier
@@ -50,6 +51,8 @@ fun TextFieldWithLabel(
             shape = AppShapes.field,
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
+
+            maxLines = maxLines,
 
             placeholder = {
                 Text(

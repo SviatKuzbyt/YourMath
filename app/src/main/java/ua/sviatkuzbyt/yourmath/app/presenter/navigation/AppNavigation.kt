@@ -68,7 +68,6 @@ fun AppNavigation(){
     val modifier = Modifier
         .fillMaxSize()
         .windowInsetsPadding(WindowInsets.systemBars)
-        .padding(WindowInsets.ime.asPaddingValues())
 
     val navController = rememberNavController()
 

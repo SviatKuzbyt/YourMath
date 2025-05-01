@@ -31,6 +31,7 @@ fun LazyItemScope.CodeItem(
             TextFieldWithLabel(
                 label = stringResource(R.string.python),
                 text = text,
+                maxLines = 16,
                 singleLine = false,
                 hint = stringResource(R.string.enter_code),
                 onTextChange = { text ->

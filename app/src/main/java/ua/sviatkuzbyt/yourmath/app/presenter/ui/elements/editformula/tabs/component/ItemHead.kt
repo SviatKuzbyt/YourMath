@@ -1,11 +1,10 @@
-package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula
+package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.tabs.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import ua.sviatkuzbyt.yourmath.app.R

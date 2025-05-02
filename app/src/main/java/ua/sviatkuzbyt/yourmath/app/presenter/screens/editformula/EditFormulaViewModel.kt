@@ -243,42 +243,32 @@ class EditFormulaViewModel @Inject constructor(
     )
 
     private fun saveInputLabel(index: Int){
-        if (index in _inputs.value.list.indices){
-            updateInputDataUseCase.updateTextLabel(
-                _inputs.value.list[index].label, _inputs.value.list[index].id
-            )
+        _inputs.value.list.elementAtOrNull(index)?.let { input ->
+            updateInputDataUseCase.updateTextLabel(input.label, input.id)
         }
     }
 
     private fun saveInputCodeLabel(index: Int){
-        if (index in _inputs.value.list.indices) {
-            updateInputDataUseCase.updateCodeLabel(
-                _inputs.value.list[index].codeLabel, _inputs.value.list[index].id
-            )
+        _inputs.value.list.elementAtOrNull(index)?.let { input ->
+            updateInputDataUseCase.updateCodeLabel(input.codeLabel, input.id)
         }
     }
 
     private fun saveInputDefaultData(index: Int){
-        if (index in _inputs.value.list.indices) {
-            updateInputDataUseCase.updateDefaultData(
-                _inputs.value.list[index].defaultData.orEmpty(), _inputs.value.list[index].id
-            )
+        _inputs.value.list.elementAtOrNull(index)?.let { input ->
+            updateInputDataUseCase.updateDefaultData(input.defaultData.orEmpty(), input.id)
         }
     }
 
     private fun saveResultLabel(index: Int){
-        if (index in _results.value.list.indices) {
-            updateResultDataUseCase.updateTextLabel(
-                _results.value.list[index].label, _results.value.list[index].id
-            )
+        _results.value.list.elementAtOrNull(index)?.let { result ->
+            updateResultDataUseCase.updateTextLabel(result.label, result.id)
         }
     }
 
     private fun saveResultCodeLabel(index: Int){
-        if (index in _results.value.list.indices) {
-            updateResultDataUseCase.updateCodeLabel(
-                _results.value.list[index].codeLabel, _results.value.list[index].id
-            )
+        _results.value.list.elementAtOrNull(index)?.let { result ->
+            updateResultDataUseCase.updateCodeLabel(result.codeLabel, result.id)
         }
     }
 

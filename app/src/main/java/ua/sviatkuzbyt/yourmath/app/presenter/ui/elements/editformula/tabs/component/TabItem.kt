@@ -1,4 +1,4 @@
-package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula
+package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.tabs.component
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.clickable

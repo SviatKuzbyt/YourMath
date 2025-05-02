@@ -1,4 +1,4 @@
-package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula
+package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.tabs
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -21,7 +19,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaStateContent
-import ua.sviatkuzbyt.yourmath.app.presenter.controllers.transfer.TransferIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.other.editformula.saveField
 import ua.sviatkuzbyt.yourmath.app.presenter.other.editformula.setFieldChanged
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.CheckboxBlue

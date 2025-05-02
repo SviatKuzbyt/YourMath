@@ -1,9 +1,8 @@
-package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula
+package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.tabs
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyItemScope
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember

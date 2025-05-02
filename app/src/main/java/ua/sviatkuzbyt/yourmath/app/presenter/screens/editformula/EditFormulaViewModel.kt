@@ -6,12 +6,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaDialog
+import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaDialogContent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaState
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaStateContent
-import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditList
-import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorListContent
+import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.FormulaListText
+import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.FormulaText
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.ErrorData
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.GlobalEvent
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.GlobalEventType
@@ -34,120 +34,361 @@ class EditFormulaViewModel @Inject constructor(
 ): ViewModel() {
 
     private var formulaID: Long = sentData["formulaID"] ?: CreateFormulaUseCase.NEW_FORMULA
-    private val _screenState = MutableStateFlow(EditFormulaState())
-    val screenState: StateFlow<EditFormulaState> = _screenState
 
-    private val _info = MutableStateFlow(EditFormulaStateContent.Info("", null, true))
+    private val _info = MutableStateFlow(EditFormulaStateContent.Info(
+        "", null, true)
+    )
     private val _inputs = MutableStateFlow(EditFormulaStateContent.Inputs(listOf()))
     private val _results = MutableStateFlow(EditFormulaStateContent.Results(listOf()))
     private val _code = MutableStateFlow(EditFormulaStateContent.Code(""))
 
-    init {
-        loadData()
-    }
+    private val _screenState = MutableStateFlow(EditFormulaState())
+    val screenState: StateFlow<EditFormulaState> = _screenState
+
+    init { loadData() }
+
+    private fun loadData() = safeBackgroundLaunch(
+        code = {
+            val data = if (formulaID == CreateFormulaUseCase.NEW_FORMULA){
+                createFormulaUseCase.execute().also {
+                    formulaID = it.info.id
+                    setGlobalEvent()
+                }
+            } else {
+                getEditFormulaDataUseCase.execute(formulaID)
+            }
+
+            _info.value = EditFormulaStateContent.Info(
+                name = data.info.name,
+                description = data.info.description,
+                isNote = data.info.isNote
+            )
+            _inputs.value = EditFormulaStateContent.Inputs(data.inputList)
+            _results.value = EditFormulaStateContent.Results(data.resultList)
+            _code.value = EditFormulaStateContent.Code(data.info.code)
+
+            _screenState.value = EditFormulaState(
+                content = _info.value
+            )
+        },
+        errorHandling = ::setError
+    )
 
     fun onIntent(intent: EditFormulaIntent){
         when(intent){
             is EditFormulaIntent.SelectTab ->
                 changeTab(intent.index)
-            is EditFormulaIntent.ChangeName ->
-                changeName(intent.name)
-            is EditFormulaIntent.ChangeDescription ->
-                changeDescription(intent.description)
+            is EditFormulaIntent.ChangeFormulaText ->
+                changeFormulaText(intent.type, intent.text)
+            is EditFormulaIntent.ChangeListText ->
+                changeListText(intent.type, intent.index, intent.text)
+            is EditFormulaIntent.SaveFormulaText ->
+                saveFormulaText(intent.type)
+            is EditFormulaIntent.SaveListText ->
+                saveListText(intent.type, intent.index)
+            is EditFormulaIntent.ChangeIsNote ->
+                changeIsNote(intent.isNote)
             EditFormulaIntent.AddDataItem ->
                 addItem()
-            is EditFormulaIntent.ChangeItemLabel ->
-                changeItemLabel(intent.index, intent.newText, intent.list)
-            is EditFormulaIntent.ChangeItemCodeLabel ->
-                changeItemCodeLabel(intent.index, intent.newText, intent.list)
-            is EditFormulaIntent.DeleteItem ->
-                deleteItem(intent.index, intent.list)
             is EditFormulaIntent.MoveItem ->
-                moveItem(intent.from, intent.to, intent.list)
-            is EditFormulaIntent.ChangeInputDefaultData ->
-                changeInputDefaultData(intent.index, intent.newText)
-            is EditFormulaIntent.ChangeCodeText ->
-                changeCodeText(intent.newText)
-
-            is EditFormulaIntent.SaveCodeText ->
-                updateFormulaCode()
-            is EditFormulaIntent.SaveDescription ->
-                updateFormulaDescription()
-            is EditFormulaIntent.SaveInputDefaultData ->
-                updateInputDefaultData(intent.index)
-            is EditFormulaIntent.SaveItemCodeLabel ->
-                updateItemCodeLabel(intent.index, intent.list)
-            is EditFormulaIntent.SaveItemLabel ->
-                updateItemTextLabel(intent.index, intent.list)
-            is EditFormulaIntent.SaveName ->
-                updateFormulaLabel()
-
-            EditFormulaIntent.Exit -> checkCompleteEdit()
-            is EditFormulaIntent.OpenDialog -> openDialog(intent.dialog)
-            EditFormulaIntent.CloseDialog -> closeDialog()
-            is EditFormulaIntent.ChangeIsNote -> changeIsNote(intent.isNote)
+                moveItem(intent.from, intent.to)
+            is EditFormulaIntent.DeleteItem ->
+                deleteItem(intent.index)
+            is EditFormulaIntent.OpenDialog ->
+                openDialog(intent.dialog)
+            EditFormulaIntent.CloseDialog ->
+                closeDialog()
+            EditFormulaIntent.Exit ->
+                setNavigateBack()
         }
     }
+
+    // SELECT TAB
+
+    private fun changeTab(index: Int){
+        val content = when(index){
+            0 -> _info.value
+            1 -> _inputs.value
+            2 -> _results.value
+            3 -> _code.value
+            else -> EditFormulaStateContent.Nothing
+        }
+
+        _screenState.update { state ->
+            state.copy(
+                selectedTab = index,
+                content = content
+            )
+        }
+    }
+
+    //CHANGE TEXTS
+
+    private fun changeFormulaText(type: FormulaText, text: String){
+        when(type){
+            FormulaText.Name -> changeFormulaName(text)
+            FormulaText.Description -> changeFormulaDescription(text)
+            FormulaText.Code -> changeFormulaCode(text)
+        }
+    }
+
+    private fun changeFormulaName(text: String){
+        updateInfo { it.copy(name = text) }
+        setGlobalEvent()
+    }
+
+    private fun changeFormulaDescription(text: String){
+        updateInfo { it.copy(description = text) }
+    }
+
+    private fun changeFormulaCode(text: String){
+        updateCode { it.copy(text = text) }
+    }
+
+    //CHANGE TEXTS IN LIST
+
+    private fun changeListText(type: FormulaListText, index: Int, text: String){
+        when(type){
+            FormulaListText.InputLabel -> changeInputLabel(index, text)
+            FormulaListText.InputCodeLabel -> changeInputCodeLabel(index, text)
+            FormulaListText.InputDefaultData -> changeInputDefaultData(index, text)
+            FormulaListText.ResultLabel -> changeResultLabel(index, text)
+            FormulaListText.ResultCodeLabel -> changeResultCodeLabel(index, text)
+        }
+    }
+
+    private fun changeInputLabel(changeIndex: Int, text: String) {
+        updateInputs { inputs ->
+            inputs.copy(list = inputs.list.mapIndexed { index, input ->
+                if (index == changeIndex) input.copy(label = text)
+                else input
+            })
+        }
+    }
+
+    private fun changeInputCodeLabel(changeIndex: Int, text: String) {
+        updateInputs { inputs ->
+            inputs.copy(list = inputs.list.mapIndexed { index, input ->
+                if (index == changeIndex) input.copy(codeLabel = text)
+                else input
+            })
+        }
+    }
+
+    private fun changeInputDefaultData(changeIndex: Int, text: String) {
+        updateInputs { inputs ->
+            inputs.copy(list = inputs.list.mapIndexed { index, input ->
+                if (index == changeIndex) input.copy(defaultData = text)
+                else input
+            })
+        }
+    }
+
+    private fun changeResultLabel(changeIndex: Int, text: String) {
+        updateResults { results ->
+            results.copy(list = results.list.mapIndexed { index, result ->
+                if (index == changeIndex) result.copy(label = text)
+                else result
+            })
+        }
+    }
+
+    private fun changeResultCodeLabel(changeIndex: Int, text: String) {
+        updateResults { results ->
+            results.copy(list = results.list.mapIndexed { index, result ->
+                if (index == changeIndex) result.copy(codeLabel = text)
+                else result
+            })
+        }
+    }
+
+    //SAVE CHANGED TEXT IN DB
+
+    private fun saveFormulaText(type: FormulaText) = safeBackgroundLaunch(
+        code = {
+            when(type){
+                FormulaText.Name -> saveFormulaName()
+                FormulaText.Description -> saveFormulaDescription()
+                FormulaText.Code -> saveFormulaCode()
+            }
+        },
+        errorHandling = ::setError
+    )
+
+    private fun saveFormulaName(){
+        updateFormulaDataUseCase.updateLabel(_info.value.name, formulaID)
+    }
+
+    private fun saveFormulaDescription(){
+        updateFormulaDataUseCase.updateDescription(_info.value.description.orEmpty(), formulaID)
+    }
+
+    private fun saveFormulaCode(){
+        updateFormulaDataUseCase.updateCode(_code.value.text, formulaID)
+    }
+
+    //SAVE CHANGED LIST TEXT IN DB
+
+    private fun saveListText(type: FormulaListText, index: Int) = safeBackgroundLaunch(
+        code = {
+            when(type){
+                FormulaListText.InputLabel -> saveInputLabel(index)
+                FormulaListText.InputCodeLabel -> saveInputCodeLabel(index)
+                FormulaListText.InputDefaultData -> saveInputDefaultData(index)
+                FormulaListText.ResultLabel -> saveResultLabel(index)
+                FormulaListText.ResultCodeLabel -> saveResultCodeLabel(index)
+            }
+        },
+        errorHandling = ::setError
+    )
+
+    private fun saveInputLabel(index: Int){
+        if (index in _inputs.value.list.indices){
+            updateInputDataUseCase.updateTextLabel(
+                _inputs.value.list[index].label, _inputs.value.list[index].id
+            )
+        }
+    }
+
+    private fun saveInputCodeLabel(index: Int){
+        if (index in _inputs.value.list.indices) {
+            updateInputDataUseCase.updateCodeLabel(
+                _inputs.value.list[index].codeLabel, _inputs.value.list[index].id
+            )
+        }
+    }
+
+    private fun saveInputDefaultData(index: Int){
+        if (index in _inputs.value.list.indices) {
+            updateInputDataUseCase.updateDefaultData(
+                _inputs.value.list[index].defaultData.orEmpty(), _inputs.value.list[index].id
+            )
+        }
+    }
+
+    private fun saveResultLabel(index: Int){
+        if (index in _results.value.list.indices) {
+            updateResultDataUseCase.updateTextLabel(
+                _results.value.list[index].label, _results.value.list[index].id
+            )
+        }
+    }
+
+    private fun saveResultCodeLabel(index: Int){
+        if (index in _results.value.list.indices) {
+            updateResultDataUseCase.updateCodeLabel(
+                _results.value.list[index].codeLabel, _results.value.list[index].id
+            )
+        }
+    }
+
+    //CHANGE IS NOTE
 
     private fun changeIsNote(isNote: Boolean) = safeBackgroundLaunch(
         code = {
             updateInfo { it.copy(isNote = isNote) }
             updateFormulaDataUseCase.changeIsNote(isNote, formulaID)
-            GlobalEvent.sendEvent(GlobalEventType.ChangeEditorFormulaList)
+            setGlobalEvent()
         },
         errorHandling = ::setError
     )
+
+    //ADD LIST ITEM
 
     private fun addItem() = safeBackgroundLaunch(
         code = {
             if (screenState.value.content is EditFormulaStateContent.Inputs){
-                val input = updateInputDataUseCase.add(formulaID)
-                updateInputs { it.copy(list = it.list + input) }
+                addInputItem()
             } else if(screenState.value.content is EditFormulaStateContent.Results){
-                val result = updateResultDataUseCase.add(formulaID)
-                updateResults { it.copy(list = it.list + result) }
+                addResultItem()
             }
         },
         errorHandling = ::setError
     )
 
-    private fun moveItem(fromIndex: Int, toIndex: Int, list: EditList) = safeBackgroundLaunch(
+    private fun addInputItem(){
+        val input = updateInputDataUseCase.add(formulaID)
+        updateInputs { it.copy(list = it.list + input) }
+    }
+
+    private fun addResultItem(){
+        val result = updateResultDataUseCase.add(formulaID)
+        updateResults { it.copy(list = it.list + result) }
+    }
+
+    //MOVE ITEMS
+
+    private fun moveItem(fromIndex: Int, toIndex: Int) = safeBackgroundLaunch(
         code = {
-            when(list){
-                EditList.Inputs -> {
-                    val inputsList = _inputs.value.list
-                    if (toIndex in inputsList.indices){
-                        val fromID = inputsList[fromIndex].id
-                        val toID = inputsList[toIndex].id
-                        updateInputDataUseCase.moveItem(fromID, fromIndex, toID, toIndex)
-
-                        updateInputs {
-                            it.copy(list = it.list.toMutableList().apply {
-                                add(toIndex, removeAt(fromIndex))
-                            })
-                        }
-                    }
-                }
-                EditList.Results -> {
-                    val inputsList = _results.value.list
-                    if (toIndex in inputsList.indices){
-                        val fromID = inputsList[fromIndex].id
-                        val toID = inputsList[toIndex].id
-                        updateResultDataUseCase.moveItem(fromID, fromIndex, toID, toIndex)
-
-                        updateResults {
-                            it.copy(list = it.list.toMutableList().apply {
-                                add(toIndex, removeAt(fromIndex))
-                            })
-                        }
-                    }
-                }
+            if (screenState.value.content is EditFormulaStateContent.Inputs){
+                moveInput(fromIndex, toIndex)
+            } else if(screenState.value.content is EditFormulaStateContent.Results){
+                moveResult(fromIndex, toIndex)
             }
         },
         errorHandling = ::setError
     )
 
-    private fun openDialog(dialog: EditFormulaDialog){
+    private fun moveInput(fromIndex: Int, toIndex: Int){
+        val list = _inputs.value.list
+        if (toIndex in list.indices){
+            val fromID = list[fromIndex].id
+            val toID = list[toIndex].id
+            updateInputDataUseCase.moveItem(fromID, fromIndex, toID, toIndex)
+
+            updateInputs {
+                it.copy(list = it.list.toMutableList().apply {
+                    add(toIndex, removeAt(fromIndex))
+                })
+            }
+        }
+    }
+
+    private fun moveResult(fromIndex: Int, toIndex: Int){
+        val results = _results.value.list
+        if (toIndex in results.indices){
+            val fromID = results[fromIndex].id
+            val toID = results[toIndex].id
+            updateResultDataUseCase.moveItem(fromID, fromIndex, toID, toIndex)
+
+            updateResults {
+                it.copy(list = it.list.toMutableList().apply {
+                    add(toIndex, removeAt(fromIndex))
+                })
+            }
+        }
+    }
+
+    //DELETE ITEM
+
+    private fun deleteItem(index: Int) = safeBackgroundLaunch(
+        code = {
+            closeDialog()
+
+            if (screenState.value.content is EditFormulaStateContent.Inputs){
+                deleteInput(index)
+            } else if(screenState.value.content is EditFormulaStateContent.Results){
+                deleteResult(index)
+            }
+        },
+        errorHandling = ::setError
+    )
+
+    private fun deleteInput(index: Int){
+        val inputData = _inputs.value.list[index]
+        updateInputs { it.copy(list = it.list - inputData) }
+        updateInputDataUseCase.deleteItem(formulaID, inputData.id, index)
+    }
+
+    private fun deleteResult(index: Int){
+        val resultData = _results.value.list[index]
+        updateResults { it.copy(list = it.list - resultData) }
+        updateResultDataUseCase.deleteItem(formulaID, resultData.id, index)
+    }
+
+    //SET DIALOG
+
+    private fun openDialog(dialog: EditFormulaDialogContent){
         _screenState.update { state ->
             state.copy(dialog = dialog)
         }
@@ -155,147 +396,15 @@ class EditFormulaViewModel @Inject constructor(
 
     private fun closeDialog(){
         _screenState.update { state ->
-            state.copy(dialog = EditFormulaDialog.Nothing)
+            state.copy(dialog = EditFormulaDialogContent.Nothing)
         }
     }
 
-    private fun deleteItem(index: Int, list: EditList) = safeBackgroundLaunch(
-        code = {
-            closeDialog()
-
-            when(list){
-                EditList.Inputs -> {
-                    val inputData = _inputs.value.list[index]
-                    updateInputs { it.copy(list = it.list - inputData) }
-                    updateInputDataUseCase.deleteItem(formulaID, inputData.id, index)
-                }
-                EditList.Results -> {
-                    val resultData = _results.value.list[index]
-                    updateResults { it.copy(list = it.list - resultData) }
-                    updateResultDataUseCase.deleteItem(formulaID, resultData.id, index)
-                }
-            }
-        },
-        errorHandling = ::setError
-    )
-
-    private fun checkCompleteEdit(){
+    private fun setNavigateBack(){
         _screenState.update { it.copy(isNavigateBack = true) }
     }
 
-    private fun updateFormulaLabel() = safeBackgroundLaunch(
-        code = {
-            updateFormulaDataUseCase.updateLabel(_info.value.name, formulaID)
-        },
-        errorHandling = ::setError
-    )
-
-    private fun updateFormulaDescription() = safeBackgroundLaunch(
-        code = {
-            updateFormulaDataUseCase.updateDescription(_info.value.description.orEmpty(), formulaID)
-        },
-        errorHandling = ::setError
-    )
-
-    private fun updateItemTextLabel(index: Int, list: EditList) = safeBackgroundLaunch(
-        code = {
-            when(list){
-                EditList.Inputs -> updateInputDataUseCase.updateTextLabel(
-                    _inputs.value.list[index].label, _inputs.value.list[index].id
-                )
-                EditList.Results -> updateResultDataUseCase.updateTextLabel(
-                    _results.value.list[index].label, _results.value.list[index].id
-                )
-            }
-        },
-        errorHandling = ::setError
-    )
-
-    private fun updateItemCodeLabel(index: Int, list: EditList) = safeBackgroundLaunch(
-        code = {
-            when(list){
-                EditList.Inputs -> updateInputDataUseCase.updateCodeLabel(
-                    _inputs.value.list[index].codeLabel, _inputs.value.list[index].id
-                )
-                EditList.Results -> updateResultDataUseCase.updateCodeLabel(
-                    _results.value.list[index].codeLabel, _results.value.list[index].id
-                )
-            }
-        },
-        errorHandling = ::setError
-    )
-
-    private fun updateInputDefaultData(index: Int) = safeBackgroundLaunch(
-        code = {
-            updateInputDataUseCase.updateDefaultData(
-                _inputs.value.list[index].defaultData.orEmpty(), _inputs.value.list[index].id
-            )
-        },
-        errorHandling = ::setError
-    )
-
-    private fun updateFormulaCode() = safeBackgroundLaunch(
-        code = {
-            updateFormulaDataUseCase.updateCode(_code.value.text, formulaID)
-        },
-        errorHandling = ::setError
-    )
-
-    private fun changeCodeText(newText: String){
-        updateCode { it.copy(text = newText) }
-    }
-
-    private fun changeItemLabel(index: Int, newText: String, list: EditList){
-        when(list){
-            EditList.Inputs -> updateInputs { state ->
-                state.copy(list = state.list.mapIndexed {i, input ->
-                    if (i == index) input.copy(label = newText)
-                    else input
-                })
-            }
-            EditList.Results -> updateResults { state ->
-                state.copy(list = state.list.mapIndexed {i, result ->
-                    if (i == index) result.copy(label = newText)
-                    else result
-                })
-            }
-        }
-    }
-
-    private fun changeItemCodeLabel(index: Int, newText: String, list: EditList){
-        when(list){
-            EditList.Inputs -> updateInputs { state ->
-                state.copy(list = state.list.mapIndexed { i, input ->
-                    if (i == index) input.copy(codeLabel = newText)
-                    else input
-                })
-            }
-            EditList.Results -> updateResults { state ->
-                state.copy(list = state.list.mapIndexed { i, result ->
-                    if (i == index)  result.copy(codeLabel = newText)
-                    else result
-                })
-            }
-        }
-    }
-
-    private fun changeInputDefaultData(index: Int, newText: String){
-        updateInputs { state ->
-            state.copy(list = state.list.mapIndexed { i, input ->
-                if (i == index)  input.copy(defaultData = newText)
-                else input
-            })
-        }
-    }
-
-    private fun changeName(newText: String){
-        GlobalEvent.sendEvent(GlobalEventType.ChangeEditorFormulaList)
-        updateInfo { it.copy(name = newText) }
-    }
-
-    private fun changeDescription(newText: String){
-        updateInfo { it.copy(description = newText) }
-    }
+    // UPDATE STATES
 
     private inline fun updateInfo(
         update: (EditFormulaStateContent.Info) -> EditFormulaStateContent.Info
@@ -333,53 +442,16 @@ class EditFormulaViewModel @Inject constructor(
         }
     }
 
-    private fun loadData() = safeBackgroundLaunch(
-        code = {
-            val data = if (formulaID == CreateFormulaUseCase.NEW_FORMULA){
-                createFormulaUseCase.execute().also {
-                    GlobalEvent.sendEvent(GlobalEventType.ChangeEditorFormulaList)
-                    formulaID = it.info.id
-                }
-            } else {
-                getEditFormulaDataUseCase.execute(formulaID)
-            }
-            _info.value = EditFormulaStateContent.Info(
-                name = data.info.name,
-                description = data.info.description,
-                isNote = data.info.isNote
-            )
-            _inputs.value = EditFormulaStateContent.Inputs(data.inputList)
-            _results.value = EditFormulaStateContent.Results(data.resultList)
-            _code.value = EditFormulaStateContent.Code(data.info.code)
+    // OTHERS
 
-            _screenState.value = EditFormulaState(
-                content = _info.value
-            )
-        },
-        errorHandling = ::setError
-    )
-
-    private fun changeTab(index: Int){
-        val content = when(index){
-            0 -> _info.value
-            1 -> _inputs.value
-            2 -> _results.value
-            3 -> _code.value
-            else -> EditFormulaStateContent.Nothing
-        }
-
-        _screenState.update { state ->
-            state.copy(
-                selectedTab = index,
-                content = content
-            )
-        }
+    private fun setGlobalEvent(){
+        GlobalEvent.sendEvent(GlobalEventType.ChangeEditorFormulaList)
     }
 
     private fun setError(exception: Exception){
         _screenState.update { state ->
             state.copy(
-                dialog = EditFormulaDialog.ErrorDialog(
+                dialog = EditFormulaDialogContent.ErrorDialogContent(
                     ErrorData(detailStr = exception.message)
                 )
             )

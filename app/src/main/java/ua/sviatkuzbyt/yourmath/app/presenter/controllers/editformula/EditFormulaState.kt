@@ -15,7 +15,7 @@ data class EditFormulaState(
     val selectedTab: Int = 0,
     val content: EditFormulaStateContent = EditFormulaStateContent.Nothing,
     val isAddButton: Boolean = false,
-    val dialog: EditFormulaDialog = EditFormulaDialog.Nothing,
+    val dialog: EditFormulaDialogContent = EditFormulaDialogContent.Nothing,
     val isNavigateBack: Boolean = false
 )
 
@@ -31,9 +31,8 @@ sealed class EditFormulaStateContent {
     data object Nothing: EditFormulaStateContent()
 }
 
-sealed class EditFormulaDialog {
-    data class ErrorDialog(val data: ErrorData): EditFormulaDialog()
-    data class DeleteFormula(val index: Int, val list: EditList): EditFormulaDialog()
-    data object NoAllData: EditFormulaDialog()
-    data object Nothing: EditFormulaDialog()
+sealed class EditFormulaDialogContent {
+    data class ErrorDialogContent(val data: ErrorData): EditFormulaDialogContent()
+    data class DeleteFormulaContent(val index: Int): EditFormulaDialogContent()
+    data object Nothing: EditFormulaDialogContent()
 }

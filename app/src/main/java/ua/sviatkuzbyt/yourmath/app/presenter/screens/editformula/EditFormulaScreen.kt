@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ScrollableTabRow
@@ -22,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -31,11 +33,12 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import kotlinx.coroutines.launch
 import ua.sviatkuzbyt.yourmath.app.R
-import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaDialog
+import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaDialogContent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaState
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormulaStateContent
-import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditList
+import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.FormulaListText
+import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.FormulaText
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.LocalNavController
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.NavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
@@ -61,6 +64,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppTheme
 fun EditFormulaScreen(viewModel: EditFormulaViewModel = hiltViewModel()){
     val screenState by viewModel.screenState.collectAsState()
     val navController = LocalNavController.current
+
     EditFormulaContent(
         screenState = screenState,
         onIntent = viewModel::onIntent,
@@ -68,7 +72,6 @@ fun EditFormulaScreen(viewModel: EditFormulaViewModel = hiltViewModel()){
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun EditFormulaContent(
     screenState: EditFormulaState,
@@ -77,289 +80,220 @@ fun EditFormulaContent(
 ){
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current
     val focusManager = LocalFocusManager.current
-    val lifecycleOwner = LocalLifecycleOwner.current
 
-    if (screenState.isNavigateBack){
-        onNavigate(NavigateIntent.NavigateBack)
-    }
-
-    DisposableEffect(lifecycleOwner) {
-        val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_STOP) {
-                focusManager.clearFocus(true)
-            }
-        }
-        lifecycleOwner.lifecycle.addObserver(observer)
-
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
-        }
-    }
-
-    BackHandler {
+    fun navigateBack(){
         focusManager.clearFocus(true)
         onIntent(EditFormulaIntent.Exit)
     }
 
     Box(Modifier.fillMaxSize()){
         Column(Modifier.fillMaxSize()) {
-            ScreenTopBar(
-                tittle = stringResource(R.string.edit_formula),
+            EditFormulaTopBar(listState, ::navigateBack)
+
+            EditFormulaList(
                 listState = listState,
-                onBack = {
-                    focusManager.clearFocus(true)
-                    onIntent(EditFormulaIntent.Exit)
+                tabs = screenState.tabs,
+                selectedTab = screenState.selectedTab,
+                content = screenState.content,
+                onSelectTab = { tabIndex ->
+                    scope.launch { listState.animateScrollToItem(0) }.invokeOnCompletion {
+                        onIntent(EditFormulaIntent.SelectTab(tabIndex))
+                    }
                 },
-                toolButtons = {
-                    ButtonIconTopBar(
-                        imageRes = R.drawable.ic_auto_save,
-                        contentDescriptionRes = R.string.change_auto_save,
-                        onClick = { showToast(R.string.change_auto_save, context) }
-                    )
+                onChangeText = { type, text ->
+                    onIntent(EditFormulaIntent.ChangeFormulaText(type, text))
+                },
+                onChangeIsNote = { isNote ->
+                    onIntent(EditFormulaIntent.ChangeIsNote(isNote))
+                },
+                onSaveText = { type ->
+                    onIntent(EditFormulaIntent.SaveFormulaText(type))
+                },
+                onListChangeText = { type, index, text ->
+                    onIntent(EditFormulaIntent.ChangeListText(type, index, text))
+                },
+                onListSaveText = { type, index ->
+                    onIntent(EditFormulaIntent.SaveListText(type, index))
+                },
+                onListMove = { from, to ->
+                    onIntent(EditFormulaIntent.MoveItem(from, to))
+                },
+                onListDelete = { index ->
+                    onIntent(EditFormulaIntent.OpenDialog(
+                        EditFormulaDialogContent.DeleteFormulaContent(index)
+                    ))
                 }
             )
-
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                state = listState
-            ) {
-                item { Tittle() }
-
-                stickyHeader {
-                    ScreenTabs(
-                        tabs = screenState.tabs,
-                        selectedTab = screenState.selectedTab,
-                        onSelectTab = { index ->
-                            scope.launch {
-                                listState.animateScrollToItem(0)
-                            }.invokeOnCompletion {
-                                onIntent(EditFormulaIntent.SelectTab(index))
-                            }
-                        }
-                    )
-                }
-
-                when(screenState.content){
-                    is EditFormulaStateContent.Info -> item("info") {
-                        InfoItems(
-                            info = screenState.content,
-                            onNameChange = { name ->
-                                onIntent(EditFormulaIntent.ChangeName(name))
-                            },
-                            onDescriptionChange = { description ->
-                                onIntent(EditFormulaIntent.ChangeDescription(description))
-                            },
-                            onNameSave = {
-                                onIntent(EditFormulaIntent.SaveName)
-                            },
-                            onDescriptionSave = {
-                                onIntent(EditFormulaIntent.SaveDescription)
-                            },
-                            onChangeIsNote = { isNote ->
-                                onIntent(EditFormulaIntent.ChangeIsNote(isNote))
-                            },
-                        )
-                    }
-                    is EditFormulaStateContent.Inputs -> {
-                        if (screenState.content.list.isEmpty()){
-                            item(key = "empty") {
-                                EmptyScreenInListFullSize(
-                                    EmptyScreenInfo.noEditRecords()
-                                )
-                            }
-                        } else{
-                            itemsIndexed(
-                                items = screenState.content.list,
-                                key = {_, input -> "input${input.id}"}
-                            ){ index, input ->
-                                InputItem(
-                                    input = input,
-                                    onLabelChange = { newText ->
-                                        onIntent(
-                                            EditFormulaIntent.ChangeItemLabel(
-                                                index,
-                                                newText,
-                                                EditList.Inputs
-                                            )
-                                        )
-                                    },
-                                    onCodeLabelChange = { newText ->
-                                        onIntent(
-                                            EditFormulaIntent.ChangeItemCodeLabel(
-                                                index,
-                                                newText,
-                                                EditList.Inputs
-                                            )
-                                        )
-                                    },
-                                    onDefaultDataChange = { newText ->
-                                        onIntent(
-                                            EditFormulaIntent.ChangeInputDefaultData(
-                                                index,
-                                                newText
-                                            )
-                                        )
-                                    },
-                                    onDelete = {
-                                        onIntent(
-                                            EditFormulaIntent.OpenDialog(
-                                                EditFormulaDialog.DeleteFormula(index, EditList.Inputs)
-                                            )
-                                        )
-                                    },
-                                    onMoveDown = {
-                                        onIntent(
-                                            EditFormulaIntent.MoveItem(
-                                                index,
-                                                index + 1,
-                                                EditList.Inputs
-                                            )
-                                        )
-                                    },
-                                    onMoveUp = {
-                                        onIntent(
-                                            EditFormulaIntent.MoveItem(
-                                                index,
-                                                index - 1,
-                                                EditList.Inputs
-                                            )
-                                        )
-                                    },
-                                    onLabelSave = {
-                                        onIntent(EditFormulaIntent.SaveItemLabel(index, EditList.Inputs))
-                                    },
-                                    onCodeLabelSave = {
-                                        onIntent(EditFormulaIntent.SaveItemCodeLabel(index, EditList.Inputs))
-                                    },
-                                    onDefaultDataSave = {
-                                        onIntent(EditFormulaIntent.SaveInputDefaultData(index))
-                                    }
-                                )
-                            }
-
-                            emptySpaceOfButton()
-                        }
-                    }
-
-                    is EditFormulaStateContent.Code -> {
-                        item {
-                            CodeItem(
-                                text = screenState.content.text,
-                                onTextChange = { onIntent(EditFormulaIntent.ChangeCodeText(it)) },
-                                onSaveText = {
-                                    onIntent(EditFormulaIntent.SaveCodeText)
-                                }
-                            )
-                        }
-                    }
-                    is EditFormulaStateContent.Results -> {
-                        if (screenState.content.list.isEmpty()){
-                            item(key = "empty") {
-                                EmptyScreenInListFullSize(
-                                    EmptyScreenInfo.noEditRecords()
-                                )
-                            }
-                        } else{
-                            itemsIndexed(
-                                items = screenState.content.list,
-                                key = {_, result -> "result${result.id}"}
-                            ){ index, result ->
-                                ResultItem(
-                                    result = result,
-                                    onLabelChange = { newText ->
-                                        onIntent(
-                                            EditFormulaIntent.ChangeItemLabel(
-                                                index,
-                                                newText,
-                                                EditList.Results
-                                            )
-                                        )
-                                    },
-                                    onCodeLabelChange = { newText ->
-                                        onIntent(
-                                            EditFormulaIntent.ChangeItemCodeLabel(
-                                                index,
-                                                newText,
-                                                EditList.Results
-                                            )
-                                        )
-                                    },
-                                    onDelete = {
-                                        onIntent(
-                                            EditFormulaIntent.OpenDialog(
-                                                EditFormulaDialog.DeleteFormula(index, EditList.Results)
-                                            )
-                                        )
-                                    },
-                                    onMoveDown = {
-                                        onIntent(
-                                            EditFormulaIntent.MoveItem(
-                                                index,
-                                                index + 1,
-                                                EditList.Results
-                                            )
-                                        )
-                                    },
-                                    onMoveUp = {
-                                        onIntent(
-                                            EditFormulaIntent.MoveItem(
-                                                index,
-                                                index - 1,
-                                                EditList.Results
-                                            )
-                                        )
-                                    },
-                                    onLabelSave = {
-                                        onIntent(EditFormulaIntent.SaveItemLabel(index, EditList.Results))
-                                    },
-                                    onCodeLabelSave = {
-                                        onIntent(EditFormulaIntent.SaveItemCodeLabel(index, EditList.Results))
-                                    }
-                                )
-                            }
-                            emptySpaceOfButton()
-                        }
-                    }
-                    EditFormulaStateContent.Nothing -> Unit
-                }
-            }
         }
+
         AddDataButton(
             isShow =
-            screenState.content is EditFormulaStateContent.Inputs ||
-                    screenState.content is EditFormulaStateContent.Results,
+                screenState.content is EditFormulaStateContent.Inputs ||
+                screenState.content is EditFormulaStateContent.Results,
             onClick = { onIntent(EditFormulaIntent.AddDataItem) }
         )
     }
 
-    when(screenState.dialog){
-        is EditFormulaDialog.DeleteFormula -> DialogDeleteItem(
-            onClose = { onIntent(EditFormulaIntent.CloseDialog) },
-            onDelete = {
-                onIntent(EditFormulaIntent.DeleteItem(screenState.dialog.index, screenState.dialog.list))
-            }
-        )
-        is EditFormulaDialog.ErrorDialog -> DialogError(
-            data = screenState.dialog.data,
-            onCloseClick = { onIntent(EditFormulaIntent.CloseDialog) },
-        )
-        EditFormulaDialog.NoAllData -> {}
-        EditFormulaDialog.Nothing -> {}
+    EditFormulaDialog(
+        dialog = screenState.dialog,
+        onClose = { onIntent(EditFormulaIntent.CloseDialog) },
+        onListDelete = { index -> onIntent(EditFormulaIntent.DeleteItem(index)) }
+    )
+
+    if (screenState.isNavigateBack){
+        onNavigate(NavigateIntent.NavigateBack)
     }
+
+    ClearFocusOnStop(focusManager)
+    BackHandler { navigateBack() }
 }
 
 @Composable
-private fun Tittle(){
-    TittleText(
-        textRes = R.string.edit_formula,
-        padding = PaddingValues(
-            start = AppSizes.dp16,
-            end = AppSizes.dp16,
-            bottom = AppSizes.dp16
-        )
+private fun EditFormulaTopBar(
+    listState: LazyListState,
+    onBack: () -> Unit
+){
+    val context = LocalContext.current
+    ScreenTopBar(
+        tittle = stringResource(R.string.edit_formula),
+        listState = listState,
+        onBack = onBack,
+        toolButtons = {
+            ButtonIconTopBar(
+                imageRes = R.drawable.ic_auto_save,
+                contentDescriptionRes = R.string.change_auto_save,
+                onClick = { showToast(R.string.change_auto_save, context) }
+            )
+        }
     )
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun EditFormulaList(
+    listState: LazyListState,
+    tabs: List<Int>,
+    selectedTab: Int,
+    content: EditFormulaStateContent,
+    onSelectTab: (Int) -> Unit,
+    onChangeText: (FormulaText, String) -> Unit,
+    onChangeIsNote: (Boolean) -> Unit,
+    onSaveText: (FormulaText) -> Unit,
+    onListChangeText: (FormulaListText, Int, String) -> Unit,
+    onListSaveText: (FormulaListText, Int) -> Unit,
+    onListMove: (Int, Int) -> Unit,
+    onListDelete: (Int) -> Unit
+){
+    LazyColumn(modifier = Modifier.fillMaxSize(), state = listState) {
+        item { Tittle() }
+
+        stickyHeader {
+            ScreenTabs(
+                tabs = tabs,
+                selectedTab = selectedTab,
+                onSelectTab = onSelectTab
+            )
+        }
+
+        when(content){
+            is EditFormulaStateContent.Info -> item("info") {
+                InfoItems(
+                    info = content,
+                    onNameChange = { text -> onChangeText(FormulaText.Name, text) },
+                    onDescriptionChange = { text -> onChangeText(FormulaText.Description, text) },
+                    onNameSave = { onSaveText(FormulaText.Name) },
+                    onDescriptionSave = { onSaveText(FormulaText.Description) },
+                    onChangeIsNote = onChangeIsNote
+                )
+            }
+
+            is EditFormulaStateContent.Inputs -> {
+                if (content.list.isEmpty()){
+                    item(key = "empty") {
+                        EmptyScreenInListFullSize(EmptyScreenInfo.noEditRecords())
+                    }
+                } else {
+                    itemsIndexed(
+                        items = content.list,
+                        key = { _, input -> "input${input.id}" }
+                    ){ index, input ->
+                        InputItem(
+                            input = input,
+                            onLabelChange = { text ->
+                                onListChangeText(FormulaListText.InputLabel, index, text)
+                            },
+                            onCodeLabelChange = { text ->
+                                onListChangeText(FormulaListText.InputCodeLabel, index, text)
+                            },
+                            onDefaultDataChange = { text ->
+                                onListChangeText(FormulaListText.InputDefaultData, index, text)
+                            },
+                            onLabelSave = {
+                                onListSaveText(FormulaListText.InputLabel, index)
+                            },
+                            onCodeLabelSave = {
+                                onListSaveText(FormulaListText.InputCodeLabel, index)
+                            },
+                            onDefaultDataSave = {
+                                onListSaveText(FormulaListText.InputDefaultData, index)
+                            },
+                            onDelete = { onListDelete(index) },
+                            onMoveDown = { onListMove(index, index + 1) },
+                            onMoveUp = { onListMove(index, index - 1) }
+                        )
+                    }
+
+                    emptySpaceOfButton()
+                }
+            }
+
+            is EditFormulaStateContent.Results -> {
+                if (content.list.isEmpty()){
+                    item(key = "empty") {
+                        EmptyScreenInListFullSize(EmptyScreenInfo.noEditRecords())
+                    }
+                } else{
+                    itemsIndexed(
+                        items = content.list,
+                        key = {_, result -> "result${result.id}"}
+                    ){ index, result ->
+                        ResultItem(
+                            result = result,
+                            onLabelChange = { text ->
+                                onListChangeText(FormulaListText.ResultLabel, index, text)
+                            },
+                            onCodeLabelChange = { text ->
+                                onListChangeText(FormulaListText.ResultCodeLabel, index, text)
+                            },
+                            onLabelSave = {
+                                onListSaveText(FormulaListText.ResultLabel, index)
+                            },
+                            onCodeLabelSave = {
+                                onListSaveText(FormulaListText.ResultCodeLabel, index)
+                            },
+                            onDelete = { onListDelete(index) },
+                            onMoveDown = { onListMove(index, index + 1) },
+                            onMoveUp = { onListMove(index, index - 1) }
+                        )
+                    }
+                    emptySpaceOfButton()
+                }
+            }
+
+            is EditFormulaStateContent.Code -> {
+                item {
+                    CodeItem(
+                        text = content.text,
+                        onTextChange = { text -> onChangeText(FormulaText.Code, text) },
+                        onSaveText = { onSaveText(FormulaText.Code) }
+                    )
+                }
+            }
+
+            EditFormulaStateContent.Nothing -> Unit
+        }
+    }
 }
 
 @Composable
@@ -378,7 +312,55 @@ private fun BoxScope.AddDataButton(
             onClick = onClick
         )
     }
+}
 
+@Composable
+private fun EditFormulaDialog(
+    dialog: EditFormulaDialogContent,
+    onClose: () -> Unit,
+    onListDelete: (Int) -> Unit
+){
+    when(dialog){
+        is EditFormulaDialogContent.DeleteFormulaContent -> DialogDeleteItem(
+            onClose = onClose,
+            onDelete = { onListDelete(dialog.index) }
+        )
+        is EditFormulaDialogContent.ErrorDialogContent -> DialogError(
+            data = dialog.data,
+            onCloseClick = onClose,
+        )
+        EditFormulaDialogContent.Nothing -> Unit
+    }
+}
+
+@Composable
+private fun ClearFocusOnStop(focusManager: FocusManager){
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_STOP) {
+                focusManager.clearFocus(true)
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+}
+
+@Composable
+private fun Tittle(){
+    TittleText(
+        textRes = R.string.edit_formula,
+        padding = PaddingValues(
+            start = AppSizes.dp16,
+            end = AppSizes.dp16,
+            bottom = AppSizes.dp16
+        )
+    )
 }
 
 @Composable

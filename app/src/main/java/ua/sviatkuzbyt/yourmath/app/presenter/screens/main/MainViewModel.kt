@@ -30,9 +30,7 @@ class MainViewModel @Inject constructor(
     private val _screenState = MutableStateFlow(MainState())
     val screenState: StateFlow<MainState> = _screenState
 
-    init {
-        loadFormulas()
-    }
+    init { loadFormulas() }
 
     private fun loadFormulas(){
         safeBackgroundLaunch(

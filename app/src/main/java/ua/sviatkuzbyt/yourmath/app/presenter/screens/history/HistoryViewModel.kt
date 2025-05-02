@@ -38,9 +38,7 @@ class HistoryViewModel @Inject constructor(
     private val filterList = mutableListOf<FormulaFilterItem>()
     private var isLoadMore = true
 
-    init {
-        loadData()
-    }
+    init { loadData() }
 
     fun onIntent(intent: HistoryIntent){
         when(intent){

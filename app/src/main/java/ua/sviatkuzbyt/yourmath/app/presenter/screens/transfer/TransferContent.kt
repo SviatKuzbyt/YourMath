@@ -35,11 +35,7 @@ fun TransferContent(
     screenState: TransferState,
     onIntent: (TransferIntent) -> Unit
 ){
-    Column(
-        Modifier
-            .fillMaxSize()
-            .padding(AppSizes.dp16)
-    ) {
+    Column(Modifier.fillMaxSize().padding(AppSizes.dp16)) {
         Icon(
             imageVector = ImageVector.vectorResource(screenState.icon),
             contentDescription = stringResource(screenState.tittle),
@@ -60,34 +56,10 @@ fun TransferContent(
             )
 
             screenState.isExportNotes?.let { isExportNotes ->
-                Spacer(Modifier.size(AppSizes.dp16))
-                Container{
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable(
-                                onClick = { onIntent(TransferIntent.SetExportNotes(!isExportNotes)) },
-                                indication = null,
-                                interactionSource = null
-                            )
-                            .padding(vertical = AppSizes.dp8)
-                            .padding(start = AppSizes.dp8, end = AppSizes.dp16),
-                        verticalAlignment = Alignment.CenterVertically
-                    )  {
-
-                        CheckboxBlue(
-                            checked = isExportNotes,
-                            onCheckedChange = { onIntent(TransferIntent.SetExportNotes(it)) }
-                        )
-
-                        Spacer(Modifier.size(AppSizes.dp8))
-
-                        Text(
-                            text = stringResource(R.string.export_notes),
-                            style = AppTheme.types.basic
-                        )
-                    }
-                }
+                IsNoteCheckbox(
+                    isNote = isExportNotes,
+                    onChangeNote = { onIntent(TransferIntent.SetExportNotes(it)) }
+                )
             }
         }
 
@@ -106,6 +78,41 @@ fun TransferContent(
                 textRes = R.string.cancel,
                 modifier = Modifier.fillMaxWidth().padding(top = AppSizes.dp8),
                 onClick = { onIntent(TransferIntent.Exit) }
+            )
+        }
+    }
+}
+
+@Composable
+private fun IsNoteCheckbox(
+    isNote: Boolean,
+    onChangeNote: (Boolean) -> Unit
+){
+    Spacer(Modifier.size(AppSizes.dp16))
+    Container{
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(
+                    onClick = { onChangeNote(!isNote) },
+                    indication = null,
+                    interactionSource = null
+                )
+                .padding(vertical = AppSizes.dp8)
+                .padding(start = AppSizes.dp8, end = AppSizes.dp16),
+            verticalAlignment = Alignment.CenterVertically
+        )  {
+
+            CheckboxBlue(
+                checked = isNote,
+                onCheckedChange = onChangeNote
+            )
+
+            Spacer(Modifier.size(AppSizes.dp8))
+
+            Text(
+                text = stringResource(R.string.export_notes),
+                style = AppTheme.types.basic
             )
         }
     }

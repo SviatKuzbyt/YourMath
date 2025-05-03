@@ -1,43 +1,22 @@
 package ua.sviatkuzbyt.yourmath.app.presenter.screens.formula
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
-import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.formula.FormulaIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.formula.FormulaState
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.LocalNavController
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.NavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.AnimateListItem
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.formula.InputDataContainer
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.SubTittleText
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.TittleText
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.dialog.ShowDialogError
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.formula.FormulaContentList
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.formula.FormulaTopBar
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.formula.MathButton
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.formula.ResultDataContainer
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppTheme
-import ua.sviatkuzbyt.yourmath.domain.structures.formula.FormulaInput
-import ua.sviatkuzbyt.yourmath.domain.structures.formula.FormulaResult
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.formula.screen.FormulaContentList
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.formula.screen.FormulaTopBar
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.formula.screen.MathButton
 
 @Composable
 fun FormulaScreen(viewModel: FormulaViewModel) {

@@ -28,8 +28,8 @@ import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.showToast
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ScreenTopBar
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button.AddButton
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.dialog.DialogError
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editor.DialogDeleteAll
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editor.DialogDeleteFormula
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editor.dialog.DialogDeleteAll
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editor.dialog.DialogDeleteFormula
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editor.EditorContentList
 import ua.sviatkuzbyt.yourmath.domain.usecases.editformula.CreateFormulaUseCase
 

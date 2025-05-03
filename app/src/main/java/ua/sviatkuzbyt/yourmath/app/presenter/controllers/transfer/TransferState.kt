@@ -34,10 +34,10 @@ data class TransferState(
             isExitButton = false
         )
 
-        fun getError() = TransferState(
+        fun getError(@StringRes tittle: Int, @StringRes content: Int) = TransferState(
             icon = R.drawable.ic_no_results,
-            tittle = R.string.unknown_error,
-            content = R.string.unknown_error_detail,
+            tittle = tittle,
+            content = content,
             isExportNotes = null,
             isContinueButton = false,
             isCanselButton = false,

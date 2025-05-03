@@ -10,8 +10,8 @@ import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.MainIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.MainListContent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.NavigateIntent
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.AnimateListItem
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.EmptyScreenInListFullSize
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.list.AnimateListItem
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.list.EmptyScreenInListFullSize
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.SubTittleText
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
 
@@ -29,16 +29,14 @@ fun MainListContent(
             is MainListContent.FormulaList -> {
                 if (listContent.formulas.pins.isNotEmpty()) {
                     item (key = "s1") {
-                        AnimateListItem {
-                            SubTittleText(R.string.pinned)
-                        }
+                        AnimateListItem { SubTittleText(R.string.pinned) }
                     }
                     items(listContent.formulas.pins, key = { it.id }) { formula ->
                         AnimateListItem {
                             FormulaPinnedItemList(
                                 text = formula.name,
                                 onClick = {
-                                    onNavigate(NavigateIntent.OpenFormulaScreen(formulaID = formula.id))
+                                    onNavigate(NavigateIntent.OpenFormulaScreen(formula.id))
                                 },
                                 unpinOnClick = {
                                     onIntent(MainIntent.UnPinFormula(formula))
@@ -58,7 +56,7 @@ fun MainListContent(
                             FormulaNoPinItemList(
                                 text = formula.name,
                                 onClick = {
-                                    onNavigate(NavigateIntent.OpenFormulaScreen(formulaID = formula.id))
+                                    onNavigate(NavigateIntent.OpenFormulaScreen(formula.id))
                                 },
                                 pinOnClick = {
                                     onIntent(MainIntent.PinFormula(formula))

@@ -12,11 +12,13 @@ import androidx.compose.ui.res.stringResource
 import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorDialogContent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorListContent
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.AnimateListItem
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.EmptyScreenInListInSize
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.emptySpaceOfButton
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.list.AnimateListItem
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.list.EmptyScreenInListInSize
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.list.emptySpaceOfButton
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.SubTittleText
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.TittleText
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editor.items.EditFormulaItem
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editor.items.ActionsItems
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
 import ua.sviatkuzbyt.yourmath.domain.structures.editor.FormulaNameItem
 

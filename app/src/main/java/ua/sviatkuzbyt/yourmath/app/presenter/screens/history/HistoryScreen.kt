@@ -18,10 +18,10 @@ import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.GlobalEvent
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.GlobalEventType
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.dialog.DialogError
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.ClearDialog
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.FilterSheet
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.HistoryContentList
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.HistoryTopBar
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.above.ClearDialog
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.above.FilterSheet
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.screen.HistoryContentList
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.screen.HistoryTopBar
 
 @Composable
 fun HistoryScreen(viewModel: HistoryViewModel = hiltViewModel()){

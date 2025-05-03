@@ -66,11 +66,9 @@
     <string name="no_items_to_delete">No items to delete</string>
     <string name="import_finished">Formulas successfully imported from a file and added to existing ones (at the end of the list)</string>
     <string name="edit_formula">Edit formula</string>
-    <string name="save">Save</string>
     <string name="info">Info</string>
     <string name="code">Code</string>
     <string name="add_item">Add item</string>
-    <string name="save_changes">Save changes</string>
     <string name="name">Name</string>
     <string name="enter_name">Enter name</string>
     <string name="description">Description</string>
@@ -87,4 +85,8 @@
     <string name="note">note</string>
     <string name="mark_as_note">Mark as a note (hide the formula on the main screen and history screen)</string>
     <string name="export_notes">Export notes too</string>
+    <string name="export_error">Export error</string>
+    <string name="export_error_details">Couldn\'t export formulas to a file</string>
+    <string name="import_error">Import error</string>
+    <string name="import_error_details">Could not import formulas from a file</string>
 </resources>

@@ -21,9 +21,9 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DialogBasic(
+    modifier: Modifier = Modifier,
     tittle: String,
     content: String,
-    modifier: Modifier = Modifier,
     onClose: () -> Unit = {},
     buttons: @Composable RowScope.() -> Unit
 ) {

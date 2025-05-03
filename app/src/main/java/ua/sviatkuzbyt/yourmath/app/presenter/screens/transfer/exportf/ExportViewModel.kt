@@ -40,7 +40,10 @@ class ExportViewModel @Inject constructor (
                 )
             }
         },
-        errorHandling = { _screenState.value = TransferState.getError() }
+        errorHandling = { _screenState.value = TransferState.getError(
+            tittle = R.string.export_error,
+            content = R.string.export_error_details
+        ) }
     )
 
     fun setIsExportNotes(isExport: Boolean){

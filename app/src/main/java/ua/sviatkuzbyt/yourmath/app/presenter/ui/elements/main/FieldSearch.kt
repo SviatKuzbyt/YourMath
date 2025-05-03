@@ -1,7 +1,6 @@
 package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.main
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -30,7 +29,6 @@ fun FieldSearch(
     val localKeyboard = LocalSoftwareKeyboardController.current
 
     OutlinedTextField(
-
         value = text,
         onValueChange = onTextChange,
         singleLine = true,

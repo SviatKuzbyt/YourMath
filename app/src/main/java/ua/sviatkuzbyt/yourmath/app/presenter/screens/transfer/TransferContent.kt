@@ -25,7 +25,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.controllers.transfer.TransferState
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.CheckboxBlue
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.Container
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button.ButtonLarge
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.dialog.DialogButton
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button.DialogButton
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.TittleText
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppTheme

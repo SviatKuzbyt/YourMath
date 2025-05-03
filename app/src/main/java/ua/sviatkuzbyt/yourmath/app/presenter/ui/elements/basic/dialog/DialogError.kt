@@ -4,19 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.ErrorData
-
-@Composable
-fun ShowDialogError(
-    errorData: ErrorData?,
-    onCloseClick: () -> Unit
-){
-    errorData?.let { error ->
-        DialogError(
-            data = error,
-            onCloseClick = onCloseClick
-        )
-    }
-}
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button.DialogButton
 
 @Composable
 fun DialogError(
@@ -40,4 +28,17 @@ fun DialogError(
             )
         }
     )
+}
+
+@Composable
+fun ShowDialogError(
+    errorData: ErrorData?,
+    onCloseClick: () -> Unit
+){
+    errorData?.let { error ->
+        DialogError(
+            data = error,
+            onCloseClick = onCloseClick
+        )
+    }
 }

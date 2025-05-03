@@ -16,7 +16,9 @@
         <activity
             android:name=".core.main.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.YourMath">
+            android:theme="@style/Theme.YourMath"
+            android:screenOrientation="portrait"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

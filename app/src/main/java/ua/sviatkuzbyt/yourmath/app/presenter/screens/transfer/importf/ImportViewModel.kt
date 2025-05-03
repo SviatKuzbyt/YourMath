@@ -41,6 +41,9 @@ class ImportViewModel @Inject constructor (
                 )
             }
         },
-        errorHandling = { _screenState.value = TransferState.getError() }
+        errorHandling = { _screenState.value = TransferState.getError(
+            tittle = R.string.import_error,
+            content = R.string.import_error_details
+        ) }
     )
 }

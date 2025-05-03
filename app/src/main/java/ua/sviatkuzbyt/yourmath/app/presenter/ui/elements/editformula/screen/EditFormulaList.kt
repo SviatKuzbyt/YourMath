@@ -13,14 +13,13 @@ import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormula
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.FormulaListText
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.FormulaText
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.EmptyScreenInfo
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.EmptyScreenInListFullSize
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ScreenTabs
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.emptySpaceOfButton
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.list.EmptyScreenInListFullSize
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.list.emptySpaceOfButton
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.TittleText
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.tabs.CodeItem
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.tabs.InfoItems
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.tabs.InputItem
-import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.tabs.ResultItem
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.items.CodeItem
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.items.InfoItems
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.items.InputItem
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.items.ResultItem
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
 
 @OptIn(ExperimentalFoundationApi::class)

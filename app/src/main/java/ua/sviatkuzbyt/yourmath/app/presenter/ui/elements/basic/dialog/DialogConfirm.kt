@@ -2,6 +2,7 @@ package ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.dialog
 
 import androidx.compose.runtime.Composable
 import ua.sviatkuzbyt.yourmath.app.R
+import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button.DialogButton
 
 @Composable
 fun DialogConfirm(

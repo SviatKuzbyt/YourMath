@@ -38,13 +38,13 @@ class HistoryRepositoryImpl @Inject constructor(
     }
 
     override fun getFormulaInput(historyID: Long, formulaID: Long): List<FormulaInput> {
-        return historyDao.getInputData(formulaID, historyID).map{ data ->
+        return historyDao.getInputData(formulaID, historyID).map { data ->
             mapInputDataFormulaToDomain(data)
         }
     }
 
     override fun getFormulaResult(historyID: Long, formulaID: Long): List<FormulaResult> {
-        return historyDao.getOutputData(formulaID, historyID).map{ data ->
+        return historyDao.getOutputData(formulaID, historyID).map { data ->
             mapResultDataFormulaToDomain(data)
         }
     }

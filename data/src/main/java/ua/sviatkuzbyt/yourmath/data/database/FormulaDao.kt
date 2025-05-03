@@ -16,19 +16,29 @@ interface FormulaDao {
     @Query("UPDATE Formula SET isPin=:isPin WHERE formulaID=:id")
     fun changePinFormula(id: Long, isPin: Boolean)
 
-    @Query("SELECT formulaID, name, isPin, position FROM Formula WHERE isNote=0 AND name LIKE :searchText ORDER BY position")
+    @Query(
+        "SELECT formulaID, name, isPin, position " +
+        "FROM Formula " +
+        "WHERE isNote=0 AND name LIKE :searchText ORDER BY position"
+    )
     fun searchFormulas(searchText: String): List<FormulaItemWithPinnedData>
 
     @Query("SELECT name, description FROM Formula WHERE formulaID = :formulaID LIMIT 1")
     fun getFormulaInfo(formulaID: Long): FormulaInfoData
 
-    @Query("SELECT inputDataID, label, codeLabel, defaultData FROM InputData WHERE formulaID = :formulaID ORDER BY position")
+    @Query(
+        "SELECT inputDataID, label, codeLabel, defaultData " +
+        "FROM InputData WHERE formulaID = :formulaID ORDER BY position"
+    )
     fun getFormulaInputData(formulaID: Long): List<FormulaInputData>
 
     @Query("SELECT code FROM Formula WHERE formulaID = :formulaID LIMIT 1")
     fun getFormulaCode(formulaID: Long): String
 
-    @Query("SELECT outputDataID, label, codeLabel FROM OutputData WHERE formulaID = :formulaID ORDER BY position")
+    @Query(
+        "SELECT outputDataID, label, codeLabel " +
+        "FROM OutputData " +
+        "WHERE formulaID = :formulaID ORDER BY position")
     fun getOutputData(formulaID: Long): List<FormulaResultData>
 
     @Query("SELECT formulaID, name FROM Formula WHERE isNote=0 ORDER BY position")

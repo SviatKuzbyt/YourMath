@@ -6,20 +6,24 @@ import androidx.room.Query
 import ua.sviatkuzbyt.yourmath.data.database.entity.FormulaEntity
 import ua.sviatkuzbyt.yourmath.data.database.entity.InputDataEntity
 import ua.sviatkuzbyt.yourmath.data.database.entity.OutputDataEntity
-import ua.sviatkuzbyt.yourmath.data.structures.editformula.EditFormulaInfoData
-import ua.sviatkuzbyt.yourmath.data.structures.editformula.EditInputData
-import ua.sviatkuzbyt.yourmath.data.structures.editformula.EditResultData
-import ua.sviatkuzbyt.yourmath.data.structures.editor.FormulaNameItemData
-import ua.sviatkuzbyt.yourmath.data.structures.transfer.FileDataInputData
-import ua.sviatkuzbyt.yourmath.data.structures.transfer.FileDataOutputData
-import ua.sviatkuzbyt.yourmath.data.structures.transfer.FormulaToFormatData
+import ua.sviatkuzbyt.yourmath.data.structures.edit.editformula.EditFormulaInfoData
+import ua.sviatkuzbyt.yourmath.data.structures.edit.editformula.EditInputData
+import ua.sviatkuzbyt.yourmath.data.structures.edit.editformula.EditResultData
+import ua.sviatkuzbyt.yourmath.data.structures.edit.FormulaNameItemData
+import ua.sviatkuzbyt.yourmath.data.structures.edit.export.ExportDataInputData
+import ua.sviatkuzbyt.yourmath.data.structures.edit.export.ExportDataOutputData
+import ua.sviatkuzbyt.yourmath.data.structures.edit.export.FormulaToFormatData
 
 @Dao
 interface EditFormulaDao {
     @Query("SELECT formulaID, name, isNote FROM Formula ORDER BY position")
     fun getFormulas(): List<FormulaNameItemData>
 
-    @Query("SELECT formulaID, name, isNote FROM Formula ORDER BY position LIMIT ${Int.MAX_VALUE} OFFSET :offset")
+    @Query(
+        "SELECT formulaID, name, isNote " +
+        "FROM Formula ORDER BY position " +
+        "LIMIT ${Int.MAX_VALUE} OFFSET :offset"
+    )
     fun getFormulas(offset: Int): List<FormulaNameItemData>
 
     @Query("UPDATE Formula SET position = position - 1 WHERE position > :deletedPosition")
@@ -34,14 +38,23 @@ interface EditFormulaDao {
     @Query("UPDATE Formula SET position=:position WHERE formulaID=:formulaID")
     fun updateFormulaPosition(formulaID: Long, position: Int)
 
-    @Query("SELECT formulaID, name, description, code, isNote FROM Formula WHERE isNote=0 ORDER BY position")
+    @Query(
+        "SELECT formulaID, name, description, code, isNote " +
+        "FROM Formula WHERE isNote=0 ORDER BY position"
+    )
     fun getFormulasToExport(): List<FormulaToFormatData>
 
-    @Query("SELECT label, codeLabel, defaultData, position FROM InputData WHERE formulaID = :formulaID ORDER BY position")
-    fun getInputDataToExport(formulaID: Long): List<FileDataInputData>
+    @Query(
+        "SELECT label, codeLabel, defaultData, position " +
+        "FROM InputData WHERE formulaID = :formulaID ORDER BY position"
+    )
+    fun getInputDataToExport(formulaID: Long): List<ExportDataInputData>
 
-    @Query("SELECT label, codeLabel, position FROM OutputData WHERE formulaID = :formulaID ORDER BY position")
-    fun getOutputDataToExport(formulaID: Long): List<FileDataOutputData>
+    @Query(
+        "SELECT label, codeLabel, position " +
+        "FROM OutputData WHERE formulaID = :formulaID ORDER BY position"
+    )
+    fun getOutputDataToExport(formulaID: Long): List<ExportDataOutputData>
 
     @Query("SELECT COUNT(*) FROM Formula")
     fun getSize(): Int
@@ -58,13 +71,22 @@ interface EditFormulaDao {
     @Query("SELECT position FROM Formula WHERE formulaID = :formulaID LIMIT 1")
     fun getPosition(formulaID: Long): Int
 
-    @Query("SELECT formulaID, name, description, isNote, code FROM Formula WHERE formulaID = :formulaID LIMIT 1")
+    @Query(
+        "SELECT formulaID, name, description, isNote, code " +
+        "FROM Formula WHERE formulaID = :formulaID LIMIT 1"
+    )
     fun getEditFormulaInfo(formulaID: Long): EditFormulaInfoData
 
-    @Query("SELECT inputDataID, label, codeLabel, defaultData FROM InputData WHERE formulaID = :formulaID ORDER BY position")
+    @Query(
+        "SELECT inputDataID, label, codeLabel, defaultData " +
+        "FROM InputData WHERE formulaID = :formulaID ORDER BY position"
+    )
     fun getEditInputs(formulaID: Long): List<EditInputData>
 
-    @Query("SELECT outputDataID, label, codeLabel FROM OutputData WHERE formulaID = :formulaID ORDER BY position")
+    @Query(
+        "SELECT outputDataID, label, codeLabel " +
+        "FROM OutputData WHERE formulaID = :formulaID ORDER BY position"
+    )
     fun getEditResults(formulaID: Long): List<EditResultData>
 
     @Query("UPDATE Formula SET name=:text WHERE formulaID=:formulaID")
@@ -97,10 +119,16 @@ interface EditFormulaDao {
     @Query("DELETE FROM OutputData WHERE outputDataID = :resultID")
     fun deleteResultData(resultID: Long)
 
-    @Query("UPDATE InputData SET position = position - 1 WHERE formulaID = :formulaID AND position > :position")
+    @Query(
+        "UPDATE InputData SET position = position - 1 " +
+        "WHERE formulaID = :formulaID AND position > :position"
+    )
     fun updateInputDataPositionsAfterDeleting(position: Int, formulaID: Long)
 
-    @Query("UPDATE OutputData SET position = position - 1 WHERE formulaID = :formulaID AND position > :position")
+    @Query(
+        "UPDATE OutputData SET position = position - 1 " +
+        "WHERE formulaID = :formulaID AND position > :position"
+    )
     fun updateResultDataPositionsAfterDeleting(position: Int, formulaID: Long)
 
     @Query("UPDATE InputData SET position=:index WHERE inputDataID=:id")

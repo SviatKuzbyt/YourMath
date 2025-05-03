@@ -1,4 +1,4 @@
-package ua.sviatkuzbyt.yourmath.data.structures.transfer
+package ua.sviatkuzbyt.yourmath.data.structures.edit.export
 
 data class FormulaToFormatData(
     val formulaID: Long,

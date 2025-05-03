@@ -4,13 +4,13 @@ import ua.sviatkuzbyt.yourmath.data.database.EditFormulaDao
 import ua.sviatkuzbyt.yourmath.data.database.entity.FormulaEntity
 import ua.sviatkuzbyt.yourmath.data.database.entity.InputDataEntity
 import ua.sviatkuzbyt.yourmath.data.database.entity.OutputDataEntity
-import ua.sviatkuzbyt.yourmath.data.structures.editformula.EditFormulaInfoData
-import ua.sviatkuzbyt.yourmath.data.structures.editformula.EditInputData
-import ua.sviatkuzbyt.yourmath.data.structures.editformula.EditResultData
-import ua.sviatkuzbyt.yourmath.data.structures.editor.FormulaNameItemData
-import ua.sviatkuzbyt.yourmath.data.structures.transfer.FileDataInputData
-import ua.sviatkuzbyt.yourmath.data.structures.transfer.FileDataOutputData
-import ua.sviatkuzbyt.yourmath.data.structures.transfer.FormulaToFormatData
+import ua.sviatkuzbyt.yourmath.data.structures.edit.editformula.EditFormulaInfoData
+import ua.sviatkuzbyt.yourmath.data.structures.edit.editformula.EditInputData
+import ua.sviatkuzbyt.yourmath.data.structures.edit.editformula.EditResultData
+import ua.sviatkuzbyt.yourmath.data.structures.edit.FormulaNameItemData
+import ua.sviatkuzbyt.yourmath.data.structures.edit.export.ExportDataInputData
+import ua.sviatkuzbyt.yourmath.data.structures.edit.export.ExportDataOutputData
+import ua.sviatkuzbyt.yourmath.data.structures.edit.export.FormulaToFormatData
 import ua.sviatkuzbyt.yourmath.domain.repositories.EditFormulaRepository
 import ua.sviatkuzbyt.yourmath.domain.structures.edit.editformula.EditFormulaInfo
 import ua.sviatkuzbyt.yourmath.domain.structures.edit.editformula.EditInput
@@ -83,42 +83,15 @@ class EditFormulaRepositoryImpl @Inject constructor(
     }
 
     override fun addFormula(formula: FormulaToAdd): Long {
-        val formulaEntity = FormulaEntity(
-            formulaID = 0,
-            name = formula.name,
-            description = formula.description,
-            code = formula.code,
-            isPin = false,
-            position = formula.position,
-            isNote = formula.isNote
-        )
-
-        return editFormulaDao.addFormula(formulaEntity)
+        return editFormulaDao.addFormula(mapFormulaDomainToEntity(formula))
     }
 
     override fun addInputData(data: DataInputToAdd): Long {
-        val inputDataEntity = InputDataEntity(
-            inputDataID = 0,
-            label = data.label,
-            codeLabel = data.codeLabel,
-            defaultData = data.defaultData,
-            position = data.position,
-            formulaID = data.formulaID
-        )
-
-        return editFormulaDao.addInputData(inputDataEntity)
+        return editFormulaDao.addInputData(mapInputDomainToEntity(data))
     }
 
     override fun addOutputData(data: DataOutputToAdd): Long {
-        val outputDataEntity = OutputDataEntity(
-            outputDataID = 0,
-            label = data.label,
-            codeLabel = data.codeLabel,
-            position = data.position,
-            formulaID = data.formulaID
-        )
-
-        return editFormulaDao.addOutputData(outputDataEntity)
+        return editFormulaDao.addOutputData(mapOutputDomainToEntity(data))
     }
 
     override fun getEditFormulaInfo(formulaID: Long): EditFormulaInfo {
@@ -237,7 +210,7 @@ class EditFormulaRepositoryImpl @Inject constructor(
         )
     }
 
-    private fun mapFileDataInputDataDomain(data: FileDataInputData): ExportDataInput {
+    private fun mapFileDataInputDataDomain(data: ExportDataInputData): ExportDataInput {
         return ExportDataInput(
             label = data.label,
             codeLabel = data.codeLabel,
@@ -246,11 +219,44 @@ class EditFormulaRepositoryImpl @Inject constructor(
         )
     }
 
-    private fun mapFileDataOutputDataDomain(data: FileDataOutputData): ExportDataOutput {
+    private fun mapFileDataOutputDataDomain(data: ExportDataOutputData): ExportDataOutput {
         return ExportDataOutput(
             label = data.label,
             codeLabel = data.codeLabel,
             position = data.position
+        )
+    }
+
+    private fun mapFormulaDomainToEntity(formula: FormulaToAdd): FormulaEntity {
+        return FormulaEntity(
+            formulaID = 0,
+            name = formula.name,
+            description = formula.description,
+            code = formula.code,
+            isPin = false,
+            position = formula.position,
+            isNote = formula.isNote
+        )
+    }
+
+    private fun mapInputDomainToEntity(data: DataInputToAdd): InputDataEntity {
+        return InputDataEntity(
+            inputDataID = 0,
+            label = data.label,
+            codeLabel = data.codeLabel,
+            defaultData = data.defaultData,
+            position = data.position,
+            formulaID = data.formulaID
+        )
+    }
+
+    private fun mapOutputDomainToEntity(data: DataOutputToAdd): OutputDataEntity {
+        return OutputDataEntity(
+            outputDataID = 0,
+            label = data.label,
+            codeLabel = data.codeLabel,
+            position = data.position,
+            formulaID = data.formulaID
         )
     }
 }

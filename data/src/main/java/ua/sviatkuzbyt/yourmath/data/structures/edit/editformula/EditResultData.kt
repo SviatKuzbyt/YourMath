@@ -1,4 +1,4 @@
-package ua.sviatkuzbyt.yourmath.data.structures.editformula
+package ua.sviatkuzbyt.yourmath.data.structures.edit.editformula
 
 data class EditResultData(
     val outputDataID: Long,

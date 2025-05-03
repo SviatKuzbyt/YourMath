@@ -46,12 +46,12 @@ fun ActionsItems(
         ) {
             ActionItem(
                 iconRes = R.drawable.ic_import,
-                textRes = R.string.import_formulas,
+                textRes = R.string.import_formulas_action,
                 onClick = onImportClick
             )
             ActionItem(
                 iconRes = R.drawable.ic_export,
-                textRes = R.string.export_formulas,
+                textRes = R.string.export_formulas_action,
                 onClick = onExportClick
             )
             ActionItem(

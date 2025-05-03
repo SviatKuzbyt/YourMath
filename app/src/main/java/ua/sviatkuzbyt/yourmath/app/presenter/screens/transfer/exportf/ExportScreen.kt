@@ -26,7 +26,7 @@ fun ExportScreen(viewModel: ExportViewModel = hiltViewModel()){
     TransferContent(screenState) { intent ->
         when(intent){
             TransferIntent.Exit -> navController.navigateUp()
-            TransferIntent.Continue -> launcher.launch("YourmathFormulas")
+            TransferIntent.Continue -> launcher.launch("MyFormulas")
             is TransferIntent.SetExportNotes -> viewModel.setIsExportNotes(intent.isExport)
         }
     }

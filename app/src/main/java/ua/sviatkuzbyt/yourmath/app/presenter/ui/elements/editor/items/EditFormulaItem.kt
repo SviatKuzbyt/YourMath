@@ -55,7 +55,7 @@ fun EditFormulaItem(
 
             ButtonIconNarrow(
                 imageRes = R.drawable.btn_down,
-                contentDescription = R.string.move_item_up,
+                contentDescription = R.string.move_item_down,
                 color = AppTheme.colors.textSecondary,
                 onClick = onMoveDown,
                 modifier = Modifier.padding(vertical = AppSizes.dp8)
@@ -63,7 +63,7 @@ fun EditFormulaItem(
 
             ButtonIconNarrow(
                 imageRes = R.drawable.btn_up,
-                contentDescription = R.string.move_item_down,
+                contentDescription = R.string.move_item_up,
                 color = AppTheme.colors.textSecondary,
                 onClick = onMoveUp,
                 modifier = Modifier.padding(vertical = AppSizes.dp8)

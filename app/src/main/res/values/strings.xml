@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">YourMath</string>
+    <string name="app_name" translatable="false">YourMath</string>
     <string name="history">History</string>
     <string name="editor">Editor</string>
     <string name="search">Search</string>
@@ -12,7 +12,7 @@
     <string name="no_search_result">Formula with this name was not found</string>
     <string name="unknown_error">Unknown error</string>
     <string name="unknown_error_detail">An unexpected error has occurred. We\'re sorry for the inconvenience. We are already working on it</string>
-    <string name="ok">OK</string>
+    <string name="ok" translatable="false">OK</string>
     <string name="back">Go to previous page</string>
     <string name="input_data">Input data</string>
     <string name="enter_data">Enter the data</string>
@@ -43,6 +43,8 @@
     <string name="no_selected">No selected</string>
     <string name="actions">Actions</string>
     <string name="icon_for_button">Icon for button</string>
+    <string name="import_formulas_action">Import formulas</string>
+    <string name="export_formulas_action">Export formulas</string>
     <string name="import_formulas">Import formulas</string>
     <string name="export_formulas">Export formulas</string>
     <string name="delete_all_formulas">Delete all formulas</string>
@@ -51,14 +53,14 @@
     <string name="no_edit_formulas">There are no formulas yet. Click ‘+’ to create new ones, or import them from a file</string>
     <string name="delete_item">Delete item</string>
     <string name="delete_formula_text_1">Are you sure you want to delete the</string>
-    <string name="delete_formula_text_2">The history associated with it will also be deleted. You won\'t be able to recover the data.</string>
-    <string name="delete_all_formulas_text">Are you sure you want to delete all formulas? This action will delete all formulas and history, and it will not be possible to restore them.</string>
+    <string name="delete_formula_text_2">The history associated with it will also be deleted. You won\'t be able to recover the data</string>
+    <string name="delete_all_formulas_text">Are you sure you want to delete ALL formulas? This action will delete all formulas and history, and it will not be possible to restore them</string>
     <string name="move_item_up">Move item up</string>
     <string name="move_item_down">Move item down</string>
     <string name="start">Continue</string>
     <string name="exit">Exit</string>
     <string name="export_content">In the new window, select the location and name of the file where you want to export the formulas</string>
-    <string name="import_content">In the new window that opens, select the file from which you want to import formulas.\n\nIMPORTANT! Third-party formulas may contain malicious code. Import them only from a trusted source</string>
+    <string name="import_content">In the new window that opens, select the file from which you want to import formulas. \n\nIMPORTANT! Third-party formulas may contain malicious code. Import them only from a trusted source</string>
     <string name="cancel">Cancel</string>
     <string name="nothing_to_export">Nothing to export</string>
     <string name="export_finished">Formulas successfully exported to file</string>
@@ -73,15 +75,15 @@
     <string name="enter_name">Enter name</string>
     <string name="description">Description</string>
     <string name="optional">Optional</string>
-    <string name="item">Item</string>
+    <string name="item">Data</string>
     <string name="display_label">Name to display</string>
     <string name="code_label">Name in code</string>
     <string name="default_data">Default data</string>
     <string name="enter_code">Enter calculation code here</string>
-    <string name="python">Python</string>
+    <string name="python" translatable="false">Python</string>
     <string name="no_edit_records">There are no entries yet. Click \"+\" to add new ones</string>
     <string name="change_auto_save">Changes are saved automatically</string>
-    <string name="delete_item_content">Do you really want to delete an item? You won\'t be able to restore it.</string>
+    <string name="delete_item_content">Do you really want to delete an item? You won\'t be able to restore it</string>
     <string name="note">note</string>
     <string name="mark_as_note">Mark as a note (hide the formula on the main screen and history screen)</string>
     <string name="export_notes">Export notes too</string>

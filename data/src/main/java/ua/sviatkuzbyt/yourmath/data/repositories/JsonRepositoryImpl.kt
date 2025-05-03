@@ -6,7 +6,7 @@ import org.json.JSONObject
 import ua.sviatkuzbyt.yourmath.data.other.NoAllDataEnterException
 import ua.sviatkuzbyt.yourmath.domain.repositories.JsonRepository
 import ua.sviatkuzbyt.yourmath.domain.structures.formula.FormulaInput
-import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ExportFormulaItem
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.export.ExportFormulaItem
 import javax.inject.Inject
 
 class JsonRepositoryImpl @Inject constructor() : JsonRepository {

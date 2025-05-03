@@ -1,12 +1,12 @@
 package ua.sviatkuzbyt.yourmath.domain.usecases.editformula
 
 import ua.sviatkuzbyt.yourmath.domain.repositories.EditFormulaRepository
-import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditFormula
-import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditFormulaInfo
-import ua.sviatkuzbyt.yourmath.domain.structures.transfer.FormulaToAdd
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.editformula.EditFormula
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.editformula.EditFormulaInfo
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.add.FormulaToAdd
 
 class CreateFormulaUseCase(private val repository: EditFormulaRepository) {
-    fun execute(): EditFormula{
+    fun execute(): EditFormula {
         val position = repository.getTableSize()
         val formula = FormulaToAdd(
             name = "",

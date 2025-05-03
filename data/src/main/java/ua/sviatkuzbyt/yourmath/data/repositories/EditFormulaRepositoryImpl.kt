@@ -12,16 +12,16 @@ import ua.sviatkuzbyt.yourmath.data.structures.transfer.FileDataInputData
 import ua.sviatkuzbyt.yourmath.data.structures.transfer.FileDataOutputData
 import ua.sviatkuzbyt.yourmath.data.structures.transfer.FormulaToFormatData
 import ua.sviatkuzbyt.yourmath.domain.repositories.EditFormulaRepository
-import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditFormulaInfo
-import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditInput
-import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditResult
-import ua.sviatkuzbyt.yourmath.domain.structures.editor.FormulaNameItem
-import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ExportDataInput
-import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ExportDataOutput
-import ua.sviatkuzbyt.yourmath.domain.structures.transfer.FormulaToFormat
-import ua.sviatkuzbyt.yourmath.domain.structures.transfer.DataInputToAdd
-import ua.sviatkuzbyt.yourmath.domain.structures.transfer.DataOutputToAdd
-import ua.sviatkuzbyt.yourmath.domain.structures.transfer.FormulaToAdd
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.editformula.EditFormulaInfo
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.editformula.EditInput
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.editformula.EditResult
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.FormulaNameItem
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.export.ExportDataInput
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.export.ExportDataOutput
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.export.FormulaToFormat
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.add.DataInputToAdd
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.add.DataOutputToAdd
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.add.FormulaToAdd
 import javax.inject.Inject
 
 class EditFormulaRepositoryImpl @Inject constructor(
@@ -211,11 +211,11 @@ class EditFormulaRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun mapEditResultToDomain(item: EditResultData): EditResult{
+    private fun mapEditResultToDomain(item: EditResultData): EditResult {
         return EditResult(item.outputDataID, item.label, item.codeLabel)
     }
 
-    private fun mapEditInputToDomain(item: EditInputData): EditInput{
+    private fun mapEditInputToDomain(item: EditInputData): EditInput {
         return EditInput(item.inputDataID, item.label, item.codeLabel, item.defaultData)
     }
 
@@ -227,7 +227,7 @@ class EditFormulaRepositoryImpl @Inject constructor(
         return FormulaNameItem(item.formulaID, item.name, item.isNote)
     }
 
-    private fun mapFormulaToFormatToDomain(data: FormulaToFormatData): FormulaToFormat{
+    private fun mapFormulaToFormatToDomain(data: FormulaToFormatData): FormulaToFormat {
         return FormulaToFormat(
             formulaID = data.formulaID,
             name = data.name,
@@ -237,7 +237,7 @@ class EditFormulaRepositoryImpl @Inject constructor(
         )
     }
 
-    private fun mapFileDataInputDataDomain(data: FileDataInputData): ExportDataInput{
+    private fun mapFileDataInputDataDomain(data: FileDataInputData): ExportDataInput {
         return ExportDataInput(
             label = data.label,
             codeLabel = data.codeLabel,
@@ -246,7 +246,7 @@ class EditFormulaRepositoryImpl @Inject constructor(
         )
     }
 
-    private fun mapFileDataOutputDataDomain(data: FileDataOutputData): ExportDataOutput{
+    private fun mapFileDataOutputDataDomain(data: FileDataOutputData): ExportDataOutput {
         return ExportDataOutput(
             label = data.label,
             codeLabel = data.codeLabel,

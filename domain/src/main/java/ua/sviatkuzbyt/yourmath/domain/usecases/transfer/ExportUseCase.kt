@@ -3,7 +3,7 @@ package ua.sviatkuzbyt.yourmath.domain.usecases.transfer
 import ua.sviatkuzbyt.yourmath.domain.repositories.EditFormulaRepository
 import ua.sviatkuzbyt.yourmath.domain.repositories.FileRepository
 import ua.sviatkuzbyt.yourmath.domain.repositories.JsonRepository
-import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ExportFormulaItem
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.export.ExportFormulaItem
 
 class ExportUseCase(
     private val editFormulaRepository: EditFormulaRepository,

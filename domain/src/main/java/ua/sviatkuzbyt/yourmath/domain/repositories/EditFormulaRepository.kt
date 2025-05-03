@@ -1,15 +1,15 @@
 package ua.sviatkuzbyt.yourmath.domain.repositories
 
-import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditFormulaInfo
-import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditInput
-import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditResult
-import ua.sviatkuzbyt.yourmath.domain.structures.editor.FormulaNameItem
-import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ExportDataInput
-import ua.sviatkuzbyt.yourmath.domain.structures.transfer.ExportDataOutput
-import ua.sviatkuzbyt.yourmath.domain.structures.transfer.FormulaToFormat
-import ua.sviatkuzbyt.yourmath.domain.structures.transfer.DataInputToAdd
-import ua.sviatkuzbyt.yourmath.domain.structures.transfer.DataOutputToAdd
-import ua.sviatkuzbyt.yourmath.domain.structures.transfer.FormulaToAdd
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.editformula.EditFormulaInfo
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.editformula.EditInput
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.editformula.EditResult
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.FormulaNameItem
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.export.ExportDataInput
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.export.ExportDataOutput
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.export.FormulaToFormat
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.add.DataInputToAdd
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.add.DataOutputToAdd
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.add.FormulaToAdd
 
 interface EditFormulaRepository {
     fun getFormulas(): List<FormulaNameItem>
@@ -22,16 +22,13 @@ interface EditFormulaRepository {
     fun getOutputDataToExport(formulaID: Long): List<ExportDataOutput>
     fun updatePositionsAfterDeleting(deletedPosition: Int)
     fun getPosition(formulaID: Long): Int
-
     fun getTableSize(): Int
     fun addFormula(formula: FormulaToAdd): Long
     fun addInputData(data: DataInputToAdd): Long
     fun addOutputData(data: DataOutputToAdd): Long
-
     fun getEditFormulaInfo(formulaID: Long): EditFormulaInfo
     fun getEditInputs(formulaID: Long): List<EditInput>
     fun getEditResults(formulaID: Long): List<EditResult>
-
     fun updateFormulaLabel(text: String, formulaID: Long)
     fun updateFormulaDescription(text: String, formulaID: Long)
     fun updateInputTextLabel(text: String, inputID: Long)

@@ -1,4 +1,4 @@
-package ua.sviatkuzbyt.yourmath.domain.structures.transfer
+package ua.sviatkuzbyt.yourmath.domain.structures.edit.add
 
 data class DataInputToAdd(
     val label: String,

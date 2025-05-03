@@ -1,4 +1,4 @@
-package ua.sviatkuzbyt.yourmath.domain.structures.editformula
+package ua.sviatkuzbyt.yourmath.domain.structures.edit.editformula
 
 data class EditFormulaInfo(
     val id: Long,

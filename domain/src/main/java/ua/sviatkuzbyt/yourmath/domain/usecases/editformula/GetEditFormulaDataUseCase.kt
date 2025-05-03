@@ -1,8 +1,7 @@
 package ua.sviatkuzbyt.yourmath.domain.usecases.editformula
 
 import ua.sviatkuzbyt.yourmath.domain.repositories.EditFormulaRepository
-import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditFormula
-import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditFormulaInfo
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.editformula.EditFormula
 
 class GetEditFormulaDataUseCase(private val repository: EditFormulaRepository) {
     fun execute(formulaID: Long): EditFormula {

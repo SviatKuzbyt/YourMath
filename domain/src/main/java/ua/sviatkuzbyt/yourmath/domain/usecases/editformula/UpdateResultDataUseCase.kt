@@ -1,8 +1,8 @@
 package ua.sviatkuzbyt.yourmath.domain.usecases.editformula
 
 import ua.sviatkuzbyt.yourmath.domain.repositories.EditFormulaRepository
-import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditResult
-import ua.sviatkuzbyt.yourmath.domain.structures.transfer.DataOutputToAdd
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.editformula.EditResult
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.add.DataOutputToAdd
 
 class UpdateResultDataUseCase(private val repository: EditFormulaRepository) {
     fun updateTextLabel(text: String, outputID: Long){

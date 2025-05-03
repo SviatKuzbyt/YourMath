@@ -1,4 +1,4 @@
-package ua.sviatkuzbyt.yourmath.domain.structures.transfer
+package ua.sviatkuzbyt.yourmath.domain.structures.edit.export
 
 data class ExportDataOutput(
     val label: String,

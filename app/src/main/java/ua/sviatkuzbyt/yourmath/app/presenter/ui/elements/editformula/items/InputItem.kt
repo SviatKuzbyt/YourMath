@@ -19,7 +19,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.Container
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.TextFieldWithLabel
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editformula.component.ItemHead
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
-import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditInput
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.editformula.EditInput
 
 @Composable
 fun LazyItemScope.InputItem(

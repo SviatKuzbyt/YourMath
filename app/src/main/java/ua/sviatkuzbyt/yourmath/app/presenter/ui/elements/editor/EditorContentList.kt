@@ -20,7 +20,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.text.TittleText
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editor.items.EditFormulaItem
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.editor.items.ActionsItems
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.theme.AppSizes
-import ua.sviatkuzbyt.yourmath.domain.structures.editor.FormulaNameItem
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.FormulaNameItem
 
 @Composable
 fun EditorContentList(

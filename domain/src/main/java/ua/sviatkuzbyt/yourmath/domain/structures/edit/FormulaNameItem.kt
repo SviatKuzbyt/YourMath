@@ -1,4 +1,4 @@
-package ua.sviatkuzbyt.yourmath.domain.structures.editor
+package ua.sviatkuzbyt.yourmath.domain.structures.edit
 
 data class FormulaNameItem(
     val id: Long,

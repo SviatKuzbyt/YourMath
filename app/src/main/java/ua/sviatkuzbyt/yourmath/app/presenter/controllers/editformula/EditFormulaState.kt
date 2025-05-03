@@ -2,8 +2,8 @@ package ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula
 
 import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.ErrorData
-import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditInput
-import ua.sviatkuzbyt.yourmath.domain.structures.editformula.EditResult
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.editformula.EditInput
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.editformula.EditResult
 
 data class EditFormulaState(
     val tabs: List<Int> = listOf(

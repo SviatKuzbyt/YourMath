@@ -24,7 +24,7 @@ object DatabaseModule {
             context = context,
             klass = AppDatabase::class.java,
             name = "YourmathDatabase"
-        ).build()
+        ).createFromAsset("yourmathDbBase.db").build()
     }
 
     @Provides

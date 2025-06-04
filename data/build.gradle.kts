@@ -21,7 +21,7 @@ android {
         consumerProguardFiles("consumer-rules.pro")
 
         ndk {
-            abiFilters += listOf("arm64-v8a", "x86_64", "x86") //todo delete x86 in prod
+            abiFilters += listOf("arm64-v8a", "x86_64")
         }
     }
 
@@ -67,7 +67,6 @@ dependencies {
 
     //json
     implementation(libs.gson)
-
 
     //modules
     implementation(project(":domain"))

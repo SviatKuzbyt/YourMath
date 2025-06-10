@@ -23,3 +23,4 @@ rootProject.name = "YourMath"
 include(":app")
 include(":domain")
 include(":data")
+include(":test")

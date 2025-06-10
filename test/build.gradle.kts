@@ -1,17 +1,10 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    //room
-    alias(libs.plugins.google.devtools.ksp)
-    //hilt
-    alias(libs.plugins.kotlin.kapt)
-    alias(libs.plugins.dagger.hilt)
-    //python
-    alias(libs.plugins.chaquo.python)
 }
 
 android {
-    namespace = "ua.sviatkuzbyt.yourmath.data"
+    namespace = "ua.sviatkuzbyt.yourmath.test"
     compileSdk = 35
 
     defaultConfig {
@@ -19,10 +12,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
-
-        ndk {
-            abiFilters += listOf("arm64-v8a", "x86_64")
-        }
     }
 
     buildTypes {
@@ -32,10 +21,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-        }
-
-        create("profile"){
-            initWith(getByName("debug"))
         }
     }
     compileOptions {
@@ -47,27 +32,15 @@ android {
     }
 }
 
-kapt {
-    correctErrorTypes = true
-}
-
 dependencies {
-    //core and test
+
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 
-    //room
-    api(libs.androidx.room.runtime)
-    ksp(libs.androidx.room.compiler)
-
-    //hilt
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
-
-    //json
-    implementation(libs.gson)
-
-    //modules
     implementation(project(":domain"))
+    implementation(project(":data"))
 }

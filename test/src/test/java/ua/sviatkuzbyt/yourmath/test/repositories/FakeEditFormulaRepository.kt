@@ -128,7 +128,7 @@ class FakeEditFormulaRepository: EditFormulaRepository {
         private set
 
     val position = 1
-    val tableSize = 2
+    val sizeOfTable = 2
     val newId = 3L
 
     override fun getFormulas(): List<FormulaNameItem> {
@@ -172,7 +172,7 @@ class FakeEditFormulaRepository: EditFormulaRepository {
     }
 
     override fun getTableSize(): Int {
-        return tableSize
+        return sizeOfTable
     }
 
     override fun addFormula(formula: FormulaToAdd): Long {
@@ -259,11 +259,11 @@ class FakeEditFormulaRepository: EditFormulaRepository {
     }
 
     override fun getInputTableSize(formulaID: Long): Int {
-        return tableSize
+        return sizeOfTable
     }
 
     override fun getResultTableSize(formulaID: Long): Int {
-        return tableSize
+        return sizeOfTable
     }
 
     override fun setIsNote(note: Boolean, formulaID: Long) {

@@ -1,6 +1,8 @@
 package ua.sviatkuzbyt.yourmath.test.repositories
 
 import ua.sviatkuzbyt.yourmath.domain.repositories.JsonRepository
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.export.ExportDataInput
+import ua.sviatkuzbyt.yourmath.domain.structures.edit.export.ExportDataOutput
 import ua.sviatkuzbyt.yourmath.domain.structures.edit.export.ExportFormulaItem
 import ua.sviatkuzbyt.yourmath.domain.structures.formula.FormulaInput
 
@@ -17,8 +19,12 @@ class FakeJsonRepository: JsonRepository {
         ExportFormulaItem(
             name = "Formula 1",
             description = "Description of Formula 1",
-            inputData = listOf(),
-            outputData = listOf(),
+            inputData = listOf(
+                ExportDataInput("Input 1", "input1", "10", 1)
+            ),
+            outputData = listOf(
+                ExportDataOutput("Output 1", "output1", 1)
+            ),
             code = "code",
             isNote = false,
             position = 1

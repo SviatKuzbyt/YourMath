@@ -16,6 +16,28 @@ class FakeHistoryRepository: HistoryRepository {
         HistoryNoFormatItem(1, 1, "1", "1", "1", 1)
     )
 
+    val fakeInputs = listOf(
+        FormulaInput(1, "input1", "value1", "1", "1"),
+        FormulaInput(2, "input2", "value2", "2", "2")
+    )
+
+    val fakeResults = listOf(
+        FormulaResult(1, "result1", "value1", "1"),
+        FormulaResult(2, "result2", "value2", "2")
+    )
+
+    var cleanHistoryCalled = false
+        private set
+
+    var addedHistoryFormulaAndGetID = false
+        private set
+
+    var addedHistoryInputData = false
+        private set
+
+    var addedHistoryOutputData = false
+        private set
+
     override fun getHistoryItems(offset: Int, limit: Int): List<HistoryNoFormatItem> {
         return fakeItems
     }
@@ -28,37 +50,28 @@ class FakeHistoryRepository: HistoryRepository {
         return fakeFilterItems
     }
 
-    // Rest of codes
-
-    var cleanHistoryCalled = false
-        private set
-
     override fun cleanHistory() {
         cleanHistoryCalled = true
     }
 
     override fun addHistoryFormulaAndGetID(date: Long, formulaID: Long): Long {
-        TODO("Not yet implemented")
+        addedHistoryFormulaAndGetID = true
+        return 1
     }
 
     override fun addHistoryInputData(data: String, inputID: Long, historyID: Long) {
-        TODO("Not yet implemented")
+        addedHistoryInputData = true
     }
 
     override fun addHistoryOutputData(data: String, outputID: Long, historyID: Long) {
-        TODO("Not yet implemented")
+        addedHistoryOutputData = true
     }
 
-
-
     override fun getFormulaInput(historyID: Long, formulaID: Long): List<FormulaInput> {
-        TODO("Not yet implemented")
+        return fakeInputs
     }
 
     override fun getFormulaResult(historyID: Long, formulaID: Long): List<FormulaResult> {
-        TODO("Not yet implemented")
+        return fakeResults
     }
-
-
-
 }

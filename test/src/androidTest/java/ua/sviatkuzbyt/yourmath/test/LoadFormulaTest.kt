@@ -14,17 +14,11 @@ import ua.sviatkuzbyt.yourmath.domain.usecases.formula.GetFormulaUseCase
 import ua.sviatkuzbyt.yourmath.other.createDatabase
 
 class LoadFormulaTest {
-
+    private lateinit var editFormulaRepository: EditFormulaRepositoryImpl
+    private lateinit var formulasRepository: FormulasRepositoryImpl
     private lateinit var useCase: GetFormulaUseCase
-    private lateinit var expectedFormula: FormulaContent
 
-    private val formula = FormulaToAdd(
-        name = "Formula test",
-        description = "Description of the formula",
-        code = "some code",
-        position = 0,
-        isNote = false
-    )
+    private lateinit var expectedFormula: FormulaContent
     private var formulaId = 0L
 
     @Before
@@ -32,13 +26,17 @@ class LoadFormulaTest {
         val db = createDatabase()
 
         val editDao = db.editFormulaDao()
-        val editFormulaRepository = EditFormulaRepositoryImpl(editDao)
+        editFormulaRepository = EditFormulaRepositoryImpl(editDao)
 
         val formulaDao = db.formulaDao()
-        val formulasRepository = FormulasRepositoryImpl(formulaDao)
+        formulasRepository = FormulasRepositoryImpl(formulaDao)
 
         useCase = GetFormulaUseCase(formulasRepository)
 
+        fillDatabase()
+    }
+
+    private fun fillDatabase() {
         val formula = FormulaToAdd(
             name = "Formula test",
             description = "Description of the formula",

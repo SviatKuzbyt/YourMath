@@ -15,6 +15,7 @@ import ua.sviatkuzbyt.yourmath.domain.structures.main.FormulaItem
 import ua.sviatkuzbyt.yourmath.domain.structures.main.SplitFormulaItems
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.GetFormulasListUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.SplitFormulaItemsUseCase
+import ua.sviatkuzbyt.yourmath.other.createDatabase
 
 class LoadFormulaListTest {
     private lateinit var db: AppDatabase
@@ -31,10 +32,7 @@ class LoadFormulaListTest {
 
     @Before
     fun setup() {
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
-        db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
-            .allowMainThreadQueries()
-            .build()
+        db = createDatabase()
 
         val formulaDao = db.formulaDao()
         val repository = FormulasRepositoryImpl(formulaDao)

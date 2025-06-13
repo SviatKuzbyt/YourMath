@@ -28,7 +28,6 @@ class DeleteFormulaTest {
         code = "a + b = c",
     )
 
-
     @Before
     fun setup() {
         val db = createDatabase()

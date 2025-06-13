@@ -7,7 +7,7 @@ class FakeFileRepository: FileRepository {
     var isFileWritten = false
         private set
 
-    val fileData = "Fake file content"
+    private val fileData = "Fake file content"
 
     override fun write(fileUri: String, text: String) {
         isFileWritten = true

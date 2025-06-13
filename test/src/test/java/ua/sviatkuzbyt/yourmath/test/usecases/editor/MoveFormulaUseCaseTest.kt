@@ -4,7 +4,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import ua.sviatkuzbyt.yourmath.domain.usecases.editor.MoveFormulaUseCase
 import ua.sviatkuzbyt.yourmath.test.repositories.FakeEditFormulaRepository
-import ua.sviatkuzbyt.yourmath.test.repositories.FakeFormulasRepository
 
 class MoveFormulaUseCaseTest {
 

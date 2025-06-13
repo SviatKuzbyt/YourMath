@@ -7,15 +7,13 @@ import ua.sviatkuzbyt.yourmath.domain.structures.edit.export.ExportFormulaItem
 import ua.sviatkuzbyt.yourmath.domain.structures.formula.FormulaInput
 
 class FakeJsonRepository: JsonRepository {
-
-
-    val inputsJson = "{\"input1\": \"10\""
+    private val inputsJson = "{\"input1\": \"10\""
 
     val inputMap = mapOf("output1" to "20")
 
-    val formulasJson = "formulas"
+    private val formulasJson = "formulas"
 
-    val formulasData = listOf(
+    private val formulasData = listOf(
         ExportFormulaItem(
             name = "Formula 1",
             description = "Description of Formula 1",

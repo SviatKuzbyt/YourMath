@@ -4,7 +4,7 @@ import ua.sviatkuzbyt.yourmath.domain.repositories.PythonRepository
 
 class FakePythonRepository: PythonRepository {
 
-    val codeResult = "result"
+    private val codeResult = "result"
 
     override fun runCode(code: String, inputJson: String): String {
         return codeResult

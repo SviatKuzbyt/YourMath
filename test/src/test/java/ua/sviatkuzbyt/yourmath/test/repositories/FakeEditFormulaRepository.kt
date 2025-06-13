@@ -26,17 +26,17 @@ class FakeEditFormulaRepository: EditFormulaRepository {
         FormulaNameItem(4, "Formula 4", false)
     )
 
-    val fakeFormulasToExport = listOf(
+    private val fakeFormulasToExport = listOf(
         FormulaToFormat(1, "Formula 1", "Code 1", "Description 1", false),
         FormulaToFormat(2, "Formula 2", "Code 2", "Description 2", false)
     )
 
-    val fakeInputsToExport = listOf(
+    private val fakeInputsToExport = listOf(
         ExportDataInput("Input 1", "input1", null, 1),
         ExportDataInput("Input 2", "input2", null, 2)
     )
 
-    val fakeOutputsToExport = listOf(
+    private val fakeOutputsToExport = listOf(
         ExportDataOutput("Output 1", "output1", 1),
         ExportDataOutput("Output 2", "output2", 2)
     )
@@ -55,7 +55,7 @@ class FakeEditFormulaRepository: EditFormulaRepository {
         EditResult(2, "Output 2", "output2")
     )
 
-    val fakeFormulasToExportWithNote = listOf(
+    private val fakeFormulasToExportWithNote = listOf(
         FormulaToFormat(1, "Formula 1", "Code 1", "Description 1", false),
         FormulaToFormat(2, "Formula 2", "Code 2", "Description 2", false),
         FormulaToFormat(3, "Formula 3", "Code 3", "Description 3", true)
@@ -127,8 +127,8 @@ class FakeEditFormulaRepository: EditFormulaRepository {
     var updatedIsNote = false
         private set
 
-    val position = 1
-    val sizeOfTable = 2
+    private val position = 1
+    private val sizeOfTable = 2
     val newId = 3L
 
     override fun getFormulas(): List<FormulaNameItem> {

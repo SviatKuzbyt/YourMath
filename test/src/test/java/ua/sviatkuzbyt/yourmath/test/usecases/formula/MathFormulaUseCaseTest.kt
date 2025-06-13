@@ -2,7 +2,6 @@ package ua.sviatkuzbyt.yourmath.test.usecases.formula
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import ua.sviatkuzbyt.yourmath.domain.structures.formula.FormulaResult
 import ua.sviatkuzbyt.yourmath.domain.usecases.formula.MathFormulaUseCase
 import ua.sviatkuzbyt.yourmath.test.repositories.FakeFormulasRepository
 import ua.sviatkuzbyt.yourmath.test.repositories.FakeJsonRepository

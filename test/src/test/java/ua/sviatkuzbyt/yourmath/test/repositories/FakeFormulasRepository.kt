@@ -29,7 +29,7 @@ class FakeFormulasRepository: FormulasRepository {
         FormulaInput(id = 2, label = "Input 2", codeLabel = "input2", defaultData = null, data = "data 2")
     )
 
-    val formulaCode = "code of formula 1"
+    private val formulaCode = "code of formula 1"
 
     val formulaResults = listOf(
         FormulaResult(id = 1, label = "Output 1", codeLabel = "output1", data = "result 1")

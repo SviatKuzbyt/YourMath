@@ -17,13 +17,13 @@ class FakeHistoryRepository: HistoryRepository {
     )
 
     val fakeInputs = listOf(
-        FormulaInput(1, "input1", "value1", "1", "1"),
-        FormulaInput(2, "input2", "value2", "2", "2")
+        FormulaInput(1, "input1", "value1", "1", "data 1 history"),
+        FormulaInput(2, "input2", "value2", "2", "data 2 history")
     )
 
     val fakeResults = listOf(
-        FormulaResult(1, "result1", "value1", "1"),
-        FormulaResult(2, "result2", "value2", "2")
+        FormulaResult(1, "result1", "value1", "data 1 history"),
+        FormulaResult(2, "result2", "value2", "data 2 history")
     )
 
     var cleanHistoryCalled = false

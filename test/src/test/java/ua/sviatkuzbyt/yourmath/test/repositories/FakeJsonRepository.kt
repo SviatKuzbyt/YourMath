@@ -6,12 +6,10 @@ import ua.sviatkuzbyt.yourmath.domain.structures.formula.FormulaInput
 
 class FakeJsonRepository: JsonRepository {
 
-    val inputsJson = "inputs"
 
-    val inputMap = mapOf(
-        "input1" to "value1",
-        "input2" to "value2"
-    )
+    val inputsJson = "{\"input1\": \"10\""
+
+    val inputMap = mapOf("output1" to "20")
 
     val formulasJson = "formulas"
 
@@ -26,7 +24,6 @@ class FakeJsonRepository: JsonRepository {
             position = 1
         )
     )
-
 
     override fun formulaInputsToJson(inputList: List<FormulaInput>): String {
         return inputsJson

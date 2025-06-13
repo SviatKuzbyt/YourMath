@@ -32,8 +32,7 @@ class FakeFormulasRepository: FormulasRepository {
     val formulaCode = "code of formula 1"
 
     val formulaResults = listOf(
-        FormulaResult(id = 1, label = "Output 1", codeLabel = "output1", data = "result 1"),
-        FormulaResult(id = 2, label = "Output 2", codeLabel = "output2", data = "result 2")
+        FormulaResult(id = 1, label = "Output 1", codeLabel = "output1", data = "result 1")
     )
 
     val formulaFilters = listOf(

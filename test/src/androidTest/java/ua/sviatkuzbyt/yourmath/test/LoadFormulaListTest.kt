@@ -1,4 +1,4 @@
-package ua.sviatkuzbyt.yourmath.test.usecases.main
+package ua.sviatkuzbyt.yourmath.test
 
 import androidx.room.Room
 import androidx.test.platform.app.InstrumentationRegistry
@@ -9,7 +9,6 @@ import org.junit.Before
 import org.junit.Test
 import ua.sviatkuzbyt.yourmath.data.database.AppDatabase
 import ua.sviatkuzbyt.yourmath.data.database.EditFormulaDao
-import ua.sviatkuzbyt.yourmath.data.database.FormulaDao
 import ua.sviatkuzbyt.yourmath.data.database.entity.FormulaEntity
 import ua.sviatkuzbyt.yourmath.data.repositories.FormulasRepositoryImpl
 import ua.sviatkuzbyt.yourmath.domain.structures.main.FormulaItem
@@ -17,7 +16,7 @@ import ua.sviatkuzbyt.yourmath.domain.structures.main.SplitFormulaItems
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.GetFormulasListUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.SplitFormulaItemsUseCase
 
-class GetFormulasListUseCaseTest {
+class LoadFormulaListTest {
     private lateinit var db: AppDatabase
     private lateinit var useCase: GetFormulasListUseCase
 

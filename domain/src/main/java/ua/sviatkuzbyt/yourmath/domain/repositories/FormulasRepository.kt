@@ -8,11 +8,11 @@ import ua.sviatkuzbyt.yourmath.domain.structures.history.FormulaFilterItem
 import ua.sviatkuzbyt.yourmath.domain.structures.main.FormulaItemWithPinned
 
 interface FormulasRepository {
+    fun observeFormulas(): Flow<List<FormulaItemWithPinned>>
     fun changePinFormula(id: Long, isPin: Boolean)
     fun getFormulaInfo(formulaID: Long): FormulaInfo
     fun getFormulaInput(formulaID: Long): List<FormulaInput>
     fun getFormulaCode(formulaID: Long): String
     fun getFormulaResult(formulaID: Long): List<FormulaResult>
     fun getFormulaFilterList(): List<FormulaFilterItem>
-    fun flowFormulas(): Flow<List<FormulaItemWithPinned>>
 }

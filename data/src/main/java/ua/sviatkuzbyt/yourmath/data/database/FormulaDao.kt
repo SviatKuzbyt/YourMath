@@ -11,23 +11,11 @@ import ua.sviatkuzbyt.yourmath.data.structures.main.FormulaItemWithPinnedData
 
 @Dao
 interface FormulaDao {
-    //TODO: remove in future
     @Query("SELECT formulaID, name, isPin, position FROM Formula WHERE isNote=0 ORDER BY position")
-    fun getFormulasOld(): List<FormulaItemWithPinnedData>
-
-    @Query("SELECT formulaID, name, isPin, position FROM Formula WHERE isNote=0 ORDER BY position")
-    fun flowFormulas(): Flow<List<FormulaItemWithPinnedData>>
+    fun observeFormulas(): Flow<List<FormulaItemWithPinnedData>>
 
     @Query("UPDATE Formula SET isPin=:isPin WHERE formulaID=:id")
     fun changePinFormula(id: Long, isPin: Boolean)
-
-    //TODO: remove in future
-    @Query(
-        "SELECT formulaID, name, isPin, position " +
-        "FROM Formula " +
-        "WHERE isNote=0 AND name LIKE :searchText ORDER BY position"
-    )
-    fun searchFormulas(searchText: String): List<FormulaItemWithPinnedData>
 
     @Query("SELECT name, description FROM Formula WHERE formulaID = :formulaID LIMIT 1")
     fun getFormulaInfo(formulaID: Long): FormulaInfoData

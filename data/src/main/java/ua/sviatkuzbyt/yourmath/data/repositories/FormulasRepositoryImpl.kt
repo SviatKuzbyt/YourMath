@@ -51,8 +51,8 @@ class FormulasRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun flowFormulas(): Flow<List<FormulaItemWithPinned>> {
-        return formulaDao.flowFormulas().map { list ->
+    override fun observeFormulas(): Flow<List<FormulaItemWithPinned>> {
+        return formulaDao.observeFormulas().map { list ->
             list.map { formulaFromDB ->
                 mapFormulaItemToDomain(formulaFromDB)
             }

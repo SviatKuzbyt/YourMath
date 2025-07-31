@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -13,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import kotlinx.coroutines.flow.collectLatest
 import ua.sviatkuzbyt.yourmath.app.R
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorDialogContent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorIntent
@@ -22,8 +20,6 @@ import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editor.EditorState
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.LocalNavController
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.NavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
-import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.GlobalEvent
-import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.GlobalEventType
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.showToast
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.ScreenTopBar
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.button.AddButton
@@ -64,11 +60,6 @@ fun EditorContent(
         if (isList) onIntent(EditorIntent.OpenDialog(EditorDialogContent.DeleteAll))
         else showToast(R.string.no_items_to_delete, context)
     }}
-
-    ObserveFormulasChange(
-        onLoadImported = { onIntent(EditorIntent.LoadImportedFormulas) },
-        onReload = { onIntent(EditorIntent.ReloadFormulas) }
-    )
 
     Box(Modifier.fillMaxSize()){
         Column(Modifier.fillMaxSize()) {
@@ -125,23 +116,5 @@ private fun EditorDialog(
             onDelete = onDeleteAll
         )
         EditorDialogContent.Nothing -> Unit
-    }
-}
-
-@Composable
-private fun ObserveFormulasChange(
-    onLoadImported: () -> Unit,
-    onReload: () -> Unit
-){
-    LaunchedEffect(Unit) {
-        GlobalEvent.event.collectLatest { event ->
-            if (event == GlobalEventType.ImportedFormulas){
-                onLoadImported()
-                GlobalEvent.clearEvent()
-            } else if (event == GlobalEventType.ChangeEditorFormulaList){
-                onReload()
-                GlobalEvent.sendEvent(GlobalEventType.ChangeFormulaList)
-            }
-        }
     }
 }

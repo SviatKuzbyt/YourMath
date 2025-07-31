@@ -3,6 +3,7 @@ package ua.sviatkuzbyt.yourmath.data.database
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 import ua.sviatkuzbyt.yourmath.data.database.entity.FormulaEntity
 import ua.sviatkuzbyt.yourmath.data.database.entity.InputDataEntity
 import ua.sviatkuzbyt.yourmath.data.database.entity.OutputDataEntity
@@ -17,14 +18,7 @@ import ua.sviatkuzbyt.yourmath.data.structures.edit.export.FormulaToFormatData
 @Dao
 interface EditFormulaDao {
     @Query("SELECT formulaID, name, isNote FROM Formula ORDER BY position")
-    fun getFormulas(): List<FormulaNameItemData>
-
-    @Query(
-        "SELECT formulaID, name, isNote " +
-        "FROM Formula ORDER BY position " +
-        "LIMIT ${Int.MAX_VALUE} OFFSET :offset"
-    )
-    fun getFormulas(offset: Int): List<FormulaNameItemData>
+    fun observeFormulas(): Flow<List<FormulaNameItemData>>
 
     @Query("UPDATE Formula SET position = position - 1 WHERE position > :deletedPosition")
     fun updatePositionsAfterDeleting(deletedPosition: Int)

@@ -5,7 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import ua.sviatkuzbyt.yourmath.domain.repositories.FormulasRepository
-import ua.sviatkuzbyt.yourmath.domain.usecases.main.FlowFormulasUseCase
+import ua.sviatkuzbyt.yourmath.domain.usecases.main.ObserveFormulasUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.SplitFormulaItemsUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.PinFormulaUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.UnpinFormulaUseCase
@@ -24,8 +24,8 @@ object MainModule{
     }
 
     @Provides
-    fun provideFlowFormulasUseCase(repository: FormulasRepository): FlowFormulasUseCase {
-        return FlowFormulasUseCase(repository)
+    fun provideFlowFormulasUseCase(repository: FormulasRepository): ObserveFormulasUseCase {
+        return ObserveFormulasUseCase(repository)
     }
 
     @Provides

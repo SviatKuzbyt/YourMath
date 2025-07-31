@@ -19,7 +19,7 @@ import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.EmptyScreenInfo
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.ErrorData
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.safeBackgroundLaunch
 import ua.sviatkuzbyt.yourmath.domain.structures.main.FormulaItem
-import ua.sviatkuzbyt.yourmath.domain.usecases.main.FlowFormulasUseCase
+import ua.sviatkuzbyt.yourmath.domain.usecases.main.ObserveFormulasUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.PinFormulaUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.SplitFormulaItemsUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.UnpinFormulaUseCase
@@ -27,7 +27,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val flowFormulasUseCase: FlowFormulasUseCase,
+    private val observeFormulasUseCase: ObserveFormulasUseCase,
     private val pinFormulaUseCase: PinFormulaUseCase,
     private val unpinFormulaUseCase: UnpinFormulaUseCase,
     private val spiltFormulaItemsUseCase: SplitFormulaItemsUseCase
@@ -40,7 +40,7 @@ class MainViewModel @Inject constructor(
 
     private fun observeFormulas() {
         combine(
-            flowFormulasUseCase.execute(),
+            observeFormulasUseCase.execute(),
             _screenState.map { it.searchText }.distinctUntilChanged()
         ) { formulas, searchText ->
             val filtered = if (searchText.isBlank()) {

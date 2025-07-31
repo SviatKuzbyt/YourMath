@@ -7,21 +7,19 @@ import dagger.hilt.android.components.ViewModelComponent
 import ua.sviatkuzbyt.yourmath.domain.repositories.EditFormulaRepository
 import ua.sviatkuzbyt.yourmath.domain.usecases.editor.DeleteAllFormulasUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.editor.DeleteFormulaUseCase
-import ua.sviatkuzbyt.yourmath.domain.usecases.editor.GetFormulasToEditUseCase
-import ua.sviatkuzbyt.yourmath.domain.usecases.editor.GetNewFormulasUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.editor.MoveFormulaUseCase
+import ua.sviatkuzbyt.yourmath.domain.usecases.editor.ObserveFormulasToEditUseCase
 
 @Module
 @InstallIn(ViewModelComponent::class)
 object EditorModule{
 
     @Provides
-    fun provideGetFormulasToEditUseCase(
+    fun provideObserveFormulasToEditUseCase(
         repository: EditFormulaRepository
-    ): GetFormulasToEditUseCase{
-        return GetFormulasToEditUseCase(repository)
+    ): ObserveFormulasToEditUseCase {
+        return ObserveFormulasToEditUseCase(repository)
     }
-
     @Provides
     fun provideDeleteFormulaUseCase(repository: EditFormulaRepository): DeleteFormulaUseCase{
         return DeleteFormulaUseCase(repository)
@@ -39,12 +37,5 @@ object EditorModule{
         repository: EditFormulaRepository
     ): MoveFormulaUseCase {
         return MoveFormulaUseCase(repository)
-    }
-
-    @Provides
-    fun provideGetNewFormulasUseCase(
-        repository: EditFormulaRepository
-    ): GetNewFormulasUseCase {
-        return GetNewFormulasUseCase(repository)
     }
 }

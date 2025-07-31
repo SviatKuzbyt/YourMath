@@ -5,23 +5,14 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import ua.sviatkuzbyt.yourmath.domain.repositories.FormulasRepository
+import ua.sviatkuzbyt.yourmath.domain.usecases.main.FlowFormulasUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.SplitFormulaItemsUseCase
-import ua.sviatkuzbyt.yourmath.domain.usecases.main.GetFormulasListUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.PinFormulaUseCase
-import ua.sviatkuzbyt.yourmath.domain.usecases.main.SearchFormulasUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.UnpinFormulaUseCase
 
 @Module
 @InstallIn(ViewModelComponent::class)
 object MainModule{
-    @Provides
-    fun provideGetFormulasUseCase(
-        repository: FormulasRepository,
-        convert: SplitFormulaItemsUseCase
-    ): GetFormulasListUseCase{
-        return GetFormulasListUseCase(repository, convert)
-    }
-
     @Provides
     fun providePinFormulaUseCase(repository: FormulasRepository): PinFormulaUseCase {
         return PinFormulaUseCase(repository)
@@ -33,11 +24,8 @@ object MainModule{
     }
 
     @Provides
-    fun provideSearchFormulasUseCase(
-        repository: FormulasRepository,
-        convert: SplitFormulaItemsUseCase
-    ): SearchFormulasUseCase {
-        return SearchFormulasUseCase(repository, convert)
+    fun provideFlowFormulasUseCase(repository: FormulasRepository): FlowFormulasUseCase {
+        return FlowFormulasUseCase(repository)
     }
 
     @Provides

@@ -1,5 +1,7 @@
 package ua.sviatkuzbyt.yourmath.data.repositories
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import ua.sviatkuzbyt.yourmath.data.database.FormulaDao
 import ua.sviatkuzbyt.yourmath.data.structures.formula.FormulaInfoData
 import ua.sviatkuzbyt.yourmath.data.structures.formula.FormulaInputData
@@ -19,21 +21,8 @@ import javax.inject.Singleton
 class FormulasRepositoryImpl @Inject constructor(
     private val formulaDao: FormulaDao
 ): FormulasRepository {
-
-    override fun getFormulaWithPinnedList(): List<FormulaItemWithPinned> {
-        return formulaDao.getFormulas().map { formulaFromDB ->
-            mapFormulaItemToDomain(formulaFromDB)
-        }
-    }
-
     override fun changePinFormula(id: Long, isPin: Boolean) {
         formulaDao.changePinFormula(id, isPin)
-    }
-
-    override fun searchFormulas(searchText: String): List<FormulaItemWithPinned> {
-        return formulaDao.searchFormulas(searchText).map { formula ->
-            mapFormulaItemToDomain(formula)
-        }
     }
 
     override fun getFormulaInfo(formulaID: Long): FormulaInfo {
@@ -59,6 +48,14 @@ class FormulasRepositoryImpl @Inject constructor(
     override fun getFormulaFilterList(): List<FormulaFilterItem> {
         return formulaDao.getFormulaFilterItemList().map {
             mapFormulaFilterItemToDomain(it)
+        }
+    }
+
+    override fun flowFormulas(): Flow<List<FormulaItemWithPinned>> {
+        return formulaDao.flowFormulas().map { list ->
+            list.map { formulaFromDB ->
+                mapFormulaItemToDomain(formulaFromDB)
+            }
         }
     }
 

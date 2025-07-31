@@ -61,20 +61,4 @@ fun MainContent(
         errorData = screenState.errorMessage,
         onCloseClick = { onIntent(MainIntent.CloseDialog) }
     )
-
-    ObserveFormulasChange{ onIntent(MainIntent.Reload) }
-}
-
-@Composable
-fun ObserveFormulasChange(
-    onReload: () -> Unit
-){
-    LaunchedEffect(Unit) {
-        GlobalEvent.event.collectLatest { event ->
-            if (event == GlobalEventType.ChangeFormulaList){
-                onReload()
-                GlobalEvent.clearEvent()
-            }
-        }
-    }
 }

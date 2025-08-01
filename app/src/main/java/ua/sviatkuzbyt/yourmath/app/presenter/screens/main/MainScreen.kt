@@ -3,19 +3,15 @@ package ua.sviatkuzbyt.yourmath.app.presenter.screens.main
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import kotlinx.coroutines.flow.collectLatest
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.MainIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.MainState
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.LocalNavController
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.NavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
-import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.GlobalEvent
-import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.GlobalEventType
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.dialog.ShowDialogError
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.main.FieldSearch
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.main.HomeTopBar
@@ -61,20 +57,4 @@ fun MainContent(
         errorData = screenState.errorMessage,
         onCloseClick = { onIntent(MainIntent.CloseDialog) }
     )
-
-    ObserveFormulasChange{ onIntent(MainIntent.Reload) }
-}
-
-@Composable
-fun ObserveFormulasChange(
-    onReload: () -> Unit
-){
-    LaunchedEffect(Unit) {
-        GlobalEvent.event.collectLatest { event ->
-            if (event == GlobalEventType.ChangeFormulaList){
-                onReload()
-                GlobalEvent.clearEvent()
-            }
-        }
-    }
 }

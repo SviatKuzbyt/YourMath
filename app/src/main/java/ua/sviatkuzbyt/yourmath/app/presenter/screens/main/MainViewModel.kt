@@ -1,9 +1,16 @@
 package ua.sviatkuzbyt.yourmath.app.presenter.screens.main
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.MainListContent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.main.MainIntent
@@ -12,99 +19,75 @@ import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.EmptyScreenInfo
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.ErrorData
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.safeBackgroundLaunch
 import ua.sviatkuzbyt.yourmath.domain.structures.main.FormulaItem
-import ua.sviatkuzbyt.yourmath.domain.structures.main.SplitFormulaItems
-import ua.sviatkuzbyt.yourmath.domain.usecases.main.GetFormulasListUseCase
+import ua.sviatkuzbyt.yourmath.domain.usecases.main.ObserveFormulasUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.PinFormulaUseCase
-import ua.sviatkuzbyt.yourmath.domain.usecases.main.SearchFormulasUseCase
+import ua.sviatkuzbyt.yourmath.domain.usecases.main.SplitFormulaItemsUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.main.UnpinFormulaUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val getFormulasListUseCase: GetFormulasListUseCase,
+    private val observeFormulasUseCase: ObserveFormulasUseCase,
     private val pinFormulaUseCase: PinFormulaUseCase,
     private val unpinFormulaUseCase: UnpinFormulaUseCase,
-    private val searchFormulasUseCase: SearchFormulasUseCase
+    private val spiltFormulaItemsUseCase: SplitFormulaItemsUseCase
 ): ViewModel() {
 
     private val _screenState = MutableStateFlow(MainState())
     val screenState: StateFlow<MainState> = _screenState
 
-    init { loadFormulas() }
+    init { observeFormulas() }
 
-    private fun loadFormulas(){
-        safeBackgroundLaunch(
-            code = {
-                //get all data from DB and set in UI
-                val formulasFromDB = getFormulasListUseCase.execute()
+    private fun observeFormulas() {
+        combine(
+            observeFormulasUseCase.execute(),
+            _screenState.map { it.searchText }.distinctUntilChanged()
+        ) { formulas, searchText ->
+            val filtered = if (searchText.isBlank()) {
+                formulas
+            } else {
+                formulas.filter { it.name.contains(searchText, ignoreCase = true) }
+            }
 
-                val listContent = if(formulasFromDB.isEmpty()){
+            if (filtered.isEmpty()) {
+                if (searchText.isBlank()){
                     MainListContent.EmptyScreen(EmptyScreenInfo.noFormulas())
-                } else{
-                    MainListContent.FormulaList(formulasFromDB)
+                } else {
+                    MainListContent.EmptyScreen(EmptyScreenInfo.noSearchResult())
                 }
 
-                _screenState.update { state ->
-                    state.copy(listContent = listContent)
-                }
-            },
-            errorHandling = ::setError
-        )
+            } else {
+                MainListContent.FormulaList(
+                    spiltFormulaItemsUseCase.execute(filtered)
+                )
+            }
+        }
+            .onEach { listContent ->
+                _screenState.update { it.copy(listContent = listContent) }
+            }
+            .catch { e -> setError(e) }
+            .launchIn(viewModelScope)
     }
 
     fun onIntent(intent: MainIntent){
         when(intent){
             is MainIntent.PinFormula -> pinFormula(intent.formula)
             is MainIntent.UnPinFormula -> unpinFormula(intent.formula)
-            is MainIntent.ChangeSearchText ->{
-                updateSearchText(intent.newText)
-                searchFormulas(intent.newText)
-            }
+            is MainIntent.ChangeSearchText ->updateSearchText(intent.newText)
             MainIntent.CloseDialog -> clearError()
-            MainIntent.Reload -> reloadFormulas()
         }
     }
 
     private fun pinFormula(formula: FormulaItem){
         safeBackgroundLaunch(
-            code = {
-                //update record in DB
-                pinFormulaUseCase.execute(formula)
-
-                _screenState.update { state ->
-                    val oldFormulas = (state.listContent as MainListContent.FormulaList).formulas
-                    state.copy(
-                        listContent = MainListContent.FormulaList(
-                            SplitFormulaItems(
-                                pins = (oldFormulas.pins + formula).sortedBy { it.position },
-                                unpins = oldFormulas.unpins - formula
-                            )
-                        )
-                    )
-                }
-            },
+            code = { pinFormulaUseCase.execute(formula) },
             errorHandling = ::setError
         )
     }
 
     private fun unpinFormula(formula: FormulaItem){
         safeBackgroundLaunch(
-            code = {
-                //update record in DB
-                unpinFormulaUseCase.execute(formula)
-
-                _screenState.update { state ->
-                    val oldFormulas = (state.listContent as MainListContent.FormulaList).formulas
-                    state.copy(
-                        listContent = MainListContent.FormulaList(
-                            SplitFormulaItems(
-                                pins = oldFormulas.pins - formula,
-                                unpins = (oldFormulas.unpins + formula).sortedBy { it.position }
-                            )
-                        )
-                    )
-                }
-            },
+            code = { unpinFormulaUseCase.execute(formula) },
             errorHandling = ::setError
         )
     }
@@ -115,36 +98,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun searchFormulas(newText: String){
-        safeBackgroundLaunch(
-            code = {
-                //search formulas in DB
-                val searchFormulas = searchFormulasUseCase.execute(newText)
-
-                //update UI if it necessary
-                val listContent = if(searchFormulas.isEmpty()){
-                    MainListContent.EmptyScreen(EmptyScreenInfo.noSearchResult())
-                } else{
-                    MainListContent.FormulaList(searchFormulas)
-                }
-
-                _screenState.update { state ->
-                    state.copy(listContent = listContent)
-                }
-            },
-            errorHandling = ::setError
-        )
-    }
-
-    private fun reloadFormulas(){
-        if(screenState.value.searchText.isNotEmpty()){
-            searchFormulas(screenState.value.searchText)
-        } else {
-            loadFormulas()
-        }
-    }
-
-    private fun setError(exception: Exception){
+    private fun setError(exception: Throwable){
         _screenState.update { state ->
             state.copy(errorMessage = ErrorData(detailStr = exception.message))
         }

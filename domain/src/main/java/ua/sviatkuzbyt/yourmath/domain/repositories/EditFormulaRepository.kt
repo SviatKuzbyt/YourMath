@@ -1,5 +1,6 @@
 package ua.sviatkuzbyt.yourmath.domain.repositories
 
+import kotlinx.coroutines.flow.Flow
 import ua.sviatkuzbyt.yourmath.domain.structures.edit.editformula.EditFormulaInfo
 import ua.sviatkuzbyt.yourmath.domain.structures.edit.editformula.EditInput
 import ua.sviatkuzbyt.yourmath.domain.structures.edit.editformula.EditResult
@@ -12,8 +13,7 @@ import ua.sviatkuzbyt.yourmath.domain.structures.edit.add.DataOutputToAdd
 import ua.sviatkuzbyt.yourmath.domain.structures.edit.add.FormulaToAdd
 
 interface EditFormulaRepository {
-    fun getFormulas(): List<FormulaNameItem>
-    fun getMoreFormulas(offset: Int): List<FormulaNameItem>
+    fun observeFormulas(): Flow<List<FormulaNameItem>>
     fun deleteFormula(formulaID: Long)
     fun deleteAllFormulas()
     fun setFormulaPosition(formulaID: Long, position: Int)

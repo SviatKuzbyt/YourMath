@@ -13,8 +13,6 @@ import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.EditFormula
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.FormulaListText
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.editformula.FormulaText
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.ErrorData
-import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.GlobalEvent
-import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.GlobalEventType
 import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.safeBackgroundLaunch
 import ua.sviatkuzbyt.yourmath.domain.usecases.editformula.CreateFormulaUseCase
 import ua.sviatkuzbyt.yourmath.domain.usecases.editformula.GetEditFormulaDataUseCase
@@ -52,7 +50,6 @@ class EditFormulaViewModel @Inject constructor(
             val data = if (formulaID == CreateFormulaUseCase.NEW_FORMULA){
                 createFormulaUseCase.execute().also {
                     formulaID = it.info.id
-                    setGlobalEvent()
                 }
             } else {
                 getEditFormulaDataUseCase.execute(formulaID)
@@ -134,7 +131,6 @@ class EditFormulaViewModel @Inject constructor(
 
     private fun changeFormulaName(text: String){
         updateInfo { it.copy(name = text) }
-        setGlobalEvent()
     }
 
     private fun changeFormulaDescription(text: String){
@@ -278,7 +274,6 @@ class EditFormulaViewModel @Inject constructor(
         code = {
             updateInfo { it.copy(isNote = isNote) }
             updateFormulaDataUseCase.changeIsNote(isNote, formulaID)
-            setGlobalEvent()
         },
         errorHandling = ::setError
     )
@@ -430,12 +425,6 @@ class EditFormulaViewModel @Inject constructor(
         _screenState.update { state ->
             state.copy(content = _code.value)
         }
-    }
-
-    // OTHERS
-
-    private fun setGlobalEvent(){
-        GlobalEvent.sendEvent(GlobalEventType.ChangeEditorFormulaList)
     }
 
     private fun setError(exception: Exception){

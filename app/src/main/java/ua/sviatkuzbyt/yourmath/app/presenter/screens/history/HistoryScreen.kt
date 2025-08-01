@@ -8,6 +8,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.HistoryAboveScreenContent
 import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.HistoryIntent
@@ -15,13 +16,13 @@ import ua.sviatkuzbyt.yourmath.app.presenter.controllers.history.HistoryState
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.LocalNavController
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.NavigateIntent
 import ua.sviatkuzbyt.yourmath.app.presenter.navigation.onNavigateIntent
-import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.GlobalEvent
-import ua.sviatkuzbyt.yourmath.app.presenter.other.basic.GlobalEventType
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.basic.dialog.DialogError
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.above.ClearDialog
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.above.FilterSheet
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.screen.HistoryContentList
 import ua.sviatkuzbyt.yourmath.app.presenter.ui.elements.history.screen.HistoryTopBar
+
+val isHistoryUpdate = MutableStateFlow(false)
 
 @Composable
 fun HistoryScreen(viewModel: HistoryViewModel = hiltViewModel()){
@@ -72,14 +73,12 @@ fun HistoryContent(
 }
 
 @Composable
-fun ObserveHistoryChange(
-    onReload: () -> Unit
-){
+fun ObserveHistoryChange(onReload: () -> Unit){
     LaunchedEffect(Unit) {
-        GlobalEvent.event.collectLatest { event ->
-            if (event == GlobalEventType.AddHistoryRecord){
+        isHistoryUpdate.collectLatest { isUpdate ->
+            if (isUpdate){
                 onReload()
-                GlobalEvent.clearEvent()
+                isHistoryUpdate.value = false
             }
         }
     }

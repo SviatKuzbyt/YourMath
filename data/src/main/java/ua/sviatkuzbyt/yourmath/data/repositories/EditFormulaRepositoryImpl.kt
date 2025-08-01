@@ -1,5 +1,7 @@
 package ua.sviatkuzbyt.yourmath.data.repositories
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import ua.sviatkuzbyt.yourmath.data.database.EditFormulaDao
 import ua.sviatkuzbyt.yourmath.data.database.entity.FormulaEntity
 import ua.sviatkuzbyt.yourmath.data.database.entity.InputDataEntity
@@ -27,16 +29,9 @@ import javax.inject.Inject
 class EditFormulaRepositoryImpl @Inject constructor(
     private val editFormulaDao: EditFormulaDao
 ) : EditFormulaRepository {
-
-    override fun getFormulas(): List<FormulaNameItem> {
-        return editFormulaDao.getFormulas().map {
-            mapToFormulaNameItemDomain(it)
-        }
-    }
-
-    override fun getMoreFormulas(offset: Int): List<FormulaNameItem> {
-        return editFormulaDao.getFormulas(offset).map {
-            mapToFormulaNameItemDomain(it)
+    override fun observeFormulas(): Flow<List<FormulaNameItem>> {
+        return editFormulaDao.observeFormulas().map { list ->
+            list.map { mapToFormulaNameItemDomain(it) }
         }
     }
 

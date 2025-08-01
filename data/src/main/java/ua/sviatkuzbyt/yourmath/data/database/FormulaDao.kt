@@ -2,6 +2,7 @@ package ua.sviatkuzbyt.yourmath.data.database
 
 import androidx.room.Dao
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 import ua.sviatkuzbyt.yourmath.data.structures.formula.FormulaInfoData
 import ua.sviatkuzbyt.yourmath.data.structures.formula.FormulaInputData
 import ua.sviatkuzbyt.yourmath.data.structures.formula.FormulaResultData
@@ -11,17 +12,10 @@ import ua.sviatkuzbyt.yourmath.data.structures.main.FormulaItemWithPinnedData
 @Dao
 interface FormulaDao {
     @Query("SELECT formulaID, name, isPin, position FROM Formula WHERE isNote=0 ORDER BY position")
-    fun getFormulas(): List<FormulaItemWithPinnedData>
+    fun observeFormulas(): Flow<List<FormulaItemWithPinnedData>>
 
     @Query("UPDATE Formula SET isPin=:isPin WHERE formulaID=:id")
     fun changePinFormula(id: Long, isPin: Boolean)
-
-    @Query(
-        "SELECT formulaID, name, isPin, position " +
-        "FROM Formula " +
-        "WHERE isNote=0 AND name LIKE :searchText ORDER BY position"
-    )
-    fun searchFormulas(searchText: String): List<FormulaItemWithPinnedData>
 
     @Query("SELECT name, description FROM Formula WHERE formulaID = :formulaID LIMIT 1")
     fun getFormulaInfo(formulaID: Long): FormulaInfoData
